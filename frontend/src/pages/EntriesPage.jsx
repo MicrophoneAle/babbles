@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../api";
 
 export default function EntriesPage() {
-  const [search, setSearch] = useState("");
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get("search") || "");
   const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    setSearch(searchParams.get("search") || "");
+  }, [searchParams]);
 
   useEffect(() => {
     const id = setTimeout(async () => {
@@ -16,11 +21,12 @@ export default function EntriesPage() {
 
   return (
     <section className="space-y-4">
-      <div className="rounded-2xl border border-white/40 bg-white/60 p-4 shadow-soft">
+      <h2 className="section-title text-4xl">Past entries</h2>
+      <div className="card-surface p-4">
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-violet-100 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-violet-200"
+          className="w-full rounded-[4px] border border-journal-gold/50 bg-journal-cream px-3 py-2 text-sm text-journal-ink outline-none focus:ring-2 focus:ring-journal-gold/40"
           placeholder="Search by keyword or tag..."
         />
       </div>
@@ -28,13 +34,16 @@ export default function EntriesPage() {
         <Link
           key={entry.id}
           to={`/entry/${entry.date}`}
-          className="block animate-fadeIn rounded-2xl border border-white/40 bg-white/65 p-4 shadow-soft transition hover:-translate-y-0.5"
+          className="card-surface block animate-fadeIn p-4 transition hover:-translate-y-0.5"
         >
-          <h3 className="font-extrabold text-violet-700">{entry.date}</h3>
-          <p className="mt-1 text-sm text-slate-600">{entry.preview || "No preview yet..."}</p>
+          <h3 className="font-heading text-2xl italic text-journal-maroon">{entry.date}</h3>
+          <p className="mt-1 text-sm text-[#4b332d]">{entry.preview || "No preview yet..."}</p>
           <div className="mt-3 flex flex-wrap gap-2">
             {entry.tags.map((tag) => (
-              <span key={tag} className="rounded-full bg-sky-100 px-2 py-1 text-xs font-bold text-slate-700">
+              <span
+                key={tag}
+                className="rounded-full border border-journal-gold/60 bg-journal-maroon px-2 py-1 text-xs font-bold text-journal-gold"
+              >
                 #{tag}
               </span>
             ))}

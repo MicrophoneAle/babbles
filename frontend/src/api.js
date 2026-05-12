@@ -9,6 +9,9 @@ async function request(path, options = {}) {
   if (!res.ok) {
     throw new Error(`API error: ${res.status}`);
   }
+  if (res.status === 204) {
+    return null;
+  }
   return res.json();
 }
 
@@ -19,5 +22,8 @@ export const api = {
   updateEntry: (date, body) => request(`/entries/${date}`, { method: "PUT", body: JSON.stringify(body) }),
   getPrompts: () => request("/prompts"),
   getStats: () => request("/stats"),
-  getTags: () => request("/tags")
+  getTags: () => request("/tags"),
+  getTagsSummary: () => request("/tags/summary"),
+  createTag: (name) => request("/tags", { method: "POST", body: JSON.stringify({ name }) }),
+  deleteTag: (name) => request(`/tags/${encodeURIComponent(name)}`, { method: "DELETE" })
 };

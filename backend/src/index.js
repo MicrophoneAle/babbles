@@ -177,6 +177,42 @@ app.get("/api/tags", async (_req, res) => {
   res.json(tags.map((tag) => tag.name));
 });
 
+app.get("/api/tags/summary", async (_req, res) => {
+  const tags = await prisma.tag.findMany({
+    orderBy: { name: "asc" },
+    include: {
+      _count: {
+        select: { entries: true }
+      }
+    }
+  });
+  res.json(tags.map((tag) => ({ name: tag.name, count: tag._count.entries })));
+});
+
+app.post("/api/tags", async (req, res) => {
+  const name = (req.body?.name || "").toString().trim().toLowerCase();
+  if (!name) return res.status(400).json({ error: "Tag name is required" });
+
+  const tag = await prisma.tag.upsert({
+    where: { name },
+    update: {},
+    create: { name }
+  });
+
+  return res.status(201).json({ name: tag.name });
+});
+
+app.delete("/api/tags/:name", async (req, res) => {
+  const name = decodeURIComponent(req.params.name || "").trim().toLowerCase();
+  if (!name) return res.status(400).json({ error: "Tag name is required" });
+
+  const tag = await prisma.tag.findUnique({ where: { name } });
+  if (!tag) return res.status(404).json({ error: "Tag not found" });
+
+  await prisma.tag.delete({ where: { name } });
+  return res.status(204).send();
+});
+
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`API listening on http://localhost:${PORT}`);

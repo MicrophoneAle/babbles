@@ -4,18 +4,21 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Nunito", "sans-serif"]
+        sans: ["Nunito", "sans-serif"],
+        heading: ["Playfair Display", "serif"]
       },
       colors: {
-        pastel: {
-          lavender: "#CDB4FF",
-          peach: "#FFC8A2",
-          mint: "#B8F2E6",
-          sky: "#A0E7FF"
+        journal: {
+          maroon: "#6B1E1E",
+          maroonSoft: "#7B2D2D",
+          cream: "#F5F0E8",
+          gold: "#C9A84C",
+          ink: "#2A1B16"
         }
       },
       boxShadow: {
-        soft: "0 12px 30px rgba(88, 70, 125, 0.12)"
+        soft: "0 10px 20px rgba(16, 8, 8, 0.2)",
+        leather: "inset 0 0 0 1px rgba(201,168,76,0.2), 0 10px 20px rgba(16,8,8,0.2)"
       },
       keyframes: {
         fadeIn: {

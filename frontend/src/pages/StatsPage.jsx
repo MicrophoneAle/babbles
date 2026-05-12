@@ -14,7 +14,7 @@ function Heatmap({ dates }) {
           <div
             key={key}
             title={key}
-            className={`h-3 w-3 rounded-sm ${active ? "bg-violet-400" : "bg-violet-100"}`}
+            className={`h-3 w-3 rounded-[2px] ${active ? "bg-journal-maroonSoft" : "bg-[#dccfb9]"}`}
           />
         );
       })}
@@ -37,26 +37,27 @@ export default function StatsPage() {
 
   return (
     <section className="space-y-4">
+      <h2 className="section-title text-4xl">Writing stats</h2>
       <div className="grid grid-cols-2 gap-4">
-        <div className="rounded-2xl bg-white/70 p-4 shadow-soft">
-          <p className="text-sm font-bold text-slate-500">Current streak</p>
-          <p className="text-3xl font-extrabold text-violet-700">{stats.currentStreak} 🔥</p>
+        <div className="card-surface p-4">
+          <p className="text-sm font-bold text-[#6b4a3b]">Current streak</p>
+          <p className="font-heading text-3xl font-bold italic text-journal-maroon">{stats.currentStreak} 🔥</p>
         </div>
-        <div className="rounded-2xl bg-white/70 p-4 shadow-soft">
-          <p className="text-sm font-bold text-slate-500">Longest streak</p>
-          <p className="text-3xl font-extrabold text-violet-700">{stats.longestStreak}</p>
+        <div className="card-surface p-4">
+          <p className="text-sm font-bold text-[#6b4a3b]">Longest streak</p>
+          <p className="font-heading text-3xl font-bold italic text-journal-maroon">{stats.longestStreak}</p>
         </div>
-        <div className="rounded-2xl bg-white/70 p-4 shadow-soft">
-          <p className="text-sm font-bold text-slate-500">Total entries</p>
-          <p className="text-3xl font-extrabold text-violet-700">{stats.totalEntries}</p>
+        <div className="card-surface p-4">
+          <p className="text-sm font-bold text-[#6b4a3b]">Total entries</p>
+          <p className="font-heading text-3xl font-bold italic text-journal-maroon">{stats.totalEntries}</p>
         </div>
-        <div className="rounded-2xl bg-white/70 p-4 shadow-soft">
-          <p className="text-sm font-bold text-slate-500">Total words</p>
-          <p className="text-3xl font-extrabold text-violet-700">{stats.totalWords}</p>
+        <div className="card-surface p-4">
+          <p className="text-sm font-bold text-[#6b4a3b]">Total words</p>
+          <p className="font-heading text-3xl font-bold italic text-journal-maroon">{stats.totalWords}</p>
         </div>
       </div>
-      <div className="rounded-2xl bg-white/70 p-4 shadow-soft">
-        <h3 className="mb-3 text-lg font-extrabold text-violet-700">Writing calendar</h3>
+      <div className="card-surface p-4">
+        <h3 className="mb-3 font-heading text-2xl italic text-journal-maroon">Writing calendar</h3>
         <Heatmap dates={stats.heatmap.map((d) => d.date)} />
       </div>
     </section>

@@ -4,12 +4,36 @@
 
 body {
   font-family: "Nunito", sans-serif;
+  background: #6b1e1e;
+  color: #f5f0e8;
+}
+
+#root {
+  min-height: 100vh;
 }
 
 .nav-link {
-  @apply rounded-xl px-3 py-2 text-slate-600 transition hover:bg-violet-100 hover:text-violet-700;
+  @apply rounded-[4px] px-3 py-2 text-journal-gold transition hover:bg-[#8b3a3a] hover:text-journal-cream;
 }
 
 .nav-link.active {
-  @apply bg-violet-200 text-violet-800;
+  @apply bg-[#8b3a3a] text-journal-cream;
+}
+
+.card-surface {
+  @apply rounded-[4px] border border-[#b69a67]/40 bg-[#f5f0e8] shadow-leather;
+}
+
+.section-title {
+  @apply font-heading text-2xl italic text-journal-maroon;
+}
+
+.journal-page {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0) 30px,
+    rgba(107, 30, 30, 0.12) 31px
+  );
+  background-color: #f5f0e8;
 }

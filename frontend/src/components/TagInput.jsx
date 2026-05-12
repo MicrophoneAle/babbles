@@ -21,7 +21,7 @@ export default function TagInput({ tags, setTags, suggestions = [] }) {
         {tags.map((tag) => (
           <button
             key={tag}
-            className="rounded-full bg-violet-100 px-3 py-1 text-xs font-bold text-violet-700 transition hover:bg-violet-200"
+            className="rounded-full border border-journal-gold/60 bg-journal-maroon px-3 py-1 text-xs font-bold text-journal-gold transition hover:bg-[#5b1818]"
             onClick={() => setTags(tags.filter((t) => t !== tag))}
           >
             #{tag} ×
@@ -37,7 +37,7 @@ export default function TagInput({ tags, setTags, suggestions = [] }) {
             addTag(value);
           }
         }}
-        className="w-full rounded-xl border border-violet-100 bg-white/90 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-violet-200"
+        className="w-full rounded-[4px] border border-journal-gold/50 bg-journal-cream px-3 py-2 text-sm text-journal-ink outline-none focus:ring-2 focus:ring-journal-gold/40"
         placeholder="Add a tag and press Enter"
       />
       {!!value && filtered.length > 0 && (
@@ -46,7 +46,7 @@ export default function TagInput({ tags, setTags, suggestions = [] }) {
             <button
               key={tag}
               onClick={() => addTag(tag)}
-              className="rounded-full bg-mint px-3 py-1 text-xs font-bold text-slate-700"
+              className="rounded-full border border-journal-gold/60 bg-[#ead9b6] px-3 py-1 text-xs font-bold text-journal-maroon"
             >
               #{tag}
             </button>
