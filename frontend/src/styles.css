@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Nunito", sans-serif;
+}
+
+.nav-link {
+  @apply rounded-xl px-3 py-2 text-slate-600 transition hover:bg-violet-100 hover:text-violet-700;
+}
+
+.nav-link.active {
+  @apply bg-violet-200 text-violet-800;
+}
