@@ -17,6 +17,7 @@ async function request(path, options = {}) {
 
 export const api = {
   getEntries: (search = "") => request(`/entries${search ? `?search=${encodeURIComponent(search)}` : ""}`),
+  getAdjacentEntries: (date) => request(`/entries/adjacent/${date}`),
   getEntryByDate: (date) => request(`/entries/${date}`),
   createEntry: (body) => request("/entries", { method: "POST", body: JSON.stringify(body) }),
   updateEntry: (date, body) => request(`/entries/${date}`, { method: "PUT", body: JSON.stringify(body) }),

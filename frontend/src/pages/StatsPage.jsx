@@ -1,23 +1,89 @@
 import { useEffect, useMemo, useState } from "react";
-import { format, subDays } from "date-fns";
+import { eachDayOfInterval, endOfWeek, format, startOfWeek, subWeeks } from "date-fns";
 import { api } from "../api";
 
-function Heatmap({ dates }) {
-  const set = new Set(dates);
-  const days = useMemo(() => Array.from({ length: 140 }, (_, i) => subDays(new Date(), 139 - i)), []);
+function getColor(wordCount) {
+  if (!wordCount) return "bg-[#d8d8d8]";
+  return `bg-[#6B1E1E]`;
+}
+
+function Heatmap({ entries }) {
+  const byDate = useMemo(() => {
+    const map = new Map();
+    entries.forEach((entry) => map.set(entry.date, entry.wordCount || 0));
+    return map;
+  }, [entries]);
+
+  const maxWordCount = useMemo(
+    () => Math.max(1, ...entries.map((entry) => entry.wordCount || 0)),
+    [entries]
+  );
+
+  const days = useMemo(() => {
+    const today = new Date();
+    const intervalStart = startOfWeek(subWeeks(today, 51), { weekStartsOn: 1 });
+    const intervalEnd = endOfWeek(today, { weekStartsOn: 1 });
+    return eachDayOfInterval({ start: intervalStart, end: intervalEnd });
+  }, []);
+
+  const weeks = useMemo(() => {
+    const arr = [];
+    for (let i = 0; i < days.length; i += 7) {
+      arr.push(days.slice(i, i + 7));
+    }
+    return arr;
+  }, [days]);
+
+  const monthLabels = useMemo(
+    () =>
+      weeks.map((week, idx) => {
+        const first = week[0];
+        if (idx === 0 || format(first, "MMM") !== format(weeks[idx - 1][0], "MMM")) {
+          return format(first, "MMM");
+        }
+        return "";
+      }),
+    [weeks]
+  );
+
   return (
-    <div className="grid grid-cols-20 gap-1">
-      {days.map((day) => {
-        const key = format(day, "yyyy-MM-dd");
-        const active = set.has(key);
-        return (
-          <div
-            key={key}
-            title={key}
-            className={`h-3 w-3 rounded-[2px] ${active ? "bg-journal-maroonSoft" : "bg-[#dccfb9]"}`}
-          />
-        );
-      })}
+    <div className="overflow-x-auto">
+      <div className="min-w-[760px]">
+        <div className="mb-2 grid grid-cols-[repeat(53,minmax(0,1fr))] gap-1 pl-9 text-[10px] text-[#7a5a4d]">
+          {monthLabels.map((month, index) => (
+            <div key={`${month}-${index}`} className="h-3">
+              {month}
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-2">
+          <div className="grid grid-rows-7 gap-1 text-[10px] text-[#7a5a4d]">
+            {["Mon", "", "Wed", "", "Fri", "", "Sun"].map((label, idx) => (
+              <div key={`label-${idx}`} className="h-3 leading-3">
+                {label}
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-[repeat(53,minmax(0,1fr))] gap-1">
+            {weeks.map((week, weekIdx) => (
+              <div key={`week-${weekIdx}`} className="grid grid-rows-7 gap-1">
+                {week.map((day) => {
+                  const key = format(day, "yyyy-MM-dd");
+                  const wordCount = byDate.get(key) || 0;
+                  return (
+                    <div
+                      key={key}
+                      title={`${key} - ${wordCount} words`}
+                      className={`h-3 w-3 rounded-[2px] ${getColor(wordCount)}`}
+                      style={wordCount ? { opacity: Math.max(0.3, wordCount / maxWordCount) } : undefined}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -58,7 +124,7 @@ export default function StatsPage() {
       </div>
       <div className="card-surface p-4">
         <h3 className="mb-3 font-heading text-2xl italic text-journal-maroon">Writing calendar</h3>
-        <Heatmap dates={stats.heatmap.map((d) => d.date)} />
+        <Heatmap entries={stats.heatmap} />
       </div>
     </section>
   );

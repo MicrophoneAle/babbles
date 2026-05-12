@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 import RichEditor from "../components/Editor";
 import Prompts from "../components/Prompts";
@@ -10,6 +10,7 @@ const emptyDoc = { type: "doc", content: [{ type: "paragraph" }] };
 
 export default function EntryPage({ mode }) {
   const params = useParams();
+  const navigate = useNavigate();
   const date = useMemo(
     () => (mode === "today" ? new Date().toISOString().slice(0, 10) : params.date),
     [mode, params.date]
@@ -23,6 +24,7 @@ export default function EntryPage({ mode }) {
   const [status, setStatus] = useState("Saved");
   const [manualSaved, setManualSaved] = useState(false);
   const [exists, setExists] = useState(false);
+  const [adjacent, setAdjacent] = useState({ previous: null, next: null });
 
   async function saveEntry() {
     setStatus("Saving...");
@@ -49,6 +51,13 @@ export default function EntryPage({ mode }) {
         if (active) setTagSuggestions(tagsRes);
       } catch {
         // no-op
+      }
+
+      try {
+        const adjacentEntries = await api.getAdjacentEntries(date);
+        if (active) setAdjacent(adjacentEntries);
+      } catch {
+        if (active) setAdjacent({ previous: null, next: null });
       }
 
       try {
@@ -85,6 +94,30 @@ export default function EntryPage({ mode }) {
 
   return (
     <section className="relative card-surface overflow-hidden p-6">
+      <button
+        disabled={!adjacent.previous}
+        onClick={() => adjacent.previous && navigate(`/entry/${adjacent.previous}`)}
+        className={`absolute left-0 top-1/2 h-24 w-7 -translate-y-1/2 rounded-r-[4px] border-r border-journal-gold/60 text-lg font-bold shadow-md transition ${
+          adjacent.previous
+            ? "bg-journal-maroon text-journal-gold hover:bg-journal-maroonSoft"
+            : "cursor-not-allowed bg-[#b8a89a] text-[#f5f0e8]/70"
+        }`}
+        title={adjacent.previous ? `Go to ${adjacent.previous}` : "No previous entry"}
+      >
+        ‹
+      </button>
+      <button
+        disabled={!adjacent.next}
+        onClick={() => adjacent.next && navigate(`/entry/${adjacent.next}`)}
+        className={`absolute right-0 top-1/2 h-24 w-7 -translate-y-1/2 rounded-l-[4px] border-l border-journal-gold/60 text-lg font-bold shadow-md transition ${
+          adjacent.next
+            ? "bg-journal-maroon text-journal-gold hover:bg-journal-maroonSoft"
+            : "cursor-not-allowed bg-[#b8a89a] text-[#f5f0e8]/70"
+        }`}
+        title={adjacent.next ? `Go to ${adjacent.next}` : "No next entry"}
+      >
+        ›
+      </button>
       <div className="absolute right-8 top-0 h-28 w-3 bg-journal-maroonSoft shadow-md" />
       <h2 className="section-title mb-1 text-4xl">
         {format(new Date(`${date}T00:00:00`), "EEEE, MMMM d")}

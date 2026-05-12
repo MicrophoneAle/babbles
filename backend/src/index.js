@@ -24,7 +24,8 @@ function countWords(text = "") {
 }
 
 async function connectTags(tags = []) {
-  const unique = [...new Set(tags.map((tag) => tag.trim().toLowerCase()).filter(Boolean))];
+  const normalized = tags.map((tag) => (typeof tag === "string" ? tag : tag?.name || ""));
+  const unique = [...new Set(normalized.map((tag) => tag.trim().toLowerCase()).filter(Boolean))];
   if (!unique.length) return [];
 
   const upserted = await Promise.all(
@@ -37,6 +38,26 @@ async function connectTags(tags = []) {
     )
   );
   return upserted.map((tag) => ({ id: tag.id }));
+}
+
+async function getAdjacentEntryDates(date) {
+  const [previous, next] = await Promise.all([
+    prisma.entry.findFirst({
+      where: { date: { lt: date } },
+      orderBy: { date: "desc" },
+      select: { date: true }
+    }),
+    prisma.entry.findFirst({
+      where: { date: { gt: date } },
+      orderBy: { date: "asc" },
+      select: { date: true }
+    })
+  ]);
+
+  return {
+    previous: previous ? previous.date.toISOString().slice(0, 10) : null,
+    next: next ? next.date.toISOString().slice(0, 10) : null
+  };
 }
 
 app.get("/api/entries", async (req, res) => {
@@ -63,6 +84,14 @@ app.get("/api/entries", async (req, res) => {
       tags: entry.tags.map((tag) => tag.name)
     }))
   );
+});
+
+app.get("/api/entries/adjacent/:date", async (req, res) => {
+  const date = dateParamToDate(req.params.date);
+  if (!date) return res.status(400).json({ error: "Invalid date format" });
+
+  const adjacent = await getAdjacentEntryDates(date);
+  return res.json(adjacent);
 });
 
 app.get("/api/entries/:date", async (req, res) => {
@@ -160,7 +189,7 @@ app.get("/api/stats", async (_req, res) => {
   const { currentStreak, longestStreak } = calculateStreaks(entries.map((e) => e.date));
   const heatmap = entries.map((e) => ({
     date: e.date.toISOString().slice(0, 10),
-    count: 1
+    wordCount: e.wordCount
   }));
 
   res.json({
