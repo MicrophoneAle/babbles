@@ -8,16 +8,13 @@ import { calculateStreaks } from "./stats.js";
 const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
-const ALLOWED_ORIGINS = (process.env.CORS_ORIGINS || "")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 app.use(
   cors({
     origin(origin, callback) {
       if (!origin) return callback(null, true);
-      if (!ALLOWED_ORIGINS.length || ALLOWED_ORIGINS.includes(origin)) {
+      if (!FRONTEND_URL || FRONTEND_URL === "*" || origin === FRONTEND_URL) {
         return callback(null, true);
       }
       return callback(new Error("Not allowed by CORS"));

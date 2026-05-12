@@ -6,6 +6,7 @@ body {
   font-family: "Nunito", sans-serif;
   background: #e6e3de;
   color: #2c2c2c;
+  overflow: hidden;
 }
 
 #root {
@@ -40,7 +41,7 @@ body {
 }
 
 .desk-bg {
-  @apply min-h-screen bg-[#ddd8d1];
+  @apply bg-[#ddd8d1];
 }
 
 .book-cover {

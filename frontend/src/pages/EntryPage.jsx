@@ -31,18 +31,25 @@ export default function EntryPage({ mode }) {
 
   async function saveEntry() {
     setStatus("Saving...");
+    const payload = { date, content, plainText, tags };
+    // eslint-disable-next-line no-console
+    console.log("[Entry] Save payload:", payload);
     try {
       if (exists) {
-        await api.updateEntry(date, { content, plainText, tags });
+        await api.updateEntry(date, payload);
       } else if (hasContentToSave) {
-        await api.createEntry({ date, content, plainText, tags });
+        await api.createEntry(payload);
         setExists(true);
       }
       setStatus("Saved");
       setSavedTags(tags);
+      // eslint-disable-next-line no-console
+      console.log("Entry saved successfully");
       return true;
     } catch {
       setStatus("Save failed");
+      // eslint-disable-next-line no-console
+      console.error("[Entry] Save failed");
       return false;
     }
   }
@@ -122,7 +129,6 @@ export default function EntryPage({ mode }) {
       >
         ›
       </button>
-      <div className="bookmark-ribbon absolute right-8 top-0 h-32 w-4 shadow-md" />
       <h2 className="section-title mb-1 text-4xl">
         {format(new Date(`${date}T00:00:00`), "EEEE, MMMM d")}
       </h2>

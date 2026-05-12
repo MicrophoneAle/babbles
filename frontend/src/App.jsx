@@ -6,14 +6,36 @@ import StatsPage from "./pages/StatsPage";
 import TagsPage from "./pages/TagsPage";
 
 function Layout({ children }) {
+  const pageLayers = [
+    "#f7f7f4",
+    "#f1f0ec",
+    "#f5f2ea",
+    "#ecebe6",
+    "#f6f3ed",
+    "#eeede7",
+    "#f4f1e9",
+    "#ebe9e2",
+    "#f3f0e8",
+    "#e9e7e0"
+  ];
+
   return (
-    <div className="desk-bg py-8">
-      <div className="book-cover relative mx-auto max-w-6xl rounded-[4px] p-3">
+    <div className="desk-bg flex h-screen items-center justify-center p-6">
+      <div className="book-cover relative h-[92vh] w-full max-w-6xl rounded-[4px] p-3">
         <div className="absolute inset-y-3 left-3 w-8 rounded-[2px] bg-[#2f2114] shadow-inner" />
-        <div className="book-page relative ml-7 flex gap-6 p-6">
-          <div className="absolute -right-2 top-6 h-[92%] w-2 bg-[#f3f3f0]" />
-          <div className="absolute -right-4 top-7 h-[90%] w-2 bg-[#ecebe7]" />
-          <div className="absolute -right-6 top-8 h-[88%] w-2 bg-[#e4e2dd]" />
+        <div className="absolute right-16 top-0 h-36 w-4 bookmark-ribbon shadow-md" />
+        <div className="book-page relative ml-7 flex h-full gap-6 p-6">
+          {pageLayers.map((shade, idx) => (
+            <div
+              key={shade + idx}
+              className="absolute top-5 w-2 shadow-[inset_-1px_0_0_rgba(0,0,0,0.08),0_0_1px_rgba(0,0,0,0.12)]"
+              style={{
+                right: `${-4 - idx * 3}px`,
+                height: `${95 - idx * 0.8}%`,
+                background: shade
+              }}
+            />
+          ))}
           <aside className="sticky top-6 h-fit w-64 rounded-[4px] border border-[#4c3928] bg-journal-cover p-5 shadow-leather">
             <h1 className="font-heading text-5xl font-bold italic text-[#efe7db]">Journal</h1>
             <p className="mt-1 font-heading text-base italic text-[#c8b8a3]">{format(new Date(), "EEEE, MMM d")}</p>
@@ -32,7 +54,7 @@ function Layout({ children }) {
             </NavLink>
           </nav>
         </aside>
-        <main className="flex-1 text-journal-text">{children}</main>
+        <main className="flex-1 overflow-y-auto pr-3 text-journal-text">{children}</main>
         </div>
       </div>
     </div>
