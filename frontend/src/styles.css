@@ -4,8 +4,8 @@
 
 body {
   font-family: "Nunito", sans-serif;
-  background: #6b1e1e;
-  color: #f5f0e8;
+  background: #e6e3de;
+  color: #2c2c2c;
 }
 
 #root {
@@ -13,19 +13,19 @@ body {
 }
 
 .nav-link {
-  @apply rounded-[4px] px-3 py-2 text-journal-gold transition hover:bg-[#8b3a3a] hover:text-journal-cream;
+  @apply rounded-[4px] px-3 py-2 font-heading text-lg italic text-[#d7cabb] transition hover:bg-[#4a3827] hover:text-journal-white;
 }
 
 .nav-link.active {
-  @apply bg-[#8b3a3a] text-journal-cream;
+  @apply bg-[#4a3827] text-journal-white;
 }
 
 .card-surface {
-  @apply rounded-[4px] border border-[#b69a67]/40 bg-[#f5f0e8] shadow-leather;
+  @apply rounded-[4px] border border-[#d3cec6] bg-journal-white shadow-soft;
 }
 
 .section-title {
-  @apply font-heading text-2xl italic text-journal-maroon;
+  @apply font-heading text-2xl italic text-journal-brown;
 }
 
 .journal-page {
@@ -33,7 +33,57 @@ body {
     to bottom,
     rgba(0, 0, 0, 0) 0,
     rgba(0, 0, 0, 0) 30px,
-    rgba(107, 30, 30, 0.12) 31px
+    rgba(140, 140, 140, 0.2) 31px
   );
-  background-color: #f5f0e8;
+  background-color: #ffffff;
+  font-family: "Lora", serif;
+}
+
+.desk-bg {
+  @apply min-h-screen bg-[#ddd8d1];
+}
+
+.book-cover {
+  background: #3b2a1a;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.02) 0px,
+    rgba(255, 255, 255, 0.02) 2px,
+    rgba(0, 0, 0, 0.02) 2px,
+    rgba(0, 0, 0, 0.02) 4px
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+}
+
+.book-page {
+  @apply bg-journal-paper rounded-[4px];
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+.bookmark-ribbon {
+  background: #5a2d1e;
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 50% 100%, 0 88%);
+}
+
+.save-indicator {
+  color: #7a9e7e;
+  @apply text-sm font-semibold animate-saveFlash;
+}
+
+@keyframes saveFlash {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }

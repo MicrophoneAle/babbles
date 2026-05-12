@@ -22,20 +22,24 @@ export default function EntryPage({ mode }) {
   const [prompts, setPrompts] = useState([]);
   const [hidePrompts, setHidePrompts] = useState(false);
   const [status, setStatus] = useState("Saved");
-  const [manualSaved, setManualSaved] = useState(false);
+  const [showSavedFlash, setShowSavedFlash] = useState(false);
   const [exists, setExists] = useState(false);
   const [adjacent, setAdjacent] = useState({ previous: null, next: null });
+  const [savedTags, setSavedTags] = useState([]);
+
+  const hasContentToSave = plainText.trim().length > 0 || tags.length > 0;
 
   async function saveEntry() {
     setStatus("Saving...");
     try {
       if (exists) {
         await api.updateEntry(date, { content, plainText, tags });
-      } else if (plainText.trim()) {
+      } else if (hasContentToSave) {
         await api.createEntry({ date, content, plainText, tags });
         setExists(true);
       }
       setStatus("Saved");
+      setSavedTags(tags);
       return true;
     } catch {
       setStatus("Save failed");
@@ -97,10 +101,10 @@ export default function EntryPage({ mode }) {
       <button
         disabled={!adjacent.previous}
         onClick={() => adjacent.previous && navigate(`/entry/${adjacent.previous}`)}
-        className={`absolute left-0 top-1/2 h-24 w-7 -translate-y-1/2 rounded-r-[4px] border-r border-journal-gold/60 text-lg font-bold shadow-md transition ${
+        className={`absolute left-0 top-1/2 h-24 w-7 -translate-y-1/2 rounded-r-[4px] border-r border-journal-grey/40 text-lg font-bold shadow-md transition ${
           adjacent.previous
-            ? "bg-journal-maroon text-journal-gold hover:bg-journal-maroonSoft"
-            : "cursor-not-allowed bg-[#b8a89a] text-[#f5f0e8]/70"
+            ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
+            : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
         }`}
         title={adjacent.previous ? `Go to ${adjacent.previous}` : "No previous entry"}
       >
@@ -109,26 +113,26 @@ export default function EntryPage({ mode }) {
       <button
         disabled={!adjacent.next}
         onClick={() => adjacent.next && navigate(`/entry/${adjacent.next}`)}
-        className={`absolute right-0 top-1/2 h-24 w-7 -translate-y-1/2 rounded-l-[4px] border-l border-journal-gold/60 text-lg font-bold shadow-md transition ${
+        className={`absolute right-0 top-1/2 h-24 w-7 -translate-y-1/2 rounded-l-[4px] border-l border-journal-grey/40 text-lg font-bold shadow-md transition ${
           adjacent.next
-            ? "bg-journal-maroon text-journal-gold hover:bg-journal-maroonSoft"
-            : "cursor-not-allowed bg-[#b8a89a] text-[#f5f0e8]/70"
+            ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
+            : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
         }`}
         title={adjacent.next ? `Go to ${adjacent.next}` : "No next entry"}
       >
         ›
       </button>
-      <div className="absolute right-8 top-0 h-28 w-3 bg-journal-maroonSoft shadow-md" />
+      <div className="bookmark-ribbon absolute right-8 top-0 h-32 w-4 shadow-md" />
       <h2 className="section-title mb-1 text-4xl">
         {format(new Date(`${date}T00:00:00`), "EEEE, MMMM d")}
       </h2>
-      <p className="mb-4 text-sm font-bold text-[#5c3a2e]">{status}</p>
+      <p className="mb-4 text-sm font-semibold text-journal-grey">{status}</p>
 
       <Prompts prompts={prompts} hidden={hidePrompts} onHide={() => setHidePrompts(true)} />
 
       <div className="mb-4">
-        <p className="mb-2 text-sm font-bold text-journal-maroon">Tags</p>
-        <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} />
+        <p className="mb-2 font-heading text-lg italic text-journal-brown">Tags</p>
+        <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} />
       </div>
 
       <RichEditor
@@ -139,16 +143,16 @@ export default function EntryPage({ mode }) {
         }}
       />
       <div className="mt-4 flex items-center justify-end gap-3">
-        {manualSaved && <span className="text-sm text-journal-maroon">Saved</span>}
+        {showSavedFlash && <span className="save-indicator">✓ Entry saved</span>}
         <button
           onClick={async () => {
             const ok = await saveEntry();
             if (ok) {
-              setManualSaved(true);
-              setTimeout(() => setManualSaved(false), 1500);
+              setShowSavedFlash(true);
+              setTimeout(() => setShowSavedFlash(false), 2000);
             }
           }}
-          className="rounded-[4px] border border-journal-gold/70 bg-journal-maroon px-4 py-2 text-sm font-bold text-journal-cream shadow-md transition hover:bg-journal-maroonSoft"
+          className="rounded-[4px] border border-journal-brown/60 bg-journal-brown px-4 py-2 text-sm font-semibold text-journal-white shadow-md transition hover:bg-[#5d4533]"
         >
           Save Entry
         </button>

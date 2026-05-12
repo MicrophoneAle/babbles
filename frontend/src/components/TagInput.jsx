@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-export default function TagInput({ tags, setTags, suggestions = [] }) {
+export default function TagInput({ tags, setTags, suggestions = [], savedTags = [] }) {
   const [value, setValue] = useState("");
   const filtered = useMemo(
     () =>
@@ -21,10 +21,10 @@ export default function TagInput({ tags, setTags, suggestions = [] }) {
         {tags.map((tag) => (
           <button
             key={tag}
-            className="rounded-full border border-journal-gold/60 bg-journal-maroon px-3 py-1 text-xs font-bold text-journal-gold transition hover:bg-[#5b1818]"
+            className="rounded-full border border-journal-brown/40 bg-[#f1ece4] px-3 py-1 text-xs font-semibold text-journal-text transition hover:bg-[#e5ded2]"
             onClick={() => setTags(tags.filter((t) => t !== tag))}
           >
-            #{tag} ×
+            #{tag} {savedTags.includes(tag) ? "✓" : ""} ×
           </button>
         ))}
       </div>
@@ -37,7 +37,7 @@ export default function TagInput({ tags, setTags, suggestions = [] }) {
             addTag(value);
           }
         }}
-        className="w-full rounded-[4px] border border-journal-gold/50 bg-journal-cream px-3 py-2 text-sm text-journal-ink outline-none focus:ring-2 focus:ring-journal-gold/40"
+        className="w-full rounded-[4px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
         placeholder="Add a tag and press Enter"
       />
       {!!value && filtered.length > 0 && (
@@ -46,7 +46,7 @@ export default function TagInput({ tags, setTags, suggestions = [] }) {
             <button
               key={tag}
               onClick={() => addTag(tag)}
-              className="rounded-full border border-journal-gold/60 bg-[#ead9b6] px-3 py-1 text-xs font-bold text-journal-maroon"
+              className="rounded-full border border-journal-brown/30 bg-journal-sticky px-3 py-1 text-xs font-semibold text-journal-brown"
             >
               #{tag}
             </button>

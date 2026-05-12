@@ -23,7 +23,7 @@ export default function TagsPage() {
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="flex-1 rounded-[4px] border border-journal-gold/50 bg-journal-cream px-3 py-2 text-sm text-journal-ink outline-none focus:ring-2 focus:ring-journal-gold/40"
+          className="flex-1 rounded-[4px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
           placeholder="New tag name"
         />
         <button
@@ -33,7 +33,7 @@ export default function TagsPage() {
             setName("");
             loadTags();
           }}
-          className="rounded-[4px] border border-journal-gold/60 bg-journal-maroon px-4 py-2 text-sm font-bold text-journal-cream"
+          className="rounded-[4px] border border-journal-brown/40 bg-journal-brown px-4 py-2 text-sm font-semibold text-journal-white"
         >
           Create Tag
         </button>
@@ -44,13 +44,13 @@ export default function TagsPage() {
           {tags.map((tag) => (
             <div
               key={tag.name}
-              className="flex items-center gap-2 rounded-full border border-journal-gold/60 bg-journal-maroon px-3 py-1 text-sm font-bold text-journal-gold"
+              className="flex items-center gap-2 rounded-full border border-journal-brown/30 bg-journal-sticky px-3 py-1 text-sm font-semibold text-journal-brown"
             >
               <button onClick={() => navigate(`/entries?search=${encodeURIComponent(tag.name)}`)}>
                 #{tag.name} ({tag.count})
               </button>
               <button
-                className="text-journal-cream"
+                className="text-journal-charcoal"
                 onClick={async () => {
                   const ok = window.confirm(`Delete tag "${tag.name}"?`);
                   if (!ok) return;

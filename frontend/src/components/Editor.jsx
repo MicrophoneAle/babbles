@@ -6,12 +6,12 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { useEffect } from "react";
 
 const BTN =
-  "rounded-[4px] border border-journal-gold/40 bg-[#f0e5d4] px-2 py-1 text-xs font-bold text-journal-maroon transition hover:bg-[#e6d5ba]";
+  "rounded-[4px] border border-journal-grey/30 bg-[#f6f4ef] px-2 py-1 text-xs font-semibold text-journal-charcoal transition hover:bg-[#ece8df]";
 
 function Toolbar({ editor }) {
   if (!editor) return null;
   return (
-    <div className="mb-3 flex flex-wrap gap-2 rounded-[4px] border border-journal-gold/30 bg-[#f5f0e8] p-2">
+    <div className="mb-3 flex flex-wrap gap-2 rounded-[4px] border border-journal-grey/25 bg-[#faf8f3] p-2">
       <button className={BTN} onClick={() => editor.chain().focus().toggleBold().run()}>B</button>
       <button className={BTN} onClick={() => editor.chain().focus().toggleItalic().run()}>I</button>
       <button className={BTN} onClick={() => editor.chain().focus().toggleUnderline().run()}>U</button>
@@ -39,7 +39,7 @@ export default function RichEditor({ value, onChange }) {
     editorProps: {
       attributes: {
         class:
-          "journal-page min-h-[360px] rounded-[4px] border border-[#d6c4a4] bg-journal-cream p-5 text-journal-ink prose prose-stone max-w-none focus:outline-none"
+          "journal-page min-h-[360px] rounded-[4px] border border-[#d8d6d1] bg-journal-white p-5 text-journal-text prose prose-stone max-w-none focus:outline-none"
       }
     },
     onUpdate: ({ editor: instance }) => {

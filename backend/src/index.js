@@ -8,8 +8,22 @@ import { calculateStreaks } from "./stats.js";
 const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
+const ALLOWED_ORIGINS = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
-app.use(cors());
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (!ALLOWED_ORIGINS.length || ALLOWED_ORIGINS.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    }
+  })
+);
 app.use(express.json({ limit: "2mb" }));
 
 function dateParamToDate(dateParam) {
@@ -38,6 +52,12 @@ async function connectTags(tags = []) {
     )
   );
   return upserted.map((tag) => ({ id: tag.id }));
+}
+
+function hasContent(content) {
+  if (!content || typeof content !== "object") return false;
+  if (!Array.isArray(content.content)) return false;
+  return content.content.length > 0;
 }
 
 async function getAdjacentEntryDates(date) {
@@ -124,6 +144,10 @@ app.post("/api/entries", async (req, res) => {
   if (exists) return res.status(409).json({ error: "Entry already exists for this date" });
 
   const tagConnections = await connectTags(tags);
+  const shouldPersist = plainText.trim() || tagConnections.length || hasContent(content);
+  if (!shouldPersist) {
+    return res.status(400).json({ error: "Entry cannot be empty" });
+  }
 
   const created = await prisma.entry.create({
     data: {

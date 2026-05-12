@@ -5,20 +5,25 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Nunito", "sans-serif"],
-        heading: ["Playfair Display", "serif"]
+        heading: ["Playfair Display", "serif"],
+        prose: ["Lora", "serif"]
       },
       colors: {
         journal: {
-          maroon: "#6B1E1E",
-          maroonSoft: "#7B2D2D",
-          cream: "#F5F0E8",
-          gold: "#C9A84C",
-          ink: "#2A1B16"
+          brown: "#6B4F3A",
+          grey: "#8C8C8C",
+          charcoal: "#3D3D3D",
+          paper: "#FAFAF8",
+          white: "#FFFFFF",
+          cover: "#3B2A1A",
+          sticky: "#F5E6C8",
+          text: "#2C2C2C",
+          saved: "#7A9E7E"
         }
       },
       boxShadow: {
-        soft: "0 10px 20px rgba(16, 8, 8, 0.2)",
-        leather: "inset 0 0 0 1px rgba(201,168,76,0.2), 0 10px 20px rgba(16,8,8,0.2)"
+        soft: "0 8px 20px rgba(45, 45, 45, 0.2)",
+        leather: "inset 0 0 0 1px rgba(255,255,255,0.08), 0 12px 24px rgba(30,20,12,0.35)"
       },
       keyframes: {
         fadeIn: {
@@ -27,7 +32,8 @@ export default {
         }
       },
       animation: {
-        fadeIn: "fadeIn 250ms ease-out"
+        fadeIn: "fadeIn 250ms ease-out",
+        saveFlash: "saveFlash 2s ease-in-out"
       }
     }
   },
