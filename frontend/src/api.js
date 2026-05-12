@@ -1,5 +1,5 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
-const API_BASE = `${API_URL.replace(/\/$/, "")}/api`;
+const RAW_API_URL = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
+const API_BASE = RAW_API_URL.endsWith("/api") ? RAW_API_URL : `${RAW_API_URL}/api`;
 
 async function request(path, options = {}) {
   const url = `${API_BASE}${path}`;
@@ -35,7 +35,10 @@ async function request(path, options = {}) {
     console.log("[API] Response body:", parsedBody);
 
     if (!res.ok) {
-      throw new Error(`API error: ${res.status}`);
+      const error = new Error(`API error: ${res.status}`);
+      error.status = res.status;
+      error.body = parsedBody;
+      throw error;
     }
 
     if (res.status === 204) {

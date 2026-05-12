@@ -36,20 +36,38 @@ export default function EntryPage({ mode }) {
     console.log("[Entry] Save payload:", payload);
     try {
       if (exists) {
-        await api.updateEntry(date, payload);
+        try {
+          await api.updateEntry(date, payload);
+        } catch (error) {
+          if (error?.status === 404) {
+            await api.createEntry(payload);
+            setExists(true);
+          } else {
+            throw error;
+          }
+        }
       } else if (hasContentToSave) {
-        await api.createEntry(payload);
-        setExists(true);
+        try {
+          await api.createEntry(payload);
+          setExists(true);
+        } catch (error) {
+          if (error?.status === 409) {
+            await api.updateEntry(date, payload);
+            setExists(true);
+          } else {
+            throw error;
+          }
+        }
       }
       setStatus("Saved");
       setSavedTags(tags);
       // eslint-disable-next-line no-console
       console.log("Entry saved successfully");
       return true;
-    } catch {
+    } catch (error) {
       setStatus("Save failed");
       // eslint-disable-next-line no-console
-      console.error("[Entry] Save failed");
+      console.error("[Entry] Save failed", error);
       return false;
     }
   }
@@ -78,15 +96,21 @@ export default function EntryPage({ mode }) {
         setContent(entry.content || emptyDoc);
         setPlainText(entry.plainText || "");
         setTags(entry.tags || []);
-      } catch {
+      } catch (error) {
         if (!active) return;
-        setExists(false);
-        setContent(emptyDoc);
-        setPlainText("");
-        setTags([]);
-        if (mode === "today") {
-          const promptData = await api.getPrompts();
-          setPrompts(promptData.prompts || []);
+        if (error?.status === 404) {
+          setExists(false);
+          setContent(emptyDoc);
+          setPlainText("");
+          setTags([]);
+          if (mode === "today") {
+            const promptData = await api.getPrompts();
+            setPrompts(promptData.prompts || []);
+          }
+        } else {
+          setStatus("Failed to load entry");
+          // eslint-disable-next-line no-console
+          console.error("[Entry] Load failed", error);
         }
       }
     }

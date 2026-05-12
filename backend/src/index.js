@@ -8,13 +8,23 @@ import { calculateStreaks } from "./stats.js";
 const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
-const FRONTEND_URL = process.env.FRONTEND_URL;
+const FRONTEND_URLS = (process.env.FRONTEND_URL || "")
+  .split(",")
+  .map((url) => url.trim())
+  .filter(Boolean);
 
 app.use(
   cors({
     origin(origin, callback) {
       if (!origin) return callback(null, true);
-      if (!FRONTEND_URL || FRONTEND_URL === "*" || origin === FRONTEND_URL) {
+      if (!FRONTEND_URLS.length || FRONTEND_URLS.includes("*")) {
+        return callback(null, true);
+      }
+      const isAllowedExact = FRONTEND_URLS.includes(origin);
+      const allowVercelSubdomains = FRONTEND_URLS.some(
+        (url) => url.includes(".vercel.app") && origin.endsWith(".vercel.app")
+      );
+      if (isAllowedExact || allowVercelSubdomains) {
         return callback(null, true);
       }
       return callback(new Error("Not allowed by CORS"));
