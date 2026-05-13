@@ -130,9 +130,7 @@ function Layout({ children }) {
               aria-hidden="true"
             />
 
-            <main
-              className="page-right relative h-full overflow-y-auto rounded-br-[6px] rounded-tr-[6px] p-6 text-journal-text"
-            />
+            <main className="page-right relative h-full overflow-y-auto rounded-br-[6px] rounded-tr-[6px] p-6 text-journal-text">
               {pageSliverColors.map((color, idx) => (
                 <span
                   key={color}
