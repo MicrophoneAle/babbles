@@ -8,30 +8,40 @@ import { calculateStreaks } from "./stats.js";
 const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 4000;
-const FRONTEND_URLS = (process.env.FRONTEND_URL || "")
-  .split(",")
-  .map((url) => url.trim())
-  .filter(Boolean);
+const corsOrigins = [
+  ...(process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(",").map((url) => url.trim()).filter(Boolean)
+    : []),
+  "http://localhost:5173"
+].filter((v, i, a) => a.indexOf(v) === i);
 
 app.use(
   cors({
-    origin(origin, callback) {
-      if (!origin) return callback(null, true);
-      if (!FRONTEND_URLS.length || FRONTEND_URLS.includes("*")) {
-        return callback(null, true);
-      }
-      const isAllowedExact = FRONTEND_URLS.includes(origin);
-      const allowVercelSubdomains = FRONTEND_URLS.some(
-        (url) => url.includes(".vercel.app") && origin.endsWith(".vercel.app")
-      );
-      if (isAllowedExact || allowVercelSubdomains) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"));
-    }
+    origin: corsOrigins.length ? corsOrigins : true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"]
   })
 );
 app.use(express.json({ limit: "2mb" }));
+
+app.get("/api/health", async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    return res.json({
+      status: "ok",
+      database: "connected",
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("[health] database check failed:", error);
+    return res.status(503).json({
+      status: "error",
+      database: "disconnected",
+      timestamp: new Date().toISOString()
+    });
+  }
+});
 
 function dateParamToDate(dateParam) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateParam)) return null;
@@ -107,7 +117,8 @@ app.get("/api/entries", async (req, res) => {
     entries.map((entry) => ({
       id: entry.id,
       date: entry.date.toISOString().slice(0, 10),
-      preview: entry.plainText.slice(0, 100),
+      preview: entry.plainText.slice(0, 150),
+      wordCount: entry.wordCount,
       tags: entry.tags.map((tag) => tag.name)
     }))
   );
@@ -233,11 +244,6 @@ app.get("/api/stats", async (_req, res) => {
 });
 
 app.get("/api/tags", async (_req, res) => {
-  const tags = await prisma.tag.findMany({ orderBy: { name: "asc" } });
-  res.json(tags.map((tag) => tag.name));
-});
-
-app.get("/api/tags/summary", async (_req, res) => {
   const tags = await prisma.tag.findMany({
     orderBy: { name: "asc" },
     include: {
@@ -250,13 +256,13 @@ app.get("/api/tags/summary", async (_req, res) => {
 });
 
 app.post("/api/tags", async (req, res) => {
-  const name = (req.body?.name || "").toString().trim().toLowerCase();
-  if (!name) return res.status(400).json({ error: "Tag name is required" });
+  const tagName = (req.body?.name || "").toString().trim().toLowerCase();
+  if (!tagName) return res.status(400).json({ error: "Tag name is required" });
 
   const tag = await prisma.tag.upsert({
-    where: { name },
+    where: { name: tagName },
     update: {},
-    create: { name }
+    create: { name: tagName }
   });
 
   return res.status(201).json({ name: tag.name });
