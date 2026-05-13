@@ -100,10 +100,8 @@ function Layout({ children }) {
           <div className="absolute inset-y-0 left-0 w-10 rounded-l-[8px] bg-[#2f2114]" />
           <div className="bookmark-ribbon absolute right-20 top-0 h-[140px] w-[18px]" />
 
-          <div className="relative ml-10 grid h-full grid-cols-[1fr_40px_1fr]">
-            <div
-              className="page-left flex h-full flex-col rounded-bl-[6px] rounded-tl-[6px] p-6"
-            >
+          <div className="relative ml-10 grid h-full min-h-0 grid-cols-[1fr_40px_1fr]">
+            <div className="page-left flex h-full min-h-0 flex-col overflow-y-auto rounded-bl-[6px] rounded-tl-[6px] p-6">
               <h1 className="font-heading text-5xl font-bold italic leading-tight text-[#3b2a1a]">Michael's Babbles</h1>
               <p className="mt-1 font-heading text-base italic text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
 
@@ -130,7 +128,7 @@ function Layout({ children }) {
               aria-hidden="true"
             />
 
-            <main className="page-right relative h-full overflow-y-auto rounded-br-[6px] rounded-tr-[6px] p-6 text-journal-text">
+            <main className="page-right relative h-full min-h-0 overflow-y-auto rounded-br-[6px] rounded-tr-[6px] p-6 text-journal-text">
               {pageSliverColors.map((color, idx) => (
                 <span
                   key={color}
