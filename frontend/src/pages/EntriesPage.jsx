@@ -13,8 +13,12 @@ export default function EntriesPage() {
 
   useEffect(() => {
     const id = setTimeout(async () => {
-      const data = await api.getEntries(search);
-      setEntries(data);
+      try {
+        const data = await api.getEntries(search);
+        setEntries(data);
+      } catch {
+        setEntries([]);
+      }
     }, 200);
     return () => clearTimeout(id);
   }, [search]);
@@ -30,26 +34,37 @@ export default function EntriesPage() {
           placeholder="Search by keyword or tag..."
         />
       </div>
-      {entries.map((entry) => (
-        <Link
-          key={entry.id}
-          to={`/entry/${entry.date}`}
-          className="card-surface block animate-fadeIn p-4 transition hover:-translate-y-0.5"
-        >
-          <h3 className="font-heading text-2xl italic text-journal-brown">{entry.date}</h3>
-          <p className="mt-1 font-prose text-sm text-journal-charcoal">{entry.preview || "No preview yet..."}</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {entry.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-journal-brown/30 bg-journal-sticky px-2 py-1 text-xs font-semibold text-journal-brown"
+      {entries.length === 0 ? (
+        <p className="font-heading text-lg italic text-journal-grey">No entries yet — start writing today!</p>
+      ) : (
+        entries.map((entry) => (
+          <article key={entry.id} className="card-surface animate-fadeIn p-4 transition hover:-translate-y-0.5">
+            <h3 className="font-heading text-2xl italic text-journal-brown">{entry.date}</h3>
+            <p className="mt-2 font-prose text-sm leading-relaxed text-journal-charcoal">
+              {entry.preview?.length ? entry.preview : "No preview yet…"}
+            </p>
+            <p className="mt-2 font-heading text-sm italic text-journal-grey">
+              {entry.wordCount ?? 0} words
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {(entry.tags || []).map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-journal-brown/30 bg-journal-sticky px-2 py-1 text-xs font-semibold text-journal-brown"
+                >
+                  #{tag}
+                </span>
+              ))}
+              <Link
+                to={`/entry/${entry.date}`}
+                className="ml-auto font-heading text-sm italic text-journal-brown underline"
               >
-                #{tag}
-              </span>
-            ))}
-          </div>
-        </Link>
-      ))}
+                Read More
+              </Link>
+            </div>
+          </article>
+        ))
+      )}
     </section>
   );
 }

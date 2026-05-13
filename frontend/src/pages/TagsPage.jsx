@@ -8,7 +8,7 @@ export default function TagsPage() {
   const navigate = useNavigate();
 
   async function loadTags() {
-    const data = await api.getTagsSummary();
+    const data = await api.getTags();
     setTags(data);
   }
 
@@ -31,7 +31,7 @@ export default function TagsPage() {
             if (!name.trim()) return;
             await api.createTag(name);
             setName("");
-            loadTags();
+            await loadTags();
           }}
           className="rounded-[4px] border border-journal-brown/40 bg-journal-brown px-4 py-2 text-sm font-semibold text-journal-white"
         >
@@ -40,25 +40,33 @@ export default function TagsPage() {
       </div>
 
       <div className="card-surface p-4">
+        <h3 className="mb-4 font-heading text-2xl italic text-journal-brown">Tag List</h3>
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <div
               key={tag.name}
               className="flex items-center gap-2 rounded-full border border-journal-brown/30 bg-journal-sticky px-3 py-1 text-sm font-semibold text-journal-brown"
             >
-              <button onClick={() => navigate(`/entries?search=${encodeURIComponent(tag.name)}`)}>
-                #{tag.name} ({tag.count})
+              <span className="font-heading italic">{tag.name}</span>
+              <span className="text-xs text-journal-grey">({tag.count} entries)</span>
+              <button
+                type="button"
+                className="font-heading text-sm italic text-journal-brown underline"
+                onClick={() => navigate(`/entries?search=${encodeURIComponent(tag.name)}`)}
+              >
+                View
               </button>
               <button
-                className="text-journal-charcoal"
+                type="button"
+                className="rounded-[4px] border border-journal-grey/50 bg-journal-white px-2 py-0.5 text-xs font-semibold text-journal-charcoal"
                 onClick={async () => {
                   const ok = window.confirm(`Delete tag "${tag.name}"?`);
                   if (!ok) return;
                   await api.deleteTag(tag.name);
-                  loadTags();
+                  await loadTags();
                 }}
               >
-                ×
+                Delete
               </button>
             </div>
           ))}

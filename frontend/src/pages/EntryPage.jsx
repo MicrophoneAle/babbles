@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { format } from "date-fns";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
@@ -7,6 +7,22 @@ import Prompts from "../components/Prompts";
 import TagInput from "../components/TagInput";
 
 const emptyDoc = { type: "doc", content: [{ type: "paragraph" }] };
+
+/** Always returns an array of non-empty plain strings for autocomplete. */
+function normalizeTagSuggestionStrings(list) {
+  if (!Array.isArray(list)) return [];
+  const strings = list
+    .map((t) => {
+      if (typeof t === "string") return t.trim().toLowerCase();
+      if (t && typeof t === "object") {
+        const n = t.name ?? t.tag ?? t.label;
+        return typeof n === "string" ? n.trim().toLowerCase() : "";
+      }
+      return "";
+    })
+    .filter((s) => typeof s === "string" && s.length > 0);
+  return [...new Set(strings)];
+}
 
 export default function EntryPage({ mode }) {
   const params = useParams();
@@ -26,6 +42,8 @@ export default function EntryPage({ mode }) {
   const [exists, setExists] = useState(false);
   const [adjacent, setAdjacent] = useState({ previous: null, next: null });
   const [savedTags, setSavedTags] = useState([]);
+  const [editorNonce, setEditorNonce] = useState(0);
+  const saveEntryRef = useRef(async () => false);
 
   const hasContentToSave = plainText.trim().length > 0 || tags.length > 0;
 
@@ -73,11 +91,15 @@ export default function EntryPage({ mode }) {
   }
 
   useEffect(() => {
+    saveEntryRef.current = saveEntry;
+  });
+
+  useEffect(() => {
     let active = true;
     async function load() {
       try {
         const [tagsRes] = await Promise.all([api.getTags()]);
-        if (active) setTagSuggestions(tagsRes);
+        if (active) setTagSuggestions(normalizeTagSuggestionStrings(tagsRes));
       } catch {
         // no-op
       }
@@ -96,6 +118,7 @@ export default function EntryPage({ mode }) {
         setContent(entry.content || emptyDoc);
         setPlainText(entry.plainText || "");
         setTags(entry.tags || []);
+        setEditorNonce((n) => n + 1);
       } catch (error) {
         if (!active) return;
         if (error?.status === 404) {
@@ -103,6 +126,7 @@ export default function EntryPage({ mode }) {
           setContent(emptyDoc);
           setPlainText("");
           setTags([]);
+          setEditorNonce((n) => n + 1);
           if (mode === "today") {
             const promptData = await api.getPrompts();
             setPrompts(promptData.prompts || []);
@@ -121,11 +145,11 @@ export default function EntryPage({ mode }) {
   }, [date, mode]);
 
   useEffect(() => {
-    const timer = setInterval(async () => {
-      await saveEntry();
+    const timer = setInterval(() => {
+      void saveEntryRef.current();
     }, 10000);
     return () => clearInterval(timer);
-  }, [exists, date, content, plainText, tags]);
+  }, []);
 
   return (
     <section className="relative card-surface overflow-hidden p-6">
@@ -166,6 +190,7 @@ export default function EntryPage({ mode }) {
       </div>
 
       <RichEditor
+        key={`${date}-${editorNonce}`}
         value={content}
         onChange={(next) => {
           setContent(next.json);

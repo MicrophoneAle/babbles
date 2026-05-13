@@ -62,7 +62,6 @@ export const api = {
   getPrompts: () => request("/prompts"),
   getStats: () => request("/stats"),
   getTags: () => request("/tags"),
-  getTagsSummary: () => request("/tags/summary"),
   createTag: (name) => request("/tags", { method: "POST", body: JSON.stringify({ name }) }),
   deleteTag: (name) => request(`/tags/${encodeURIComponent(name)}`, { method: "DELETE" })
 };

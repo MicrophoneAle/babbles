@@ -52,8 +52,12 @@ export default function RichEditor({ value, onChange }) {
 
   useEffect(() => {
     if (!editor) return;
-    editor.commands.setContent(value || { type: "doc", content: [{ type: "paragraph" }] }, false);
-  }, [value, editor]);
+    const current = editor.getJSON();
+    const next = value || { type: "doc", content: [{ type: "paragraph" }] };
+    if (JSON.stringify(current) !== JSON.stringify(next)) {
+      editor.commands.setContent(next, false);
+    }
+  }, [editor]);
 
   return (
     <div className="animate-fadeIn">

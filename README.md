@@ -65,4 +65,11 @@ Backend API:
 - `PUT /api/entries/:date`
 - `GET /api/prompts`
 - `GET /api/stats`
-- `GET /api/tags`
+- `GET /api/tags` (returns `{ name, count }[]`)
+- `GET /api/health` (database connectivity check)
+
+Run database smoke test from `backend`:
+
+```bash
+npm run test:db
+```
