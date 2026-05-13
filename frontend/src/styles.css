@@ -93,16 +93,12 @@ body {
 
 .page-right {
   box-shadow: inset 8px 0 12px rgba(0, 0, 0, 0.15);
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.page-sliver {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 5px;
-  border-radius: 0 4px 4px 0;
-  box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.15);
-  pointer-events: none;
+.page-right::-webkit-scrollbar {
+  display: none;
 }
 
 .left-panel-card {
