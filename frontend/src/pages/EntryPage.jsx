@@ -145,7 +145,7 @@ export default function EntryPage({ mode }) {
   }, []);
 
   return (
-    <section className="relative card-surface overflow-hidden p-6">
+    <section className="relative overflow-visible pr-1">
       <button
         disabled={!adjacent.previous}
         onClick={() => adjacent.previous && navigate(`/entry/${adjacent.previous}`)}

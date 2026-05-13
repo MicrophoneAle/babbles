@@ -39,7 +39,7 @@ export default function RichEditor({ value, onChange }) {
     editorProps: {
       attributes: {
         class:
-          "journal-page min-h-[360px] rounded-[4px] border border-[#d8d6d1] bg-journal-white p-5 text-journal-text prose prose-stone max-w-none focus:outline-none"
+          "journal-page min-h-[280px] bg-transparent p-5 text-journal-text prose prose-stone max-w-none focus:outline-none"
       }
     },
     onUpdate: ({ editor: instance }) => {
@@ -62,7 +62,9 @@ export default function RichEditor({ value, onChange }) {
   return (
     <div className="animate-fadeIn">
       <Toolbar editor={editor} />
-      <EditorContent editor={editor} />
+      <div className="editor-scroll-area h-[320px] overflow-y-auto rounded-[4px] border border-[#d8d6d1] bg-[#faf8f5]">
+        <EditorContent editor={editor} />
+      </div>
     </div>
   );
 }

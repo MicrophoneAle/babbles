@@ -35,6 +35,14 @@ body {
   @apply rounded-[4px] border border-[#d3cec6] bg-journal-white shadow-soft;
 }
 
+.page-content-block {
+  @apply rounded-[4px] border border-[#6b4a2a]/25 bg-transparent;
+}
+
+.editor-scroll-area .journal-page {
+  background-color: transparent;
+}
+
 .section-title {
   @apply font-heading text-2xl italic text-journal-brown;
 }

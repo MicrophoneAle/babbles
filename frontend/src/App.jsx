@@ -7,10 +7,51 @@ import EntriesPage from "./pages/EntriesPage";
 import StatsPage from "./pages/StatsPage";
 import TagsPage from "./pages/TagsPage";
 
+const WORD_OF_THE_DAY_LIST = [
+  "Serendipity",
+  "Luminous",
+  "Equanimity",
+  "Petrichor",
+  "Solstice",
+  "Vellichor",
+  "Ephemeral",
+  "Resilience",
+  "Quintessential",
+  "Melancholy",
+  "Sonorous",
+  "Wanderlust",
+  "Ebullient",
+  "Halcyon",
+  "Ineffable",
+  "Labyrinth",
+  "Nocturne",
+  "Opulent",
+  "Phosphorescence",
+  "Quixotic",
+  "Ripple",
+  "Susurrus",
+  "Tempest",
+  "Umbral",
+  "Vestige",
+  "Whimsical",
+  "Zenith",
+  "Apricity",
+  "Bucolic",
+  "Crepuscular",
+  "Dulcet",
+  "Forbearance"
+];
+
+function wordOfTheDayLabel() {
+  const d = new Date();
+  const dayOrdinal = d.getFullYear() * 372 + d.getMonth() * 31 + d.getDate();
+  return WORD_OF_THE_DAY_LIST[dayOrdinal % WORD_OF_THE_DAY_LIST.length];
+}
+
 function JournalSidebarPanels() {
   const [prompts, setPrompts] = useState([]);
   const [hidePrompts, setHidePrompts] = useState(false);
-  const [availableTags, setAvailableTags] = useState([]);
+  const [wordOfTheDay] = useState(() => wordOfTheDayLabel());
 
   useEffect(() => {
     let active = true;
@@ -18,14 +59,12 @@ function JournalSidebarPanels() {
 
     async function loadPanels() {
       try {
-        const [promptData, tagData] = await Promise.all([api.getPrompts(), api.getTags()]);
+        const promptData = await api.getPrompts();
         if (!active) return;
         setPrompts(promptData?.prompts || []);
-        setAvailableTags((tagData || []).map((tag) => tag.name).filter(Boolean));
       } catch {
         if (!active) return;
         setPrompts([]);
-        setAvailableTags([]);
       }
     }
 
@@ -36,7 +75,7 @@ function JournalSidebarPanels() {
   }, []);
 
   return (
-    <>
+    <div className="flex min-h-0 flex-1 flex-col gap-3">
       {!hidePrompts && prompts.length > 0 ? (
         <section className="left-panel-card">
           <div className="mb-2 flex items-center justify-between">
@@ -57,20 +96,12 @@ function JournalSidebarPanels() {
         </section>
       ) : null}
 
-      <section className="left-panel-card">
-        <h3 className="mb-2 font-heading text-lg italic text-[#3b2a1a]">Available Tags</h3>
-        <div className="flex flex-wrap gap-2">
-          {availableTags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full border border-[#7e6646]/50 bg-[#efe6d2] px-2 py-1 text-xs font-semibold text-[#6b4a2a]"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
+      <section className="left-panel-card mt-auto">
+        <h3 className="mb-1 font-heading text-lg italic text-[#3b2a1a]">Word of the Day</h3>
+        <p className="font-heading text-2xl italic text-[#6b4a2a]">{wordOfTheDay}</p>
+        <p className="mt-2 font-prose text-xs text-[#5c4634]">A word to carry with you today.</p>
       </section>
-    </>
+    </div>
   );
 }
 
@@ -94,13 +125,13 @@ function Layout({ children }) {
   ];
 
   return (
-    <div className="desk-bg min-h-screen p-6">
-      <div className="book-frame relative mx-auto w-full max-w-7xl overflow-y-auto rounded-[10px] p-[10px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+    <div className="desk-bg flex min-h-screen items-center justify-center p-6">
+      <div className="book-frame relative w-full max-w-7xl rounded-[10px] p-[12px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
         <div className="book-cover relative w-full rounded-[8px]">
           <div className="absolute inset-y-0 left-0 w-10 rounded-l-[8px] bg-[#2f2114]" />
 
-          <div className="ml-10 grid grid-cols-2 p-3">
-            <div className="page-left flex flex-col rounded-bl-[6px] rounded-tl-[6px] p-6">
+          <div className="ml-10 grid grid-cols-2 p-[12px]">
+            <div className="page-left flex min-h-0 flex-col rounded-bl-[6px] rounded-tl-[6px] p-6">
               <h1 className="font-heading text-5xl font-bold italic leading-tight text-[#3b2a1a]">Michael's Babbles</h1>
               <p className="mt-1 font-heading text-base italic text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
 
@@ -119,7 +150,11 @@ function Layout({ children }) {
                 </NavLink>
               </nav>
 
-              {showJournalPanels ? <div className="mt-5 space-y-3">{<JournalSidebarPanels />}</div> : null}
+              {showJournalPanels ? (
+                <div className="mt-5 flex min-h-0 flex-1 flex-col">
+                  <JournalSidebarPanels />
+                </div>
+              ) : null}
             </div>
 
             <main className="page-right relative rounded-br-[6px] rounded-tr-[6px] p-6 text-journal-text">

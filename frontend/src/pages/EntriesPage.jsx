@@ -45,7 +45,7 @@ export default function EntriesPage() {
         }}
       />
       <h2 className="section-title text-4xl">Past entries</h2>
-      <div className="card-surface p-4">
+      <div className="page-content-block p-4">
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -57,7 +57,7 @@ export default function EntriesPage() {
         <p className="font-heading text-lg italic text-journal-grey">No entries yet — open your journal to write!</p>
       ) : (
         entries.map((entry) => (
-          <article key={entry.id} className="card-surface animate-fadeIn p-4 transition hover:-translate-y-0.5">
+          <article key={entry.id} className="page-content-block animate-fadeIn p-4 transition hover:-translate-y-0.5">
             <div className="flex items-start justify-between gap-2">
               <h3 className="font-heading text-2xl italic text-journal-brown">{entry.date}</h3>
               <button

@@ -42,7 +42,7 @@ export default function TagsPage() {
         }}
       />
       <h2 className="section-title text-4xl">Tags</h2>
-      <div className="card-surface flex gap-2 p-4">
+      <div className="page-content-block flex gap-2 p-4">
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -62,7 +62,7 @@ export default function TagsPage() {
         </button>
       </div>
 
-      <div className="card-surface p-4">
+      <div className="page-content-block p-4">
         <h3 className="mb-4 font-heading text-2xl italic text-journal-brown">Tag List</h3>
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (

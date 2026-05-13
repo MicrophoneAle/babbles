@@ -105,24 +105,24 @@ export default function StatsPage() {
     <section className="space-y-4">
       <h2 className="section-title text-4xl">Writing stats</h2>
       <div className="grid grid-cols-2 gap-4">
-        <div className="card-surface p-4">
+        <div className="page-content-block p-4">
           <p className="font-heading text-lg italic text-journal-grey">Current streak</p>
           <p className="font-heading text-3xl italic text-journal-brown">{stats.currentStreak} 🔥</p>
         </div>
-        <div className="card-surface p-4">
+        <div className="page-content-block p-4">
           <p className="font-heading text-lg italic text-journal-grey">Longest streak</p>
           <p className="font-heading text-3xl italic text-journal-brown">{stats.longestStreak}</p>
         </div>
-        <div className="card-surface p-4">
+        <div className="page-content-block p-4">
           <p className="font-heading text-lg italic text-journal-grey">Total entries</p>
           <p className="font-heading text-3xl italic text-journal-brown">{stats.totalEntries}</p>
         </div>
-        <div className="card-surface p-4">
+        <div className="page-content-block p-4">
           <p className="font-heading text-lg italic text-journal-grey">Total words</p>
           <p className="font-heading text-3xl italic text-journal-brown">{stats.totalWords}</p>
         </div>
       </div>
-      <div className="card-surface p-4">
+      <div className="page-content-block p-4">
         <StickyCalendar entries={stats.heatmap} />
       </div>
     </section>
