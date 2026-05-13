@@ -9,7 +9,8 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "node prisma/seed.js",
-    "test:db": "node scripts/testDb.js"
+    "test:db": "node scripts/testDb.js",
+    "clear:entries": "node scripts/clearEntries.js"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",

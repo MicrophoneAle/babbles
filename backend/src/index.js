@@ -221,6 +221,15 @@ app.put("/api/entries/:date", async (req, res) => {
   });
 });
 
+app.delete("/api/entries/:date", async (req, res) => {
+  const date = dateParamToDate(req.params.date);
+  if (!date) return res.status(400).json({ error: "Invalid date" });
+  const existing = await prisma.entry.findUnique({ where: { date } });
+  if (!existing) return res.status(404).json({ error: "Not found" });
+  await prisma.entry.delete({ where: { date } });
+  return res.status(204).send();
+});
+
 app.get("/api/prompts", (_req, res) => {
   res.json({ prompts: getRandomPrompts(3) });
 });

@@ -35,11 +35,29 @@ export default function EntriesPage() {
         />
       </div>
       {entries.length === 0 ? (
-        <p className="font-heading text-lg italic text-journal-grey">No entries yet — start writing today!</p>
+        <p className="font-heading text-lg italic text-journal-grey">No entries yet — open your journal to write!</p>
       ) : (
         entries.map((entry) => (
           <article key={entry.id} className="card-surface animate-fadeIn p-4 transition hover:-translate-y-0.5">
-            <h3 className="font-heading text-2xl italic text-journal-brown">{entry.date}</h3>
+            <div className="flex items-start justify-between gap-2">
+              <h3 className="font-heading text-2xl italic text-journal-brown">{entry.date}</h3>
+              <button
+                type="button"
+                className="shrink-0 text-xs text-red-800/60 underline decoration-red-800/30 hover:text-red-800/80"
+                onClick={async () => {
+                  if (!window.confirm("Delete this entry?")) return;
+                  try {
+                    await api.deleteEntry(entry.date);
+                    setEntries((prev) => prev.filter((e) => e.id !== entry.id));
+                  } catch {
+                    // eslint-disable-next-line no-console
+                    console.error("Failed to delete entry");
+                  }
+                }}
+              >
+                Delete
+              </button>
+            </div>
             <p className="mt-2 font-prose text-sm leading-relaxed text-journal-charcoal">
               {entry.preview?.length ? entry.preview : "No preview yet…"}
             </p>

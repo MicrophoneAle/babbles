@@ -19,15 +19,10 @@ export default function TagInput({ tags, setTags, suggestions = [], savedTags = 
   const [value, setValue] = useState("");
   const suggestionStrings = useMemo(() => toSuggestionStrings(suggestions), [suggestions]);
 
-  const filtered = useMemo(
-    () =>
-      suggestionStrings
-        .filter(
-          (tag) =>
-            typeof tag === "string" && tag.includes(value.toLowerCase()) && !tags.includes(tag)
-        )
-        .slice(0, 6),
-    [suggestionStrings, value, tags]
+  /** All DB tags not yet applied to this entry — always shown (no typing filter). */
+  const availableTags = useMemo(
+    () => suggestionStrings.filter((tag) => typeof tag === "string" && !tags.includes(tag)),
+    [suggestionStrings, tags]
   );
 
   const addTag = async (raw) => {
@@ -50,6 +45,7 @@ export default function TagInput({ tags, setTags, suggestions = [], savedTags = 
         {tags.map((tag) => (
           <button
             key={tag}
+            type="button"
             className="rounded-full border border-journal-brown/40 bg-[#f1ece4] px-3 py-1 text-xs font-semibold text-journal-text transition hover:bg-[#e5ded2]"
             onClick={() => setTags(tags.filter((t) => t !== tag))}
           >
@@ -69,19 +65,19 @@ export default function TagInput({ tags, setTags, suggestions = [], savedTags = 
         className="w-full rounded-[4px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
         placeholder="Add a tag and press Enter"
       />
-      {!!value && filtered.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-2">
-          {filtered.map((tag) => (
-            <button
-              key={tag}
-              onClick={() => void addTag(tag)}
-              className="rounded-full border border-journal-brown/30 bg-journal-sticky px-3 py-1 text-xs font-semibold text-journal-brown"
-            >
-              #{tag}
-            </button>
-          ))}
-        </div>
-      )}
+      <p className="mt-3 font-heading text-xs italic text-journal-grey">Available Tags</p>
+      <div className="mt-1 flex flex-wrap gap-2">
+        {availableTags.map((tag) => (
+          <button
+            key={tag}
+            type="button"
+            onClick={() => void addTag(tag)}
+            className="rounded-full border border-journal-brown/30 bg-journal-sticky px-3 py-1 text-xs font-semibold text-journal-brown"
+          >
+            #{tag}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

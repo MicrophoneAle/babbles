@@ -37,10 +37,16 @@ npm run prisma:generate
 npm run prisma:migrate -- --name init
 ```
 
-4. Seed sample entries:
+4. Seed curated tags only (no sample entries):
 
 ```bash
 npm run prisma:seed
+```
+
+One-time: clear all entries on Railway (run from `backend`):
+
+```bash
+npm run clear:entries
 ```
 
 5. Start backend and frontend in separate terminals:
@@ -53,7 +59,7 @@ npm run dev:frontend
 ## Routes
 
 Frontend:
-- `/` Today entry editor
+- `/` Journal (today’s entry)
 - `/entries` Past entries list + search
 - `/stats` Writing stats + heatmap
 - `/entry/:date` Edit/view specific date entry
@@ -63,6 +69,7 @@ Backend API:
 - `GET /api/entries/:date`
 - `POST /api/entries`
 - `PUT /api/entries/:date`
+- `DELETE /api/entries/:date`
 - `GET /api/prompts`
 - `GET /api/stats`
 - `GET /api/tags` (returns `{ name, count }[]`)
@@ -72,4 +79,10 @@ Run database smoke test from `backend`:
 
 ```bash
 npm run test:db
+```
+
+Clear all entries (one-time cleanup, e.g. Railway):
+
+```bash
+npm run clear:entries
 ```

@@ -59,6 +59,7 @@ export const api = {
   getEntryByDate: (date) => request(`/entries/${date}`),
   createEntry: (body) => request("/entries", { method: "POST", body: JSON.stringify(body) }),
   updateEntry: (date, body) => request(`/entries/${date}`, { method: "PUT", body: JSON.stringify(body) }),
+  deleteEntry: (date) => request(`/entries/${date}`, { method: "DELETE" }),
   getPrompts: () => request("/prompts"),
   getStats: () => request("/stats"),
   getTags: () => request("/tags"),

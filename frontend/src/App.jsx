@@ -41,7 +41,7 @@ function Layout({ children }) {
             <p className="mt-1 font-heading text-base italic text-[#c8b8a3]">{format(new Date(), "EEEE, MMM d")}</p>
           <nav className="mt-6 flex flex-col gap-2 text-sm font-bold">
             <NavLink className="nav-link" to="/">
-              Today
+              Journal
             </NavLink>
             <NavLink className="nav-link" to="/entries">
               Entries
