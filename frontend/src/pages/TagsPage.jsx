@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api";
+import ConfirmModal from "../components/ConfirmModal";
 
 export default function TagsPage() {
   const [tags, setTags] = useState([]);
   const [name, setName] = useState("");
+  const [confirmTag, setConfirmTag] = useState(null);
   const navigate = useNavigate();
 
   async function loadTags() {
@@ -18,6 +20,27 @@ export default function TagsPage() {
 
   return (
     <section className="space-y-4">
+      <ConfirmModal
+        isOpen={confirmTag !== null}
+        message={
+          confirmTag
+            ? `Delete tag "${confirmTag}"? This cannot be undone.`
+            : "Delete this tag? This cannot be undone."
+        }
+        onCancel={() => setConfirmTag(null)}
+        onConfirm={async () => {
+          if (!confirmTag) return;
+          try {
+            await api.deleteTag(confirmTag);
+            await loadTags();
+          } catch {
+            // eslint-disable-next-line no-console
+            console.error("Failed to delete tag");
+          } finally {
+            setConfirmTag(null);
+          }
+        }}
+      />
       <h2 className="section-title text-4xl">Tags</h2>
       <div className="card-surface flex gap-2 p-4">
         <input
@@ -59,12 +82,7 @@ export default function TagsPage() {
               <button
                 type="button"
                 className="rounded-[4px] border border-journal-grey/50 bg-journal-white px-2 py-0.5 text-xs font-semibold text-journal-charcoal"
-                onClick={async () => {
-                  const ok = window.confirm(`Delete tag "${tag.name}"?`);
-                  if (!ok) return;
-                  await api.deleteTag(tag.name);
-                  await loadTags();
-                }}
+                onClick={() => setConfirmTag(tag.name)}
               >
                 Delete
               </button>

@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../api";
+import ConfirmModal from "../components/ConfirmModal";
 
 export default function EntriesPage() {
   const [searchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [entries, setEntries] = useState([]);
+  const [confirmDate, setConfirmDate] = useState(null);
 
   useEffect(() => {
     setSearch(searchParams.get("search") || "");
@@ -25,6 +27,23 @@ export default function EntriesPage() {
 
   return (
     <section className="space-y-4">
+      <ConfirmModal
+        isOpen={confirmDate !== null}
+        message="Delete this entry? This cannot be undone."
+        onCancel={() => setConfirmDate(null)}
+        onConfirm={async () => {
+          if (!confirmDate) return;
+          try {
+            await api.deleteEntry(confirmDate);
+            setEntries((prev) => prev.filter((e) => e.date !== confirmDate));
+          } catch {
+            // eslint-disable-next-line no-console
+            console.error("Failed to delete entry");
+          } finally {
+            setConfirmDate(null);
+          }
+        }}
+      />
       <h2 className="section-title text-4xl">Past entries</h2>
       <div className="card-surface p-4">
         <input
@@ -44,16 +63,7 @@ export default function EntriesPage() {
               <button
                 type="button"
                 className="shrink-0 text-xs text-red-800/60 underline decoration-red-800/30 hover:text-red-800/80"
-                onClick={async () => {
-                  if (!window.confirm("Delete this entry?")) return;
-                  try {
-                    await api.deleteEntry(entry.date);
-                    setEntries((prev) => prev.filter((e) => e.id !== entry.id));
-                  } catch {
-                    // eslint-disable-next-line no-console
-                    console.error("Failed to delete entry");
-                  }
-                }}
+                onClick={() => setConfirmDate(entry.date)}
               >
                 Delete
               </button>
