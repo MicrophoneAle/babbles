@@ -17,7 +17,17 @@ const corsOrigins = [
 
 app.use(
   cors({
-    origin: corsOrigins.length ? corsOrigins : true,
+    origin(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (
+        corsOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app") ||
+        origin.endsWith(".railway.app")
+      ) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type"]
   })
@@ -69,12 +79,6 @@ async function connectTags(tags = []) {
     )
   );
   return upserted.map((tag) => ({ id: tag.id }));
-}
-
-function hasContent(content) {
-  if (!content || typeof content !== "object") return false;
-  if (!Array.isArray(content.content)) return false;
-  return content.content.length > 0;
 }
 
 async function getAdjacentEntryDates(date) {
@@ -162,7 +166,7 @@ app.post("/api/entries", async (req, res) => {
   if (exists) return res.status(409).json({ error: "Entry already exists for this date" });
 
   const tagConnections = await connectTags(tags);
-  const shouldPersist = plainText.trim() || tagConnections.length || hasContent(content);
+  const shouldPersist = plainText.trim() || tagConnections.length;
   if (!shouldPersist) {
     return res.status(400).json({ error: "Entry cannot be empty" });
   }
