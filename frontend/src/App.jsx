@@ -126,38 +126,47 @@ function Layout({ children }) {
 
   return (
     <div className="desk-bg flex min-h-screen items-center justify-center p-6">
-      <div className="book-frame relative w-full max-w-7xl rounded-[10px] p-[12px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-        <div className="book-cover relative w-full rounded-[8px]">
-          <div className="absolute inset-y-0 left-0 w-10 rounded-l-[8px] bg-[#2f2114]" />
+      <div className="book-frame relative w-full max-w-7xl rounded-[10px] p-[10px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+        <div className="book-cover relative w-full overflow-visible rounded-[8px]">
+          <div className="absolute inset-y-0 left-0 z-20 w-10 rounded-l-[8px] bg-[#2f2114]" />
 
-          <div className="ml-10 grid grid-cols-2 p-[12px]">
-            <div className="page-left flex min-h-0 flex-col rounded-bl-[6px] rounded-tl-[6px] p-6">
-              <h1 className="font-heading text-5xl font-bold italic leading-tight text-[#3b2a1a]">Michael's Babbles</h1>
-              <p className="mt-1 font-heading text-base italic text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
+          <div className="relative z-0 ml-10 box-border min-h-0 p-[12px]">
+            <div className="grid min-h-0 grid-cols-2">
+              <div className="page-left flex min-h-0 flex-col rounded-bl-[6px] rounded-tl-[6px] p-6">
+                <h1 className="font-heading text-5xl font-bold italic leading-tight text-[#3b2a1a]">Michael's Babbles</h1>
+                <p className="mt-1 font-heading text-base italic text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
 
-              <nav className="mt-6 flex flex-col gap-2 text-sm font-bold">
-                <NavLink className="nav-link" to="/">
-                  Journal
-                </NavLink>
-                <NavLink className="nav-link" to="/entries">
-                  Entries
-                </NavLink>
-                <NavLink className="nav-link" to="/stats">
-                  Stats
-                </NavLink>
-                <NavLink className="nav-link" to="/tags">
-                  Tags
-                </NavLink>
-              </nav>
+                <nav className="mt-6 flex flex-col gap-2 text-sm font-bold">
+                  <NavLink className="nav-link" to="/">
+                    Journal
+                  </NavLink>
+                  <NavLink className="nav-link" to="/entries">
+                    Entries
+                  </NavLink>
+                  <NavLink className="nav-link" to="/stats">
+                    Stats
+                  </NavLink>
+                  <NavLink className="nav-link" to="/tags">
+                    Tags
+                  </NavLink>
+                </nav>
 
-              {showJournalPanels ? (
-                <div className="mt-5 flex min-h-0 flex-1 flex-col">
-                  <JournalSidebarPanels />
-                </div>
-              ) : null}
+                {showJournalPanels ? (
+                  <div className="mt-5 flex min-h-0 flex-1 flex-col">
+                    <JournalSidebarPanels />
+                  </div>
+                ) : null}
+              </div>
+
+              <main className="page-right relative z-10 rounded-br-[6px] rounded-tr-[6px] p-6 text-journal-text">
+                {children}
+              </main>
             </div>
 
-            <main className="page-right relative rounded-br-[6px] rounded-tr-[6px] p-6 text-journal-text">
+            <div
+              className="pointer-events-none absolute inset-y-0 right-0 z-[5] w-0 overflow-visible"
+              aria-hidden
+            >
               {pageSliverColors.map((color, idx) => (
                 <span
                   key={color}
@@ -169,8 +178,7 @@ function Layout({ children }) {
                   }}
                 />
               ))}
-              {children}
-            </main>
+            </div>
           </div>
         </div>
       </div>

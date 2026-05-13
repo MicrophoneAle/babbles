@@ -11,6 +11,8 @@ body {
 
 #root {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .nav-link {
@@ -95,8 +97,8 @@ body {
 
 .page-sliver {
   position: absolute;
-  top: 12px;
-  bottom: 12px;
+  top: 0;
+  bottom: 0;
   width: 5px;
   border-radius: 0 4px 4px 0;
   box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.15);
