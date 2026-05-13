@@ -94,14 +94,13 @@ function Layout({ children }) {
   ];
 
   return (
-    <div className="desk-bg flex h-screen items-center justify-center p-6">
-      <div className="book-frame relative h-[92vh] w-full max-w-7xl rounded-[10px] p-[10px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-        <div className="book-cover relative h-full w-full rounded-[8px]">
+    <div className="desk-bg min-h-screen p-6">
+      <div className="book-frame relative mx-auto w-full max-w-7xl overflow-y-auto rounded-[10px] p-[10px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+        <div className="book-cover relative w-full rounded-[8px]">
           <div className="absolute inset-y-0 left-0 w-10 rounded-l-[8px] bg-[#2f2114]" />
-          <div className="bookmark-ribbon absolute right-20 top-0 h-[140px] w-[18px]" />
 
-          <div className="absolute inset-3 grid min-h-0 grid-cols-2">
-            <div className="page-left flex h-full min-h-0 flex-col overflow-y-auto rounded-bl-[6px] rounded-tl-[6px] p-6">
+          <div className="ml-10 grid grid-cols-2 p-3">
+            <div className="page-left flex flex-col rounded-bl-[6px] rounded-tl-[6px] p-6">
               <h1 className="font-heading text-5xl font-bold italic leading-tight text-[#3b2a1a]">Michael's Babbles</h1>
               <p className="mt-1 font-heading text-base italic text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
 
@@ -123,7 +122,7 @@ function Layout({ children }) {
               {showJournalPanels ? <div className="mt-5 space-y-3">{<JournalSidebarPanels />}</div> : null}
             </div>
 
-            <main className="page-right relative h-full min-h-0 overflow-y-auto rounded-br-[6px] rounded-tr-[6px] p-6 text-journal-text">
+            <main className="page-right relative rounded-br-[6px] rounded-tr-[6px] p-6 text-journal-text">
               {pageSliverColors.map((color, idx) => (
                 <span
                   key={color}

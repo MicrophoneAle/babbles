@@ -149,7 +149,7 @@ export default function EntryPage({ mode }) {
       <button
         disabled={!adjacent.previous}
         onClick={() => adjacent.previous && navigate(`/entry/${adjacent.previous}`)}
-        className={`absolute left-0 top-1/2 h-24 w-7 -translate-y-1/2 rounded-r-[4px] border-r border-journal-grey/40 text-lg font-bold shadow-md transition ${
+        className={`absolute left-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-r-[3px] border-r border-journal-grey/40 text-sm font-bold shadow-sm transition ${
           adjacent.previous
             ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
             : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
@@ -161,7 +161,7 @@ export default function EntryPage({ mode }) {
       <button
         disabled={!adjacent.next}
         onClick={() => adjacent.next && navigate(`/entry/${adjacent.next}`)}
-        className={`absolute right-0 top-1/2 h-24 w-7 -translate-y-1/2 rounded-l-[4px] border-l border-journal-grey/40 text-lg font-bold shadow-md transition ${
+        className={`absolute right-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-l-[3px] border-l border-journal-grey/40 text-sm font-bold shadow-sm transition ${
           adjacent.next
             ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
             : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
