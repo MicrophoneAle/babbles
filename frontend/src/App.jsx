@@ -37,7 +37,9 @@ function Layout({ children }) {
             />
           ))}
           <aside className="sticky top-6 h-fit w-64 rounded-[4px] border border-[#4c3928] bg-journal-cover p-5 shadow-leather">
-            <h1 className="font-heading text-5xl font-bold italic text-[#efe7db]">Journal</h1>
+            <h1 className="font-heading text-4xl font-bold italic leading-tight text-[#efe7db]">
+              Michael's Babbles
+            </h1>
             <p className="mt-1 font-heading text-base italic text-[#c8b8a3]">{format(new Date(), "EEEE, MMM d")}</p>
           <nav className="mt-6 flex flex-col gap-2 text-sm font-bold">
             <NavLink className="nav-link" to="/">
