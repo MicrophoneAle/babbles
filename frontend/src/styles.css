@@ -4,7 +4,7 @@
 
 body {
   font-family: "Nunito", sans-serif;
-  background: #e6e3de;
+  background: #8b5e3c;
   color: #2c2c2c;
   overflow: hidden;
 }
@@ -14,11 +14,21 @@ body {
 }
 
 .nav-link {
-  @apply rounded-[4px] px-3 py-2 font-heading text-lg italic text-[#d7cabb] transition hover:bg-[#4a3827] hover:text-journal-white;
+  @apply rounded-[4px] px-3 py-2 font-heading text-xl italic text-[#4b3622] transition;
+  background: transparent;
+  border: 1px solid transparent;
 }
 
 .nav-link.active {
-  @apply bg-[#4a3827] text-journal-white;
+  @apply text-[#3b2a1a];
+  background: #e8dcc2;
+  border-color: rgba(107, 74, 42, 0.35);
+}
+
+.nav-link:hover {
+  background: #ede2cb;
+  color: #3b2a1a;
+  border-color: rgba(107, 74, 42, 0.25);
 }
 
 .card-surface {
@@ -41,30 +51,71 @@ body {
 }
 
 .desk-bg {
-  @apply bg-[#ddd8d1];
+  background-color: #8b5e3c;
+  background-image: repeating-linear-gradient(
+    92deg,
+    rgba(0, 0, 0, 0.03) 0px,
+    rgba(0, 0, 0, 0.03) 1px,
+    transparent 1px,
+    transparent 8px
+  );
+  box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.35);
+}
+
+.book-frame {
+  background: #7b2d2d;
+  border-radius: 10px;
 }
 
 .book-cover {
   background: #3b2a1a;
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.02) 0px,
-    rgba(255, 255, 255, 0.02) 2px,
-    rgba(0, 0, 0, 0.02) 2px,
-    rgba(0, 0, 0, 0.02) 4px
-  );
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-.book-page {
-  @apply bg-journal-paper rounded-[4px];
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+.page-left,
+.page-right {
+  background: #f5edd9;
+}
+
+.page-left {
+  box-shadow: inset -8px 0 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.page-right {
+  box-shadow: inset 8px 0 12px rgba(0, 0, 0, 0.08);
+}
+
+.spine-shadow {
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.25),
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.25)
+  );
 }
 
 .bookmark-ribbon {
-  background: #5a2d1e;
+  background: #7b2d2d;
   clip-path: polygon(0 0, 100% 0, 100% 88%, 50% 100%, 0 88%);
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.page-sliver {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  width: 5px;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+}
+
+.left-panel-card {
+  border: 1px solid rgba(107, 74, 42, 0.2);
+  background: #f0e5cf;
+  border-radius: 6px;
+  padding: 12px;
 }
 
 .save-indicator {

@@ -1,62 +1,152 @@
-import { NavLink, Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { format } from "date-fns";
+import { api } from "./api";
 import EntryPage from "./pages/EntryPage";
 import EntriesPage from "./pages/EntriesPage";
 import StatsPage from "./pages/StatsPage";
 import TagsPage from "./pages/TagsPage";
 
+function JournalSidebarPanels() {
+  const [prompts, setPrompts] = useState([]);
+  const [hidePrompts, setHidePrompts] = useState(false);
+  const [availableTags, setAvailableTags] = useState([]);
+
+  useEffect(() => {
+    let active = true;
+    setHidePrompts(false);
+
+    async function loadPanels() {
+      try {
+        const [promptData, tagData] = await Promise.all([api.getPrompts(), api.getTags()]);
+        if (!active) return;
+        setPrompts(promptData?.prompts || []);
+        setAvailableTags((tagData || []).map((tag) => tag.name).filter(Boolean));
+      } catch {
+        if (!active) return;
+        setPrompts([]);
+        setAvailableTags([]);
+      }
+    }
+
+    loadPanels();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  return (
+    <>
+      {!hidePrompts && prompts.length > 0 ? (
+        <section className="left-panel-card">
+          <div className="mb-2 flex items-center justify-between">
+            <h3 className="font-heading text-lg italic text-[#3b2a1a]">Daily prompts</h3>
+            <button
+              type="button"
+              onClick={() => setHidePrompts(true)}
+              className="text-xs font-semibold text-[#6b4a2a] hover:text-[#3b2a1a]"
+            >
+              Hide
+            </button>
+          </div>
+          <ul className="space-y-1 font-prose text-sm text-[#4b3a28]">
+            {prompts.map((prompt) => (
+              <li key={prompt}>- {prompt}</li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <section className="left-panel-card">
+        <h3 className="mb-2 font-heading text-lg italic text-[#3b2a1a]">Available Tags</h3>
+        <div className="flex flex-wrap gap-2">
+          {availableTags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full border border-[#7e6646]/50 bg-[#efe6d2] px-2 py-1 text-xs font-semibold text-[#6b4a2a]"
+            >
+              #{tag}
+            </span>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
 function Layout({ children }) {
-  const pageLayers = [
-    "#f7f7f4",
-    "#f1f0ec",
-    "#f5f2ea",
-    "#ecebe6",
-    "#f6f3ed",
-    "#eeede7",
-    "#f4f1e9",
-    "#ebe9e2",
-    "#f3f0e8",
-    "#e9e7e0"
+  const location = useLocation();
+  const showJournalPanels = location.pathname === "/";
+  const pageSliverColors = [
+    "#C4BC9E",
+    "#C8C0A3",
+    "#CCC4A8",
+    "#D0C8AD",
+    "#D4CCB2",
+    "#D8D0B7",
+    "#DDD5BB",
+    "#E1D9C0",
+    "#E5DDC5",
+    "#E9E2CA",
+    "#EDE6CF",
+    "#F1EAD4",
+    "#F5EDD9"
   ];
 
   return (
     <div className="desk-bg flex h-screen items-center justify-center p-6">
-      <div className="book-cover relative h-[92vh] w-full max-w-6xl rounded-[4px] p-3">
-        <div className="absolute inset-y-3 left-3 w-8 rounded-[2px] bg-[#2f2114] shadow-inner" />
-        <div className="absolute right-16 top-0 h-36 w-4 bookmark-ribbon shadow-md" />
-        <div className="book-page relative ml-7 flex h-full gap-6 p-6">
-          {pageLayers.map((shade, idx) => (
+      <div className="book-frame relative h-[92vh] w-full max-w-7xl rounded-[10px] p-[10px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+        <div className="book-cover relative h-full w-full rounded-[8px]">
+          <div className="absolute inset-y-0 left-0 w-10 rounded-l-[8px] bg-[#2f2114]" />
+          <div className="bookmark-ribbon absolute right-20 top-0 h-[140px] w-[18px]" />
+
+          <div className="relative ml-10 grid h-full grid-cols-[1fr_40px_1fr]">
             <div
-              key={shade + idx}
-              className="absolute top-5 w-2 shadow-[inset_-1px_0_0_rgba(0,0,0,0.08),0_0_1px_rgba(0,0,0,0.12)]"
-              style={{
-                right: `${-4 - idx * 3}px`,
-                height: `${95 - idx * 0.8}%`,
-                background: shade
-              }}
+              className="page-left flex h-full flex-col rounded-bl-[6px] rounded-tl-[6px] p-6"
+            >
+              <h1 className="font-heading text-5xl font-bold italic leading-tight text-[#3b2a1a]">Michael's Babbles</h1>
+              <p className="mt-1 font-heading text-base italic text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
+
+              <nav className="mt-6 flex flex-col gap-2 text-sm font-bold">
+                <NavLink className="nav-link" to="/">
+                  Journal
+                </NavLink>
+                <NavLink className="nav-link" to="/entries">
+                  Entries
+                </NavLink>
+                <NavLink className="nav-link" to="/stats">
+                  Stats
+                </NavLink>
+                <NavLink className="nav-link" to="/tags">
+                  Tags
+                </NavLink>
+              </nav>
+
+              {showJournalPanels ? <div className="mt-5 space-y-3">{<JournalSidebarPanels />}</div> : null}
+            </div>
+
+            <div
+              className="spine-shadow h-full"
+              aria-hidden="true"
             />
-          ))}
-          <aside className="sticky top-6 h-fit w-64 rounded-[4px] border border-[#4c3928] bg-journal-cover p-5 shadow-leather">
-            <h1 className="font-heading text-4xl font-bold italic leading-tight text-[#efe7db]">
-              Michael's Babbles
-            </h1>
-            <p className="mt-1 font-heading text-base italic text-[#c8b8a3]">{format(new Date(), "EEEE, MMM d")}</p>
-          <nav className="mt-6 flex flex-col gap-2 text-sm font-bold">
-            <NavLink className="nav-link" to="/">
-              Journal
-            </NavLink>
-            <NavLink className="nav-link" to="/entries">
-              Entries
-            </NavLink>
-            <NavLink className="nav-link" to="/stats">
-              Stats
-            </NavLink>
-            <NavLink className="nav-link" to="/tags">
-              Tags
-            </NavLink>
-          </nav>
-        </aside>
-        <main className="flex-1 overflow-y-auto pr-3 text-journal-text">{children}</main>
+
+            <main
+              className="page-right relative h-full overflow-y-auto rounded-br-[6px] rounded-tr-[6px] p-6 text-journal-text"
+            />
+              {pageSliverColors.map((color, idx) => (
+                <span
+                  key={color}
+                  className="page-sliver"
+                  style={{
+                    right: `${-(idx + 1) * 4}px`,
+                    backgroundColor: color,
+                    zIndex: idx
+                  }}
+                />
+              ))}
+              {children}
+            </main>
+          </div>
         </div>
       </div>
     </div>

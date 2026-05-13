@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 import RichEditor from "../components/Editor";
-import Prompts from "../components/Prompts";
 import TagInput from "../components/TagInput";
 
 const emptyDoc = { type: "doc", content: [{ type: "paragraph" }] };
@@ -35,8 +34,6 @@ export default function EntryPage({ mode }) {
   const [plainText, setPlainText] = useState("");
   const [tags, setTags] = useState([]);
   const [tagSuggestions, setTagSuggestions] = useState([]);
-  const [prompts, setPrompts] = useState([]);
-  const [hidePrompts, setHidePrompts] = useState(false);
   const [status, setStatus] = useState("Saved");
   const [showSavedFlash, setShowSavedFlash] = useState(false);
   const [exists, setExists] = useState(false);
@@ -127,10 +124,6 @@ export default function EntryPage({ mode }) {
           setPlainText("");
           setTags([]);
           setEditorNonce((n) => n + 1);
-          if (mode === "today") {
-            const promptData = await api.getPrompts();
-            setPrompts(promptData.prompts || []);
-          }
         } else {
           setStatus("Failed to load entry");
           // eslint-disable-next-line no-console
@@ -181,8 +174,6 @@ export default function EntryPage({ mode }) {
         {format(new Date(`${date}T00:00:00`), "EEEE, MMMM d")}
       </h2>
       <p className="mb-4 text-sm font-semibold text-journal-grey">{status}</p>
-
-      <Prompts prompts={prompts} hidden={hidePrompts} onHide={() => setHidePrompts(true)} />
 
       <div className="mb-4">
         <p className="mb-2 font-heading text-lg italic text-journal-brown">Tags</p>
