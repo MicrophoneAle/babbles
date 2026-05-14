@@ -6,12 +6,12 @@ import Placeholder from "@tiptap/extension-placeholder";
 import { useEffect } from "react";
 
 const BTN =
-  "rounded-[4px] border border-journal-grey/30 bg-[#f6f4ef] px-2 py-1 text-xs font-semibold text-journal-charcoal transition hover:bg-[#ece8df]";
+  "rounded-[2px] border border-journal-grey/30 bg-[#f6f4ef] px-2 py-1 text-xs font-semibold text-journal-charcoal transition hover:bg-[#ece8df]";
 
 function Toolbar({ editor }) {
   if (!editor) return null;
   return (
-    <div className="mb-3 flex flex-wrap gap-2 rounded-[4px] border border-journal-grey/25 bg-[#faf8f3] p-2">
+    <div className="mb-3 flex flex-wrap gap-2 rounded-[2px] border border-journal-grey/25 bg-[#faf8f3] p-2">
       <button className={BTN} onClick={() => editor.chain().focus().toggleBold().run()}>B</button>
       <button className={BTN} onClick={() => editor.chain().focus().toggleItalic().run()}>I</button>
       <button className={BTN} onClick={() => editor.chain().focus().toggleUnderline().run()}>U</button>
@@ -62,7 +62,7 @@ export default function RichEditor({ value, onChange }) {
   return (
     <div className="animate-fadeIn">
       <Toolbar editor={editor} />
-      <div className="editor-scroll-area h-[320px] overflow-y-auto rounded-[4px] border border-[#d8d6d1] bg-[#faf8f5]">
+      <div className="editor-scroll-area h-[320px] overflow-y-auto rounded-[2px] border border-[#d8d6d1] bg-[#faf8f5]">
         <EditorContent editor={editor} />
       </div>
     </div>

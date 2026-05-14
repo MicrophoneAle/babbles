@@ -40,7 +40,7 @@ export default function TagInput({ tags, setTags, suggestions = [], savedTags = 
           <button
             key={tag}
             type="button"
-            className="rounded-full border border-journal-brown/40 bg-[#f1ece4] px-3 py-1 text-xs font-semibold text-journal-text transition hover:bg-[#e5ded2]"
+            className="rounded-[2px] border border-journal-brown/40 bg-[#f1ece4] px-3 py-1 text-xs font-semibold text-journal-text transition hover:bg-[#e5ded2]"
             onClick={() => setTags(tags.filter((t) => t !== tag))}
           >
             #{tag} {savedTags.includes(tag) ? "✓" : ""} ×
@@ -56,7 +56,7 @@ export default function TagInput({ tags, setTags, suggestions = [], savedTags = 
             void addTag(value);
           }
         }}
-        className="w-full rounded-[4px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
+        className="w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
         placeholder="Add a tag and press Enter"
       />
     </div>

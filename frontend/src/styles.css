@@ -16,7 +16,7 @@ body {
 }
 
 .nav-link {
-  @apply rounded-[4px] px-3 py-2 font-heading text-xl italic text-[#4b3622] transition;
+  @apply rounded-[2px] px-3 py-2 font-heading text-xl italic text-[#4b3622] transition;
   background: transparent;
   border: 1px solid transparent;
 }
@@ -34,11 +34,11 @@ body {
 }
 
 .card-surface {
-  @apply rounded-[4px] border border-[#d3cec6] bg-journal-white shadow-soft;
+  @apply rounded-[2px] border border-[#d3cec6] bg-journal-white shadow-soft;
 }
 
 .page-content-block {
-  @apply rounded-[4px] border border-[#6b4a2a]/25 bg-transparent;
+  @apply rounded-[2px] border border-[#6b4a2a]/25 bg-transparent;
 }
 
 .editor-scroll-area .journal-page {
@@ -104,7 +104,7 @@ body {
 .left-panel-card {
   border: 1px solid rgba(107, 74, 42, 0.2);
   background: #f0e5cf;
-  border-radius: 6px;
+  border-radius: 2px;
   padding: 12px;
 }
 

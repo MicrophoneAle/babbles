@@ -49,7 +49,7 @@ export default function EntriesPage() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-[4px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
+          className="w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
           placeholder="Search by keyword or tag..."
         />
       </div>
@@ -78,7 +78,7 @@ export default function EntriesPage() {
               {(entry.tags || []).map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-journal-brown/30 bg-journal-sticky px-2 py-1 text-xs font-semibold text-journal-brown"
+                  className="rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-2 py-1 text-xs font-semibold text-journal-brown"
                 >
                   #{tag}
                 </span>

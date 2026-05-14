@@ -39,14 +39,14 @@ function StickyCalendar({ entries }) {
     <div>
       <div className="mb-3 flex items-center justify-between">
         <button
-          className="rounded-[4px] border border-journal-grey/40 px-3 py-1 text-sm"
+          className="rounded-[2px] border border-journal-grey/40 px-3 py-1 text-sm"
           onClick={() => setMonthCursor(subMonths(monthCursor, 1))}
         >
           ←
         </button>
         <h3 className="font-heading text-4xl italic text-journal-brown">{format(monthCursor, "MMMM yyyy")}</h3>
         <button
-          className="rounded-[4px] border border-journal-grey/40 px-3 py-1 text-sm"
+          className="rounded-[2px] border border-journal-grey/40 px-3 py-1 text-sm"
           onClick={() => setMonthCursor(addMonths(monthCursor, 1))}
         >
           →
@@ -69,7 +69,7 @@ function StickyCalendar({ entries }) {
             <div
               key={key}
               title={`${format(day, "PPP")} - ${words} words`}
-              className={`relative h-16 rounded-none border border-[#d9ccb0] p-1 text-xs shadow-sm transition ${
+              className={`relative h-16 rounded-[2px] border border-[#d9ccb0] p-1 text-xs shadow-sm transition ${
                 words ? "bg-[#e9d6ad]" : "bg-journal-sticky"
               } ${today ? "ring-2 ring-journal-brown/30" : ""} ${inMonth ? "" : "opacity-40"}`}
               style={{ transform: `rotate(${rotateForDate(key)}deg)` }}

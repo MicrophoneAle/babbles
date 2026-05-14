@@ -149,7 +149,7 @@ export default function EntryPage({ mode }) {
       <button
         disabled={!adjacent.previous}
         onClick={() => adjacent.previous && navigate(`/entry/${adjacent.previous}`)}
-        className={`absolute left-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-r-[3px] border-r border-journal-grey/40 text-sm font-bold shadow-sm transition ${
+        className={`absolute left-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-r-[2px] border-r border-journal-grey/40 text-sm font-bold shadow-sm transition ${
           adjacent.previous
             ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
             : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
@@ -161,7 +161,7 @@ export default function EntryPage({ mode }) {
       <button
         disabled={!adjacent.next}
         onClick={() => adjacent.next && navigate(`/entry/${adjacent.next}`)}
-        className={`absolute right-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-l-[3px] border-l border-journal-grey/40 text-sm font-bold shadow-sm transition ${
+        className={`absolute right-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-l-[2px] border-l border-journal-grey/40 text-sm font-bold shadow-sm transition ${
           adjacent.next
             ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
             : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
@@ -198,7 +198,7 @@ export default function EntryPage({ mode }) {
               setTimeout(() => setShowSavedFlash(false), 2000);
             }
           }}
-          className="rounded-[4px] border border-journal-brown/60 bg-journal-brown px-4 py-2 text-sm font-semibold text-journal-white shadow-md transition hover:bg-[#5d4533]"
+          className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 text-sm font-semibold text-journal-white shadow-md transition hover:bg-[#5d4533]"
         >
           Save Entry
         </button>
