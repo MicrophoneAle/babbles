@@ -1,5 +1,5 @@
 {
-  "name": "journal-frontend",
+  "name": "babbles-frontend",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.61.3",
+    "@clerk/express": "^2.1.15",
     "@tiptap/extension-highlight": "^2.6.6",
     "@tiptap/extension-placeholder": "^2.6.6",
     "@tiptap/extension-underline": "^2.6.6",

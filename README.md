@@ -1,124 +1,127 @@
 # Michael's Babbles
 
-A full-stack journaling app with a paper-inspired UI and daily writing flow.
+A personal journaling web app with a realistic open book UI, rich text editing, tags, stats, and a sticky note calendar.
 
-- Frontend: React + Vite + Tailwind + Tiptap
-- Backend: Express + Prisma + PostgreSQL
+**Live:** https://michaels-babbles.vercel.app
 
-## Current Features
+## Tech stack
 
-- Daily journal page with autosave every 10 seconds and manual save.
-- Rich text editor (headings, lists, blockquote, underline, highlight, and more).
-- Prompt cards for today's entry with dismiss/hide behavior.
-- Tagging with autocomplete and "available tags" suggestions.
-- Past entries list with search by text/tag and entry deletion.
-- Date-based entry navigation (previous/next entry controls).
-- Stats dashboard with streaks, totals, and monthly sticky-note style calendar.
-- Tag management page (create, list with entry counts, filter view, delete).
+- **Frontend:** React, Vite, Tailwind CSS, Tiptap
+- **Backend:** Node.js, Express
+- **Database:** PostgreSQL (Neon)
+- **ORM:** Prisma
+- **Fonts:** Playfair Display, Lora, Nunito
+- **Hosting:** Vercel (frontend), Render (backend), Neon (database)
 
-## Project Structure
+## Features
 
-- `frontend`: Vite React client
-- `backend`: Express API with Prisma
+- One journal entry per day with rich text formatting
+- Auto-save every 10 seconds plus a manual save button
+- Tags — create, attach to entries, and delete
+- Past entries page with search and delete
+- Stats page with writing streaks and a sticky note calendar
+- Entry navigation arrows between adjacent dates
+- Custom confirmation modals for destructive actions
+- Responsive open book UI with an aged parchment look
 
-## Prerequisites
+## Local development
 
-- Node.js 18+ recommended
-- A PostgreSQL database
+### Prerequisites
 
-## Local Setup
+- Node.js (LTS)
+- PostgreSQL installed locally (or any Postgres URL for `DATABASE_URL`)
+- Git
 
-1. Install dependencies from the repo root:
+### Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/MicrophoneAle/babbles.git
+   cd babbles
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm run install:all
+   ```
+
+3. **Environment variables**
+
+   Create `backend/.env`:
+
+   ```env
+   DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/journal_app"
+   FRONTEND_URL="http://localhost:5173"
+   PORT=4000
+   ```
+
+4. **Database**
+
+   ```bash
+   cd backend
+   npx prisma generate
+   npx prisma migrate deploy
+   node prisma/seed.js
+   cd ..
+   ```
+
+5. **Run the app** (two terminals from the repo root)
+
+   ```bash
+   npm run dev:backend
+   ```
+
+   ```bash
+   npm run dev:frontend
+   ```
+
+6. Open **http://localhost:5173**
+
+## Production hosting
+
+### Frontend (Vercel)
+
+- **Root directory:** `frontend`
+- **Environment variable:** `VITE_API_URL` — your Render service URL (no trailing slash), e.g. `https://your-api.onrender.com`
+
+### Backend (Render)
+
+- **Root directory:** `backend`
+- **Build command:** `npm install && npx prisma generate`
+- **Start command:** `node src/index.js`
+- **Environment variables (example):**
+
+  ```env
+  DATABASE_URL=your-neon-connection-string
+  FRONTEND_URL=https://michaels-babbles.vercel.app
+  NODE_ENV=production
+  ```
+
+  `FRONTEND_URL` may be a comma-separated list if you use multiple origins. CORS also allows `*.vercel.app` and `*.onrender.com` hostnames.
+
+### Database (Neon)
+
+- Serverless PostgreSQL
+- Use a **direct** connection URL for migrations (`prisma migrate deploy`) when Neon recommends it
+- Use a **pooled** connection URL for the running app in production when Neon recommends it
+
+## Pushing updates
 
 ```bash
-npm run install:all
+git add .
+git commit -m "Describe your changes"
+git push
 ```
 
-2. Create backend env file:
+Vercel and Render redeploy from the default branch when you push (if those integrations are enabled on the repo).
 
-- Copy `backend/.env.example` to `backend/.env`
-- Set `DATABASE_URL`
-- Optionally update `FRONTEND_URL` (comma-separated allowed origins)
+## API (reference)
 
-3. Prepare the database (from `backend`):
+- `GET /api/health` — health check
+- `GET /api/entries`, `GET /api/entries/:date`, `POST /api/entries`, `PUT /api/entries/:date`, `DELETE /api/entries/:date`
+- `GET /api/entries/adjacent/:date` — previous / next entry dates
+- `GET /api/prompts`, `GET /api/stats`, `GET /api/tags`, `POST /api/tags`, `DELETE /api/tags/:name`
 
-```bash
-npm run prisma:generate
-npm run prisma:migrate -- --name init
-npm run prisma:seed
-```
-
-4. Start the app in two terminals (from repo root):
-
-```bash
-npm run dev:backend
-npm run dev:frontend
-```
-
-Frontend default URL: `http://localhost:5173`  
-Backend default URL: `http://localhost:4000`
-
-## Environment Variables
-
-### Backend (`backend/.env`)
-
-- `DATABASE_URL`: Prisma PostgreSQL connection string
-- `PORT`: API port (default `4000`)
-- `FRONTEND_URL`: allowed frontend origins (comma-separated)
-
-### Frontend
-
-- `VITE_API_URL`: base API origin (for example `http://localhost:4000`)
-  - If omitted, frontend defaults to `http://localhost:4000`
-  - `/api` is automatically appended when needed
-
-## Scripts
-
-### Root
-
-- `npm run install:all` - install dependencies for all workspaces
-- `npm run dev:frontend` - run frontend dev server
-- `npm run dev:backend` - run backend dev server
-
-### Backend (`cd backend`)
-
-- `npm run dev` - start API with nodemon
-- `npm run start` - start API with node
-- `npm run prisma:generate` - generate Prisma client
-- `npm run prisma:migrate` - run Prisma migrate dev
-- `npm run prisma:seed` - seed curated tags
-- `npm run test:db` - test database connection
-- `npm run clear:entries` - remove all entries
-
-## Frontend Routes
-
-- `/` - journal page for today
-- `/entry/:date` - journal page for a specific date
-- `/entries` - entries list + search
-- `/stats` - writing statistics dashboard
-- `/tags` - tag management
-
-## API Routes
-
-- `GET /api/health` - DB connectivity check
-- `GET /api/prompts` - random prompt set
-- `GET /api/stats` - totals, streaks, and heatmap data
-
-- `GET /api/entries` - list entries (supports `?search=...`)
-- `GET /api/entries/adjacent/:date` - previous/next entry date
-- `GET /api/entries/:date` - fetch one entry by date
-- `POST /api/entries` - create dated entry
-- `PUT /api/entries/:date` - update dated entry
-- `DELETE /api/entries/:date` - delete dated entry
-
-- `GET /api/tags` - list tags with usage counts (`{ name, count }[]`)
-- `POST /api/tags` - create a tag
-- `DELETE /api/tags/:name` - delete a tag
-
-## Deployment Notes
-
-- `frontend/vercel.json` includes an SPA rewrite to `index.html`.
-- Backend CORS accepts:
-  - origins from `FRONTEND_URL`
-  - any `.vercel.app` and `.railway.app` origin
-  - no-origin requests (e.g. server-to-server/health checks)
+From `backend`: `npm run test:db` tests the database connection; `npm run clear:entries` removes all entries (destructive).

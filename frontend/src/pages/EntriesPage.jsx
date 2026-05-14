@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../api";
+import { useOwner } from "../AuthProvider";
 import ConfirmModal from "../components/ConfirmModal";
 
 export default function EntriesPage() {
+  const { isOwner } = useOwner();
   const [searchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [entries, setEntries] = useState([]);
@@ -60,13 +62,15 @@ export default function EntriesPage() {
           <article key={entry.id} className="page-content-block animate-fadeIn p-4 transition hover:-translate-y-0.5">
             <div className="flex items-start justify-between gap-2">
               <h3 className="font-heading text-2xl italic text-journal-brown">{entry.date}</h3>
-              <button
-                type="button"
-                className="shrink-0 text-xs text-red-800/60 underline decoration-red-800/30 hover:text-red-800/80"
-                onClick={() => setConfirmDate(entry.date)}
-              >
-                Delete
-              </button>
+              {isOwner ? (
+                <button
+                  type="button"
+                  className="shrink-0 text-xs text-red-800/60 underline decoration-red-800/30 hover:text-red-800/80"
+                  onClick={() => setConfirmDate(entry.date)}
+                >
+                  Delete
+                </button>
+              ) : null}
             </div>
             <p className="mt-2 font-prose text-sm leading-relaxed text-journal-charcoal">
               {entry.preview?.length ? entry.preview : "No preview yet…"}

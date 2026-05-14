@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api";
+import { useOwner } from "../AuthProvider";
 import ConfirmModal from "../components/ConfirmModal";
 
 export default function TagsPage() {
+  const { isOwner } = useOwner();
   const [tags, setTags] = useState([]);
   const [name, setName] = useState("");
   const [confirmTag, setConfirmTag] = useState(null);
@@ -42,25 +44,27 @@ export default function TagsPage() {
         }}
       />
       <h2 className="section-title text-4xl">Tags</h2>
-      <div className="page-content-block flex gap-2 p-4">
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="flex-1 rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
-          placeholder="New tag name"
-        />
-        <button
-          onClick={async () => {
-            if (!name.trim()) return;
-            await api.createTag(name);
-            setName("");
-            await loadTags();
-          }}
-          className="rounded-[2px] border border-journal-brown/40 bg-journal-brown px-4 py-2 text-sm font-semibold text-journal-white"
-        >
-          Create Tag
-        </button>
-      </div>
+      {isOwner ? (
+        <div className="page-content-block flex gap-2 p-4">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="flex-1 rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
+            placeholder="New tag name"
+          />
+          <button
+            onClick={async () => {
+              if (!name.trim()) return;
+              await api.createTag(name);
+              setName("");
+              await loadTags();
+            }}
+            className="rounded-[2px] border border-journal-brown/40 bg-journal-brown px-4 py-2 text-sm font-semibold text-journal-white"
+          >
+            Create Tag
+          </button>
+        </div>
+      ) : null}
 
       <div className="page-content-block p-4">
         <h3 className="mb-4 font-heading text-2xl italic text-journal-brown">Tag List</h3>
@@ -79,13 +83,15 @@ export default function TagsPage() {
               >
                 View
               </button>
-              <button
-                type="button"
-                className="rounded-[2px] border border-journal-grey/50 bg-journal-white px-2 py-0.5 text-xs font-semibold text-journal-charcoal"
-                onClick={() => setConfirmTag(tag.name)}
-              >
-                Delete
-              </button>
+              {isOwner ? (
+                <button
+                  type="button"
+                  className="rounded-[2px] border border-journal-grey/50 bg-journal-white px-2 py-0.5 text-xs font-semibold text-journal-charcoal"
+                  onClick={() => setConfirmTag(tag.name)}
+                >
+                  Delete
+                </button>
+              ) : null}
             </div>
           ))}
         </div>

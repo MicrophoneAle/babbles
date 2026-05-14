@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { format } from "date-fns";
 import { api } from "./api";
@@ -57,6 +58,42 @@ function JournalSidebarPanels() {
   );
 }
 
+function SidebarAuth() {
+  const publishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim();
+  if (!publishableKey) {
+    return (
+      <p className="font-sans text-xs leading-snug text-[#6b4a2a]/85">
+        Owner sign-in is not configured yet. Add <span className="font-mono">VITE_CLERK_PUBLISHABLE_KEY</span> to enable
+        editing.
+      </p>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-2 font-sans">
+      <SignedOut>
+        <SignInButton mode="modal">
+          <button
+            type="button"
+            className="w-full rounded-[2px] border border-journal-brown/40 bg-journal-brown px-3 py-2 text-sm font-semibold text-journal-white shadow-sm transition hover:bg-[#5d4533]"
+          >
+            Sign in
+          </button>
+        </SignInButton>
+        <p className="text-xs leading-snug text-[#6b4a2a]/80">
+          This journal is public to read. Sign in as the owner to write or delete anything.
+        </p>
+      </SignedOut>
+      <SignedIn>
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-xs font-semibold text-[#6b4a2a]">Signed in</span>
+          <UserButton afterSignOutUrl="/" />
+        </div>
+      </SignedIn>
+    </div>
+  );
+}
+
 function Layout({ children }) {
   const location = useLocation();
   const showJournalPanels = location.pathname === "/";
@@ -90,6 +127,10 @@ function Layout({ children }) {
                   <JournalSidebarPanels />
                 </div>
               ) : null}
+
+              <div className="mt-auto shrink-0 border-t border-journal-brown/15 pt-5">
+                <SidebarAuth />
+              </div>
             </div>
 
             <main className="page-right flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-br-[2px] rounded-tr-[2px] p-6 text-journal-text">

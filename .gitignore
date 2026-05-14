@@ -4,3 +4,6 @@ dist
 backend/.env
 frontend/.env
 backend/prisma/migrations
+.vscode
+*.log
+.DS_Store

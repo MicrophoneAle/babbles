@@ -8,8 +8,8 @@ import { useEffect } from "react";
 const BTN =
   "rounded-[2px] border border-journal-grey/30 bg-[#f6f4ef] px-2 py-1 text-xs font-semibold text-journal-charcoal transition hover:bg-[#ece8df]";
 
-function Toolbar({ editor }) {
-  if (!editor) return null;
+function Toolbar({ editor, readOnly }) {
+  if (!editor || readOnly) return null;
   return (
     <div className="mb-3 flex flex-wrap gap-2 rounded-[2px] border border-journal-grey/25 bg-[#faf8f3] p-2">
       <button className={BTN} onClick={() => editor.chain().focus().toggleBold().run()}>B</button>
@@ -25,14 +25,15 @@ function Toolbar({ editor }) {
   );
 }
 
-export default function RichEditor({ value, onChange }) {
+export default function RichEditor({ value, onChange, readOnly = false }) {
   const editor = useEditor({
+    editable: !readOnly,
     extensions: [
       StarterKit,
       Underline,
       Highlight,
       Placeholder.configure({
-        placeholder: "Write your thoughts..."
+        placeholder: readOnly ? "Read-only view" : "Write your thoughts..."
       })
     ],
     content: value,
@@ -43,6 +44,7 @@ export default function RichEditor({ value, onChange }) {
       }
     },
     onUpdate: ({ editor: instance }) => {
+      if (readOnly) return;
       onChange({
         json: instance.getJSON(),
         text: instance.getText()
@@ -52,16 +54,21 @@ export default function RichEditor({ value, onChange }) {
 
   useEffect(() => {
     if (!editor) return;
+    editor.setEditable(!readOnly);
+  }, [editor, readOnly]);
+
+  useEffect(() => {
+    if (!editor) return;
     const current = editor.getJSON();
     const next = value || { type: "doc", content: [{ type: "paragraph" }] };
     if (JSON.stringify(current) !== JSON.stringify(next)) {
       editor.commands.setContent(next, false);
     }
-  }, [editor]);
+  }, [editor, value]);
 
   return (
     <div className="animate-fadeIn">
-      <Toolbar editor={editor} />
+      <Toolbar editor={editor} readOnly={readOnly} />
       <div className="editor-scroll-area h-[320px] overflow-y-auto rounded-[2px] border border-[#d8d6d1] bg-[#faf8f5]">
         <EditorContent editor={editor} />
       </div>

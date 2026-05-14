@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
+import { apiClerkMiddleware, requireOwner } from "./auth.js";
 import { getRandomPrompts } from "./prompts.js";
 import { calculateStreaks } from "./stats.js";
 
@@ -29,10 +30,11 @@ app.use(
       return callback(new Error("Not allowed by CORS"));
     },
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"]
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
 app.use(express.json({ limit: "2mb" }));
+app.use(apiClerkMiddleware());
 
 app.get("/api/health", async (_req, res) => {
   try {
@@ -157,7 +159,7 @@ app.get("/api/entries/:date", async (req, res) => {
   });
 });
 
-app.post("/api/entries", async (req, res) => {
+app.post("/api/entries", requireOwner, async (req, res) => {
   const { date, content = {}, plainText = "", tags = [] } = req.body;
   const parsedDate = dateParamToDate(date);
   if (!parsedDate) return res.status(400).json({ error: "Invalid date format" });
@@ -189,7 +191,7 @@ app.post("/api/entries", async (req, res) => {
   });
 });
 
-app.put("/api/entries/:date", async (req, res) => {
+app.put("/api/entries/:date", requireOwner, async (req, res) => {
   const parsedDate = dateParamToDate(req.params.date);
   if (!parsedDate) return res.status(400).json({ error: "Invalid date format" });
 
@@ -221,7 +223,7 @@ app.put("/api/entries/:date", async (req, res) => {
   });
 });
 
-app.delete("/api/entries/:date", async (req, res) => {
+app.delete("/api/entries/:date", requireOwner, async (req, res) => {
   const date = dateParamToDate(req.params.date);
   if (!date) return res.status(400).json({ error: "Invalid date" });
   const existing = await prisma.entry.findUnique({ where: { date } });
@@ -268,7 +270,7 @@ app.get("/api/tags", async (_req, res) => {
   res.json(tags.map((tag) => ({ name: tag.name, count: tag._count.entries })));
 });
 
-app.post("/api/tags", async (req, res) => {
+app.post("/api/tags", requireOwner, async (req, res) => {
   const tagName = (req.body?.name || "").toString().trim().toLowerCase();
   if (!tagName) return res.status(400).json({ error: "Tag name is required" });
 
@@ -281,7 +283,7 @@ app.post("/api/tags", async (req, res) => {
   return res.status(201).json({ name: tag.name });
 });
 
-app.delete("/api/tags/:name", async (req, res) => {
+app.delete("/api/tags/:name", requireOwner, async (req, res) => {
   const name = decodeURIComponent(req.params.name || "").trim().toLowerCase();
   if (!name) return res.status(400).json({ error: "Tag name is required" });
 

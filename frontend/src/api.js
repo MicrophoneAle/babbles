@@ -1,6 +1,16 @@
 const RAW_API_URL = (import.meta.env.VITE_API_URL || "http://localhost:4000").replace(/\/$/, "");
 const API_BASE = RAW_API_URL.endsWith("/api") ? RAW_API_URL : `${RAW_API_URL}/api`;
 
+let getTokenFn = null;
+
+export function setApiTokenGetter(fn) {
+  getTokenFn = fn;
+}
+
+export function clearApiTokenGetter() {
+  getTokenFn = null;
+}
+
 async function request(path, options = {}) {
   const url = `${API_BASE}${path}`;
   const method = options.method || "GET";
@@ -13,10 +23,20 @@ async function request(path, options = {}) {
   // eslint-disable-next-line no-console
   console.log("[API] Request payload:", payload);
 
+  const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+  if (getTokenFn) {
+    try {
+      const token = await getTokenFn();
+      if (token) headers.Authorization = `Bearer ${token}`;
+    } catch {
+      // leave unauthenticated
+    }
+  }
+
   try {
     const res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-      ...options
+      ...options,
+      headers
     });
 
     const rawBody = await res.text();

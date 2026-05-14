@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { format } from "date-fns";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
+import { useOwner } from "../AuthProvider";
 import RichEditor from "../components/Editor";
 import TagInput from "../components/TagInput";
 
@@ -26,6 +27,8 @@ function normalizeTagSuggestionStrings(list) {
 export default function EntryPage({ mode }) {
   const params = useParams();
   const navigate = useNavigate();
+  const { isOwner, isLoaded } = useOwner();
+  const readOnly = !isOwner;
   const date = useMemo(
     () => (mode === "today" ? new Date().toISOString().slice(0, 10) : params.date),
     [mode, params.date]
@@ -45,6 +48,7 @@ export default function EntryPage({ mode }) {
   const hasContentToSave = plainText.trim().length > 0 || tags.length > 0;
 
   async function saveEntry() {
+    if (readOnly) return false;
     setStatus("Saving...");
     const payload = { date, content, plainText, tags };
     // eslint-disable-next-line no-console
@@ -138,11 +142,12 @@ export default function EntryPage({ mode }) {
   }, [date, mode]);
 
   useEffect(() => {
+    if (!isOwner) return undefined;
     const timer = setInterval(() => {
       void saveEntryRef.current();
     }, 10000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isOwner]);
 
   return (
     <section className="relative overflow-visible pr-1">
@@ -173,35 +178,40 @@ export default function EntryPage({ mode }) {
       <h2 className="section-title mb-1 text-4xl">
         {format(new Date(`${date}T00:00:00`), "EEEE, MMMM d")}
       </h2>
-      <p className="mb-4 text-sm font-semibold text-journal-grey">{status}</p>
+      <p className="mb-4 text-sm font-semibold text-journal-grey">
+        {!isLoaded ? "Loading…" : readOnly ? "View only" : status}
+      </p>
 
       <div className="mb-4">
         <p className="mb-2 font-heading text-lg italic text-journal-brown">Tags</p>
-        <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} />
+        <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} readOnly={readOnly} />
       </div>
 
       <RichEditor
         key={`${date}-${editorNonce}`}
         value={content}
+        readOnly={readOnly}
         onChange={(next) => {
           setContent(next.json);
           setPlainText(next.text);
         }}
       />
       <div className="mt-4 flex items-center justify-end gap-3">
-        {showSavedFlash && <span className="save-indicator">✓ Entry saved</span>}
-        <button
-          onClick={async () => {
-            const ok = await saveEntry();
-            if (ok) {
-              setShowSavedFlash(true);
-              setTimeout(() => setShowSavedFlash(false), 2000);
-            }
-          }}
-          className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 text-sm font-semibold text-journal-white shadow-md transition hover:bg-[#5d4533]"
-        >
-          Save Entry
-        </button>
+        {showSavedFlash && !readOnly && <span className="save-indicator">✓ Entry saved</span>}
+        {!readOnly ? (
+          <button
+            onClick={async () => {
+              const ok = await saveEntry();
+              if (ok) {
+                setShowSavedFlash(true);
+                setTimeout(() => setShowSavedFlash(false), 2000);
+              }
+            }}
+            className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 text-sm font-semibold text-journal-white shadow-md transition hover:bg-[#5d4533]"
+          >
+            Save Entry
+          </button>
+        ) : null}
       </div>
     </section>
   );
