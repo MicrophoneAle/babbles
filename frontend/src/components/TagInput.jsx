@@ -19,6 +19,11 @@ export default function TagInput({ tags, setTags, suggestions = [], savedTags = 
   const [value, setValue] = useState("");
   const suggestionStrings = useMemo(() => toSuggestionStrings(suggestions), [suggestions]);
 
+  const availableTags = useMemo(
+    () => suggestionStrings.filter((tag) => typeof tag === "string" && !tags.includes(tag)),
+    [suggestionStrings, tags]
+  );
+
   const addTag = async (raw) => {
     const tag = raw.trim().toLowerCase();
     if (!tag || tags.includes(tag)) return;
@@ -59,6 +64,23 @@ export default function TagInput({ tags, setTags, suggestions = [], savedTags = 
         className="w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
         placeholder="Add a tag and press Enter"
       />
+      {availableTags.length > 0 ? (
+        <>
+          <p className="mt-3 font-heading text-sm italic text-[#6b4a2a]">Available tags</p>
+          <div className="mt-1 flex flex-wrap gap-2">
+            {availableTags.map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => void addTag(tag)}
+                className="cursor-pointer rounded-[2px] border border-[rgba(107,74,42,0.3)] bg-[rgba(245,230,200,0.5)] px-3 py-1 font-heading text-sm italic text-[#6b4a2a] transition hover:bg-[rgba(245,230,200,0.75)]"
+              >
+                #{tag}
+              </button>
+            ))}
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }
