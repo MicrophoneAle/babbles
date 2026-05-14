@@ -88,11 +88,24 @@ async function request(path, options = {}) {
 
 export const api = {
   getEntries: (search = "") => request(`/entries${search ? `?search=${encodeURIComponent(search)}` : ""}`),
-  getAdjacentEntries: (date) => request(`/entries/adjacent/${date}`),
+  /** Previous / next entry id for navigation */
+  getAdjacentEntries: (id) => request(`/entries/adjacent/${id}`),
+  /** All entries for a calendar day (array) */
   getEntryByDate: (date) => request(`/entries/${date}`),
+  /** Single entry by id */
+  getEntryById: (id) => request(`/entries/id/${id}`),
+  /** @deprecated Prefer createNewEntry — creates a row (may be blank) */
   createEntry: (body) => request("/entries", { method: "POST", body: JSON.stringify(body) }),
-  updateEntry: (date, body) => request(`/entries/${date}`, { method: "PUT", body: JSON.stringify(body) }),
-  deleteEntry: (date) => request(`/entries/${date}`, { method: "DELETE" }),
+  createNewEntry: (body) => request("/entries", { method: "POST", body: JSON.stringify(body) }),
+  updateEntryById: (id, body) => request(`/entries/id/${id}`, { method: "PUT", body: JSON.stringify(body) }),
+  deleteEntryById: (id) => request(`/entries/id/${id}`, { method: "DELETE" }),
+  /**
+   * @deprecated Updates by id only; `dateOrId` must be the numeric entry id.
+   * Kept for older call sites that passed a date string — use updateEntryById instead.
+   */
+  updateEntry: (dateOrId, body) => request(`/entries/id/${dateOrId}`, { method: "PUT", body: JSON.stringify(body) }),
+  /** @deprecated Use deleteEntryById — `id` must be entry id */
+  deleteEntry: (id) => request(`/entries/id/${id}`, { method: "DELETE" }),
   getPrompts: () => request("/prompts"),
   getStats: () => request("/stats"),
   getTags: () => request("/tags"),

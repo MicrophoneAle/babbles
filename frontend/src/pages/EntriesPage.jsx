@@ -1,15 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { format, parseISO } from "date-fns";
 import { api } from "../api";
 import { useOwner } from "../AuthProvider";
 import ConfirmModal from "../components/ConfirmModal";
+
+function formatCreatedTime(iso) {
+  if (!iso) return "";
+  try {
+    return format(parseISO(iso), "h:mm a");
+  } catch {
+    return "";
+  }
+}
 
 export default function EntriesPage() {
   const { isOwner } = useOwner();
   const [searchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [entries, setEntries] = useState([]);
-  const [confirmDate, setConfirmDate] = useState(null);
+  const [confirmEntryId, setConfirmEntryId] = useState(null);
 
   useEffect(() => {
     setSearch(searchParams.get("search") || "");
@@ -27,22 +37,32 @@ export default function EntriesPage() {
     return () => clearTimeout(id);
   }, [search]);
 
+  const grouped = useMemo(() => {
+    const map = new Map();
+    for (const entry of entries) {
+      const d = entry.date;
+      if (!map.has(d)) map.set(d, []);
+      map.get(d).push(entry);
+    }
+    return [...map.entries()].sort((a, b) => (a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0));
+  }, [entries]);
+
   return (
     <section className="space-y-4">
       <ConfirmModal
-        isOpen={confirmDate !== null}
+        isOpen={confirmEntryId !== null}
         message="Delete this entry? This cannot be undone."
-        onCancel={() => setConfirmDate(null)}
+        onCancel={() => setConfirmEntryId(null)}
         onConfirm={async () => {
-          if (!confirmDate) return;
+          if (confirmEntryId == null) return;
           try {
-            await api.deleteEntry(confirmDate);
-            setEntries((prev) => prev.filter((e) => e.date !== confirmDate));
+            await api.deleteEntryById(confirmEntryId);
+            setEntries((prev) => prev.filter((e) => e.id !== confirmEntryId));
           } catch {
             // eslint-disable-next-line no-console
             console.error("Failed to delete entry");
           } finally {
-            setConfirmDate(null);
+            setConfirmEntryId(null);
           }
         }}
       />
@@ -58,43 +78,57 @@ export default function EntriesPage() {
       {entries.length === 0 ? (
         <p className="font-heading text-lg italic text-journal-grey">No entries yet — open your journal to write!</p>
       ) : (
-        entries.map((entry) => (
-          <article key={entry.id} className="page-content-block animate-fadeIn p-4 transition hover:-translate-y-0.5">
-            <div className="flex items-start justify-between gap-2">
-              <h3 className="font-heading text-2xl italic text-journal-brown">{entry.date}</h3>
-              {isOwner ? (
-                <button
-                  type="button"
-                  className="shrink-0 text-xs text-red-800/60 underline decoration-red-800/30 hover:text-red-800/80"
-                  onClick={() => setConfirmDate(entry.date)}
+        grouped.map(([date, dayEntries]) => (
+          <div key={date} className="space-y-3">
+            <h3 className="font-heading text-2xl italic text-journal-brown">{date}</h3>
+            {dayEntries.map((entry) => {
+              const title = (entry.title || "").trim();
+              const previewLine = title || (entry.preview?.length ? entry.preview : "No preview yet…");
+              return (
+                <article
+                  key={entry.id}
+                  className="page-content-block animate-fadeIn p-4 transition hover:-translate-y-0.5"
                 >
-                  Delete
-                </button>
-              ) : null}
-            </div>
-            <p className="mt-2 font-prose text-sm leading-relaxed text-journal-charcoal">
-              {entry.preview?.length ? entry.preview : "No preview yet…"}
-            </p>
-            <p className="mt-2 font-heading text-sm italic text-journal-grey">
-              {entry.wordCount ?? 0} words
-            </p>
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              {(entry.tags || []).map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-2 py-1 text-xs font-semibold text-journal-brown"
-                >
-                  #{tag}
-                </span>
-              ))}
-              <Link
-                to={`/entry/${entry.date}`}
-                className="ml-auto font-heading text-sm italic text-journal-brown underline"
-              >
-                Read More
-              </Link>
-            </div>
-          </article>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-heading text-xs font-semibold uppercase tracking-wide text-journal-grey">
+                        {formatCreatedTime(entry.createdAt)}
+                      </p>
+                      <p className="mt-1 font-prose text-sm font-medium leading-relaxed text-journal-charcoal">
+                        {previewLine}
+                      </p>
+                    </div>
+                    {isOwner ? (
+                      <button
+                        type="button"
+                        className="shrink-0 text-xs text-red-800/60 underline decoration-red-800/30 hover:text-red-800/80"
+                        onClick={() => setConfirmEntryId(entry.id)}
+                      >
+                        Delete
+                      </button>
+                    ) : null}
+                  </div>
+                  <p className="mt-2 font-heading text-sm italic text-journal-grey">{entry.wordCount ?? 0} words</p>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    {(entry.tags || []).map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-2 py-1 text-xs font-semibold text-journal-brown"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                    <Link
+                      to={`/entry/${entry.id}`}
+                      className="ml-auto font-heading text-sm italic text-journal-brown underline"
+                    >
+                      Read More
+                    </Link>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         ))
       )}
     </section>

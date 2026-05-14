@@ -148,7 +148,7 @@ export default function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<EntryPage mode="today" />} />
-        <Route path="/entry/:date" element={<EntryPage mode="date" />} />
+        <Route path="/entry/:entryId" element={<EntryPage mode="id" />} />
         <Route path="/entries" element={<EntriesPage />} />
         <Route path="/stats" element={<StatsPage />} />
         <Route path="/tags" element={<TagsPage />} />

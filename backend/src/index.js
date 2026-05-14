@@ -62,8 +62,28 @@ function dateParamToDate(dateParam) {
   return date;
 }
 
+function parseEntryId(param) {
+  const id = Number.parseInt(param, 10);
+  if (!Number.isInteger(id) || id < 1) return null;
+  return id;
+}
+
 function countWords(text = "") {
   return text.trim() ? text.trim().split(/\s+/).length : 0;
+}
+
+function entryToFullJson(entry) {
+  return {
+    id: entry.id,
+    date: entry.date.toISOString().slice(0, 10),
+    title: entry.title ?? "",
+    content: entry.content,
+    plainText: entry.plainText,
+    wordCount: entry.wordCount,
+    tags: entry.tags.map((tag) => tag.name),
+    createdAt: entry.createdAt.toISOString(),
+    updatedAt: entry.updatedAt.toISOString()
+  };
 }
 
 async function connectTags(tags = []) {
@@ -83,23 +103,23 @@ async function connectTags(tags = []) {
   return upserted.map((tag) => ({ id: tag.id }));
 }
 
-async function getAdjacentEntryDates(date) {
+async function getAdjacentByEntryId(id) {
   const [previous, next] = await Promise.all([
     prisma.entry.findFirst({
-      where: { date: { lt: date } },
-      orderBy: { date: "desc" },
-      select: { date: true }
+      where: { id: { lt: id } },
+      orderBy: { id: "desc" },
+      select: { id: true }
     }),
     prisma.entry.findFirst({
-      where: { date: { gt: date } },
-      orderBy: { date: "asc" },
-      select: { date: true }
+      where: { id: { gt: id } },
+      orderBy: { id: "asc" },
+      select: { id: true }
     })
   ]);
 
   return {
-    previous: previous ? previous.date.toISOString().slice(0, 10) : null,
-    next: next ? next.date.toISOString().slice(0, 10) : null
+    previous: previous ? previous.id : null,
+    next: next ? next.id : null
   };
 }
 
@@ -110,100 +130,109 @@ app.get("/api/entries", async (req, res) => {
     where: search
       ? {
           OR: [
+            { title: { contains: search, mode: "insensitive" } },
             { plainText: { contains: search, mode: "insensitive" } },
             { tags: { some: { name: { contains: search, mode: "insensitive" } } } }
           ]
         }
       : undefined,
     include: { tags: true },
-    orderBy: { date: "desc" }
+    orderBy: [{ date: "desc" }, { createdAt: "desc" }]
   });
 
   res.json(
-    entries.map((entry) => ({
-      id: entry.id,
-      date: entry.date.toISOString().slice(0, 10),
-      preview: entry.plainText.slice(0, 150),
-      wordCount: entry.wordCount,
-      tags: entry.tags.map((tag) => tag.name)
-    }))
+    entries.map((entry) => {
+      const title = (entry.title || "").trim();
+      const previewSource = title || entry.plainText || "";
+      return {
+        id: entry.id,
+        date: entry.date.toISOString().slice(0, 10),
+        title: entry.title ?? "",
+        preview: previewSource.slice(0, 100),
+        wordCount: entry.wordCount,
+        tags: entry.tags.map((tag) => tag.name),
+        createdAt: entry.createdAt.toISOString()
+      };
+    })
   );
 });
 
-app.get("/api/entries/adjacent/:date", async (req, res) => {
-  const date = dateParamToDate(req.params.date);
-  if (!date) return res.status(400).json({ error: "Invalid date format" });
+app.get("/api/entries/adjacent/:id", async (req, res) => {
+  const id = parseEntryId(req.params.id);
+  if (!id) return res.status(400).json({ error: "Invalid entry id" });
 
-  const adjacent = await getAdjacentEntryDates(date);
+  const exists = await prisma.entry.findUnique({ where: { id }, select: { id: true } });
+  if (!exists) return res.status(404).json({ error: "Entry not found" });
+
+  const adjacent = await getAdjacentByEntryId(id);
   return res.json(adjacent);
+});
+
+app.get("/api/entries/id/:id", async (req, res) => {
+  const id = parseEntryId(req.params.id);
+  if (!id) return res.status(400).json({ error: "Invalid entry id" });
+
+  const entry = await prisma.entry.findUnique({
+    where: { id },
+    include: { tags: true }
+  });
+
+  if (!entry) return res.status(404).json({ error: "Entry not found" });
+
+  return res.json(entryToFullJson(entry));
 });
 
 app.get("/api/entries/:date", async (req, res) => {
   const date = dateParamToDate(req.params.date);
   if (!date) return res.status(400).json({ error: "Invalid date format" });
 
-  const entry = await prisma.entry.findUnique({
+  const entries = await prisma.entry.findMany({
     where: { date },
-    include: { tags: true }
+    include: { tags: true },
+    orderBy: { createdAt: "asc" }
   });
 
-  if (!entry) return res.status(404).json({ error: "Entry not found" });
-
-  return res.json({
-    id: entry.id,
-    date: entry.date.toISOString().slice(0, 10),
-    content: entry.content,
-    plainText: entry.plainText,
-    wordCount: entry.wordCount,
-    tags: entry.tags.map((tag) => tag.name)
-  });
+  return res.json(entries.map(entryToFullJson));
 });
 
 app.post("/api/entries", requireOwner, async (req, res) => {
-  const { date, content = {}, plainText = "", tags = [] } = req.body;
+  const { date, title = "", content = {}, plainText = "", tags = [] } = req.body;
   const parsedDate = dateParamToDate(date);
   if (!parsedDate) return res.status(400).json({ error: "Invalid date format" });
 
-  const exists = await prisma.entry.findUnique({ where: { date: parsedDate } });
-  if (exists) return res.status(409).json({ error: "Entry already exists for this date" });
-
   const tagConnections = await connectTags(tags);
-  const shouldPersist = plainText.trim() || tagConnections.length;
-  if (!shouldPersist) {
-    return res.status(400).json({ error: "Entry cannot be empty" });
-  }
+  const titleStr = (title ?? "").toString();
 
   const created = await prisma.entry.create({
     data: {
       date: parsedDate,
+      title: titleStr,
       content,
-      plainText,
-      wordCount: countWords(plainText),
+      plainText: plainText ?? "",
+      wordCount: countWords(plainText ?? ""),
       tags: { connect: tagConnections }
     },
     include: { tags: true }
   });
 
-  return res.status(201).json({
-    id: created.id,
-    date: created.date.toISOString().slice(0, 10),
-    tags: created.tags.map((tag) => tag.name)
-  });
+  return res.status(201).json(entryToFullJson(created));
 });
 
-app.put("/api/entries/:date", requireOwner, async (req, res) => {
-  const parsedDate = dateParamToDate(req.params.date);
-  if (!parsedDate) return res.status(400).json({ error: "Invalid date format" });
+app.put("/api/entries/id/:id", requireOwner, async (req, res) => {
+  const id = parseEntryId(req.params.id);
+  if (!id) return res.status(400).json({ error: "Invalid entry id" });
 
-  const { content = {}, plainText = "", tags = [] } = req.body;
-  const existing = await prisma.entry.findUnique({ where: { date: parsedDate } });
+  const existing = await prisma.entry.findUnique({ where: { id } });
   if (!existing) return res.status(404).json({ error: "Entry not found" });
 
+  const { title, content = {}, plainText = "", tags = [] } = req.body;
   const tagConnections = await connectTags(tags);
+  const titleStr = title !== undefined ? String(title) : existing.title;
 
   const updated = await prisma.entry.update({
-    where: { date: parsedDate },
+    where: { id },
     data: {
+      title: titleStr,
       content,
       plainText,
       wordCount: countWords(plainText),
@@ -215,20 +244,17 @@ app.put("/api/entries/:date", requireOwner, async (req, res) => {
     include: { tags: true }
   });
 
-  return res.json({
-    id: updated.id,
-    date: updated.date.toISOString().slice(0, 10),
-    tags: updated.tags.map((tag) => tag.name),
-    wordCount: updated.wordCount
-  });
+  return res.json(entryToFullJson(updated));
 });
 
-app.delete("/api/entries/:date", requireOwner, async (req, res) => {
-  const date = dateParamToDate(req.params.date);
-  if (!date) return res.status(400).json({ error: "Invalid date" });
-  const existing = await prisma.entry.findUnique({ where: { date } });
+app.delete("/api/entries/id/:id", requireOwner, async (req, res) => {
+  const id = parseEntryId(req.params.id);
+  if (!id) return res.status(400).json({ error: "Invalid entry id" });
+
+  const existing = await prisma.entry.findUnique({ where: { id } });
   if (!existing) return res.status(404).json({ error: "Not found" });
-  await prisma.entry.delete({ where: { date } });
+
+  await prisma.entry.delete({ where: { id } });
   return res.status(204).send();
 });
 
@@ -243,11 +269,17 @@ app.get("/api/stats", async (_req, res) => {
 
   const totalEntries = entries.length;
   const totalWords = entries.reduce((sum, entry) => sum + entry.wordCount, 0);
-  const { currentStreak, longestStreak } = calculateStreaks(entries.map((e) => e.date));
-  const heatmap = entries.map((e) => ({
-    date: e.date.toISOString().slice(0, 10),
-    wordCount: e.wordCount
-  }));
+  const uniqueDates = entries.map((e) => e.date);
+  const { currentStreak, longestStreak } = calculateStreaks(uniqueDates);
+
+  const wordsByDate = new Map();
+  for (const e of entries) {
+    const key = e.date.toISOString().slice(0, 10);
+    wordsByDate.set(key, (wordsByDate.get(key) || 0) + e.wordCount);
+  }
+  const heatmap = [...wordsByDate.entries()]
+    .map(([date, wordCount]) => ({ date, wordCount }))
+    .sort((a, b) => a.date.localeCompare(b.date));
 
   res.json({
     currentStreak,
