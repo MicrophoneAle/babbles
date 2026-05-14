@@ -22,7 +22,7 @@ app.use(
       if (
         corsOrigins.includes(origin) ||
         origin.endsWith(".vercel.app") ||
-        origin.endsWith(".railway.app")
+        origin.endsWith(".onrender.com")
       ) {
         return callback(null, true);
       }
