@@ -114,7 +114,7 @@ export default function StatsPage() {
           <p className="font-heading text-3xl italic text-journal-brown">{stats.longestStreak}</p>
         </div>
         <div className="page-content-block p-4">
-          <p className="font-heading text-lg italic text-journal-grey">Total entries</p>
+          <p className="font-heading text-lg italic text-journal-grey">Total babbles</p>
           <p className="font-heading text-3xl italic text-journal-brown">{stats.totalEntries}</p>
         </div>
         <div className="page-content-block p-4">

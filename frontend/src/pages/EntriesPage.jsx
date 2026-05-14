@@ -51,7 +51,7 @@ export default function EntriesPage() {
     <section className="space-y-4">
       <ConfirmModal
         isOpen={confirmEntryId !== null}
-        message="Delete this entry? This cannot be undone."
+        message="Delete this babble? This cannot be undone."
         onCancel={() => setConfirmEntryId(null)}
         onConfirm={async () => {
           if (confirmEntryId == null) return;
@@ -66,7 +66,7 @@ export default function EntriesPage() {
           }
         }}
       />
-      <h2 className="section-title text-4xl">Past entries</h2>
+      <h2 className="section-title text-4xl">Past Babbles</h2>
       <div className="page-content-block p-4">
         <input
           value={search}
@@ -76,7 +76,9 @@ export default function EntriesPage() {
         />
       </div>
       {entries.length === 0 ? (
-        <p className="font-heading text-lg italic text-journal-grey">No entries yet — open your journal to write!</p>
+        <p className="font-heading text-lg italic text-journal-grey">
+          No babbles yet — open Babble to start writing!
+        </p>
       ) : (
         grouped.map(([date, dayEntries]) => (
           <div key={date} className="space-y-3">

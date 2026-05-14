@@ -101,7 +101,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
     <article className="page-content-block mb-6 animate-fadeIn p-4">
       <ConfirmModal
         isOpen={confirmOpen}
-        message="Delete this entry? This cannot be undone."
+        message="Delete this babble? This cannot be undone."
         onCancel={() => setConfirmOpen(false)}
         onConfirm={() => void handleDelete()}
       />
@@ -141,7 +141,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
       />
       <div className="mt-3 flex flex-wrap items-center justify-end gap-3">
         <span className="text-xs font-semibold text-journal-grey">{readOnly ? "View only" : status}</span>
-        {showSavedFlash && !readOnly ? <span className="save-indicator">✓ Saved</span> : null}
+        {showSavedFlash && !readOnly ? <span className="save-indicator">✓ Babble saved</span> : null}
         {!readOnly ? (
           <button
             type="button"
@@ -334,7 +334,7 @@ export default function EntryPage({ mode }) {
       <section className="relative overflow-visible pr-1">
         <ConfirmModal
           isOpen={confirmDeleteOpen}
-          message="Delete this entry? This cannot be undone."
+          message="Delete this babble? This cannot be undone."
           onCancel={() => setConfirmDeleteOpen(false)}
           onConfirm={async () => {
             try {
@@ -361,7 +361,7 @@ export default function EntryPage({ mode }) {
               ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
               : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
           }`}
-          title={adjacent.previous != null ? "Previous entry" : "No previous entry"}
+          title={adjacent.previous != null ? "Previous babble" : "No previous babble"}
         >
           ‹
         </button>
@@ -374,7 +374,7 @@ export default function EntryPage({ mode }) {
               ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
               : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
           }`}
-          title={adjacent.next != null ? "Next entry" : "No next entry"}
+          title={adjacent.next != null ? "Next babble" : "No next babble"}
         >
           ›
         </button>
@@ -419,7 +419,7 @@ export default function EntryPage({ mode }) {
           }}
         />
         <div className="mt-4 flex items-center justify-end gap-3">
-          {showSavedFlash && !readOnly ? <span className="save-indicator">✓ Entry saved</span> : null}
+          {showSavedFlash && !readOnly ? <span className="save-indicator">✓ Babble saved</span> : null}
           {!readOnly ? (
             <button
               type="button"
@@ -464,13 +464,13 @@ export default function EntryPage({ mode }) {
         ) : null}
       </div>
       <p className="mb-4 text-sm font-semibold text-journal-grey">
-        {!isLoaded ? "Loading…" : readOnly ? "View only — sign in as the owner to write." : "Each entry saves on its own."}
+        {!isLoaded ? "Loading…" : readOnly ? "View only — sign in as the owner to write." : "Each babble saves on its own."}
       </p>
       {todayLoading ? (
-        <p className="font-heading text-lg italic text-journal-grey">Loading entries…</p>
+        <p className="font-heading text-lg italic text-journal-grey">Loading today&apos;s babbles…</p>
       ) : todayEntries.length === 0 ? (
         <p className="font-heading text-lg italic text-journal-grey">
-          No entries yet for today.
+          No babbles yet for today.
           {!readOnly ? " Click New Entry to begin." : ""}
         </p>
       ) : (

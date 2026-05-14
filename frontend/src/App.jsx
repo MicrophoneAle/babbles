@@ -8,13 +8,18 @@ import EntriesPage from "./pages/EntriesPage";
 import StatsPage from "./pages/StatsPage";
 import TagsPage from "./pages/TagsPage";
 
+const PROMPTS_HIDDEN_KEY = "promptsHiddenDate";
+
 function JournalSidebarPanels() {
   const [prompts, setPrompts] = useState([]);
-  const [hidePrompts, setHidePrompts] = useState(false);
+  const [hidePrompts, setHidePrompts] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const today = new Date().toISOString().slice(0, 10);
+    return window.localStorage.getItem(PROMPTS_HIDDEN_KEY) === today;
+  });
 
   useEffect(() => {
     let active = true;
-    setHidePrompts(false);
 
     async function loadPanels() {
       try {
@@ -41,7 +46,11 @@ function JournalSidebarPanels() {
             <h3 className="font-heading text-lg italic text-[#3b2a1a]">Daily prompts</h3>
             <button
               type="button"
-              onClick={() => setHidePrompts(true)}
+              onClick={() => {
+                const today = new Date().toISOString().slice(0, 10);
+                window.localStorage.setItem(PROMPTS_HIDDEN_KEY, today);
+                setHidePrompts(true);
+              }}
               className="text-xs font-semibold text-[#6b4a2a] hover:text-[#3b2a1a]"
             >
               Hide
@@ -81,7 +90,7 @@ function SidebarAuth() {
           </button>
         </SignInButton>
         <p className="text-xs leading-snug text-[#6b4a2a]/80">
-          This journal is public to read. Sign in as the owner to write or delete anything.
+          Michael&apos;s Babbles is public to read. Sign in as the owner to write or delete anything.
         </p>
       </SignedOut>
       <SignedIn>
@@ -109,10 +118,10 @@ function Layout({ children }) {
 
               <nav className="mt-6 flex flex-col gap-2 text-sm font-bold">
                 <NavLink className="nav-link" to="/">
-                  Journal
+                  Babble
                 </NavLink>
                 <NavLink className="nav-link" to="/entries">
-                  Entries
+                  Past Babbles
                 </NavLink>
                 <NavLink className="nav-link" to="/stats">
                   Stats

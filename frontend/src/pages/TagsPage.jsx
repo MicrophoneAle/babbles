@@ -75,7 +75,7 @@ export default function TagsPage() {
               className="flex items-center gap-2 rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-3 py-1 text-sm font-semibold text-journal-brown"
             >
               <span className="font-heading italic">{tag.name}</span>
-              <span className="text-xs text-journal-grey">({tag.count} entries)</span>
+              <span className="text-xs text-journal-grey">({tag.count} babbles)</span>
               <button
                 type="button"
                 className="font-heading text-sm italic text-journal-brown underline"
