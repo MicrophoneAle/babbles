@@ -29,12 +29,12 @@ app.use(
       }
       return callback(new Error("Not allowed by CORS"));
     },
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"]
   })
 );
-app.use(express.json({ limit: "2mb" }));
 app.use(apiClerkMiddleware());
+app.use(express.json({ limit: "2mb" }));
 
 app.get("/api/health", async (_req, res) => {
   try {

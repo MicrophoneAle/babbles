@@ -14,7 +14,14 @@ export function clearApiTokenGetter() {
 async function request(path, options = {}) {
   const url = `${API_BASE}${path}`;
   const method = options.method || "GET";
-  const payload = options.body ? JSON.parse(options.body) : null;
+  let payload = null;
+  if (options.body) {
+    try {
+      payload = JSON.parse(options.body);
+    } catch {
+      payload = options.body;
+    }
+  }
 
   // eslint-disable-next-line no-console
   console.log("[API] Request URL:", url);
@@ -23,7 +30,12 @@ async function request(path, options = {}) {
   // eslint-disable-next-line no-console
   console.log("[API] Request payload:", payload);
 
-  const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+  const headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+    ...(options.headers || {})
+  };
+
   if (getTokenFn) {
     try {
       const token = await getTokenFn();
@@ -34,8 +46,9 @@ async function request(path, options = {}) {
   }
 
   try {
+    const { headers: _ignoredHeaders, ...restOptions } = options;
     const res = await fetch(url, {
-      ...options,
+      ...restOptions,
       headers
     });
 
