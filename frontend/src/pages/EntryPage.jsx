@@ -216,7 +216,9 @@ export default function EntryPage({ mode }) {
       try {
         const list = await api.getEntryByDate(todayStr);
         if (!active) return;
-        setTodayEntries(Array.isArray(list) ? list : []);
+        const arr = Array.isArray(list) ? [...list] : [];
+        arr.reverse();
+        setTodayEntries(arr);
       } catch {
         if (active) setTodayEntries([]);
       } finally {
@@ -303,7 +305,7 @@ export default function EntryPage({ mode }) {
         plainText: "",
         tags: []
       });
-      setTodayEntries((prev) => [...prev, created]);
+      setTodayEntries((prev) => [created, ...prev]);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error("Failed to create entry", e);
