@@ -15,6 +15,14 @@ function formatCreatedTime(iso) {
   }
 }
 
+/** Body snippet only — omit when API preview duplicates the title. */
+function getBodyPreview(entry, title) {
+  const preview = (entry.preview || "").trim();
+  if (!preview) return null;
+  if (title && preview === title) return null;
+  return preview;
+}
+
 export default function EntriesPage() {
   const { isOwner } = useOwner();
   const navigate = useNavigate();
@@ -87,7 +95,7 @@ export default function EntriesPage() {
             <h3 className="font-heading text-3xl italic text-journal-brown">{date}</h3>
             {dayEntries.map((entry) => {
               const title = (entry.title || "").trim();
-              const previewLine = entry.preview?.length ? entry.preview : "No preview yet…";
+              const bodyPreview = getBodyPreview(entry, title);
               return (
                 <article
                   key={entry.id}
@@ -99,15 +107,17 @@ export default function EntriesPage() {
                         {formatCreatedTime(entry.createdAt)}
                       </p>
                       <p
-                        className={`mt-1 font-heading text-lg italic leading-snug ${
+                        className={`babble-entry-title mt-1 ${
                           title ? "text-journal-charcoal" : "text-journal-charcoal/60"
                         }`}
                       >
                         {title || "Untitled Babble"}
                       </p>
-                      <p className="mt-1 font-prose text-sm font-medium leading-relaxed text-journal-charcoal">
-                        {previewLine}
-                      </p>
+                      {bodyPreview || !title ? (
+                        <p className="mt-1 font-prose text-sm font-medium leading-relaxed text-journal-charcoal">
+                          {bodyPreview || "No preview yet…"}
+                        </p>
+                      ) : null}
                     </div>
                     {isOwner ? (
                       <button

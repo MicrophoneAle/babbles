@@ -143,7 +143,7 @@ app.get("/api/entries", async (req, res) => {
   res.json(
     entries.map((entry) => {
       const title = (entry.title || "").trim();
-      const previewSource = title || entry.plainText || "";
+      const previewSource = title ? entry.plainText || "" : title || entry.plainText || "";
       return {
         id: entry.id,
         date: entry.date.toISOString().slice(0, 10),

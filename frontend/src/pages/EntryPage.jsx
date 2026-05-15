@@ -152,7 +152,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
       {!editorFullscreen ? (
         readOnly ? (
           <p
-            className={`mb-3 font-heading text-lg italic leading-snug ${
+            className={`babble-entry-title mb-3 ${
               title.trim() ? "text-journal-brown" : "text-journal-brown/60"
             }`}
           >
@@ -164,7 +164,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Title (optional)"
-            className="babble-title-input mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-lg italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20"
+            className="font-heading mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-lg not-italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20"
           />
         )
       ) : null}
@@ -469,7 +469,7 @@ export default function EntryPage({ mode }) {
         </p>
         {readOnly ? (
           <p
-            className={`mb-4 font-heading text-xl italic leading-snug ${
+            className={`babble-entry-title babble-entry-title--lg mb-4 ${
               title.trim() ? "text-journal-brown" : "text-journal-brown/60"
             }`}
           >
@@ -481,7 +481,7 @@ export default function EntryPage({ mode }) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Title (optional)"
-            className="babble-title-input mb-4 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-xl italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20"
+            className="font-heading mb-4 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-xl not-italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20"
           />
         )}
         <div className="mb-4">

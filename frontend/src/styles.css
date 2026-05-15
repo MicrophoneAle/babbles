@@ -194,9 +194,23 @@ button,
   font-family: "Dancing Script", cursive;
 }
 
-/* Nunito: babble title fields while typing (not read-only display) */
+/* Nunito: search and other non-title text inputs */
 .babble-title-input {
   font-family: "Nunito", sans-serif !important;
+  font-style: normal;
+}
+
+/* Displayed entry titles (Past Babbles, read-only entry view) */
+.babble-entry-title {
+  font-family: "Dancing Script", cursive;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+
+.babble-entry-title--lg {
+  font-size: 1.25rem;
 }
 
 /* Stats page: Carattere for all text; buttons stay Dancing Script */
