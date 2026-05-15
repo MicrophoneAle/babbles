@@ -4,3 +4,4 @@ backend/node_modules
 dist
 .git
 *.log
+package-lock.json

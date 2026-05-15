@@ -2,7 +2,7 @@ export default function ConfirmModal({ isOpen, message, onConfirm, onCancel }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" role="presentation">
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4" role="presentation">
       <button
         type="button"
         className="absolute inset-0 bg-black/55"
