@@ -48,6 +48,9 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
   const [editorFullscreen, setEditorFullscreen] = useState(false);
   const saveRef = useRef(async () => false);
 
+  // Only reset when this card represents a different entry. Do not depend on
+  // entry.updatedAt — auto-save bumps it ~every 10s and would clear fullscreen
+  // and remount the editor via editorNonce.
   useEffect(() => {
     setTitle(entry.title ?? "");
     setContent(entry.content || emptyDoc);
@@ -57,7 +60,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
     setEditorNonce((n) => n + 1);
     setStatus("Saved");
     setEditorFullscreen(false);
-  }, [entry.id, entry.updatedAt]);
+  }, [entry.id]);
 
   useEffect(() => {
     if (!editorFullscreen) return undefined;
