@@ -33,6 +33,8 @@ function formatCreatedTime(iso) {
   }
 }
 
+const EDITOR_FULLSCREEN_SCROLL_CLASS = "h-[calc(100vh-12rem)]";
+
 function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdated }) {
   const [title, setTitle] = useState(entry.title ?? "");
   const [content, setContent] = useState(entry.content || emptyDoc);
@@ -43,6 +45,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
   const [showSavedFlash, setShowSavedFlash] = useState(false);
   const [editorNonce, setEditorNonce] = useState(0);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [editorFullscreen, setEditorFullscreen] = useState(false);
   const saveRef = useRef(async () => false);
 
   useEffect(() => {
@@ -53,7 +56,20 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
     setSavedTags(entry.tags || []);
     setEditorNonce((n) => n + 1);
     setStatus("Saved");
+    setEditorFullscreen(false);
   }, [entry.id, entry.updatedAt]);
+
+  useEffect(() => {
+    if (!editorFullscreen) return undefined;
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setEditorFullscreen(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [editorFullscreen]);
 
   const saveEntry = useCallback(async () => {
     if (readOnly) return false;
@@ -107,40 +123,59 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
       />
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2 border-b border-journal-brown/15 pb-2">
         <p className="font-heading text-sm italic text-journal-grey">{formatCreatedTime(entry.createdAt)}</p>
-        {!readOnly ? (
+        <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
-            className="text-xs font-semibold text-red-800/70 underline decoration-red-800/30 hover:text-red-800"
-            onClick={() => setConfirmOpen(true)}
+            onClick={() => setEditorFullscreen((v) => !v)}
+            className="bg-transparent p-0 text-xs text-[#6b4a2a] transition hover:text-[#3b2a1a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6b4a2a]/30"
+            title={editorFullscreen ? "Collapse editor" : "Expand editor"}
+            aria-label={editorFullscreen ? "Collapse editor" : "Expand editor"}
+            aria-pressed={editorFullscreen}
           >
-            Delete
+            {editorFullscreen ? "⤡" : "⤢"}
           </button>
-        ) : null}
+          {!readOnly ? (
+            <button
+              type="button"
+              className="text-xs font-semibold text-red-800/70 underline decoration-red-800/30 hover:text-red-800"
+              onClick={() => setConfirmOpen(true)}
+            >
+              Delete
+            </button>
+          ) : null}
+        </div>
       </div>
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        readOnly={readOnly}
-        disabled={readOnly}
-        placeholder="Title (optional)"
-        className="mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-heading text-lg italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3]"
-      />
-      <div className="mb-3">
-        <p className="mb-2 font-heading text-sm italic text-journal-brown">Tags</p>
-        <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} readOnly={readOnly} />
-      </div>
+      {!editorFullscreen ? (
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          readOnly={readOnly}
+          disabled={readOnly}
+          placeholder="Title (optional)"
+          className="mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-heading text-lg italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3]"
+        />
+      ) : null}
+      {!editorFullscreen ? (
+        <div className="mb-3">
+          <p className="mb-2 font-heading text-sm italic text-journal-brown">Tags</p>
+          <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} readOnly={readOnly} />
+        </div>
+      ) : null}
       <RichEditor
         key={`${entry.id}-${editorNonce}`}
         value={content}
         readOnly={readOnly}
+        scrollAreaClassName={editorFullscreen ? EDITOR_FULLSCREEN_SCROLL_CLASS : undefined}
         onChange={(next) => {
           setContent(next.json);
           setPlainText(next.text);
         }}
       />
       <div className="mt-3 flex flex-wrap items-center justify-end gap-3">
-        <span className="text-xs font-semibold text-journal-grey">{readOnly ? "View only" : status}</span>
+        {!editorFullscreen ? (
+          <span className="text-xs font-semibold text-journal-grey">{readOnly ? "View only" : status}</span>
+        ) : null}
         {showSavedFlash && !readOnly ? <span className="save-indicator">✓ Babble saved</span> : null}
         {!readOnly ? (
           <button

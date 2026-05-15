@@ -111,7 +111,7 @@ function Toolbar({ editor, readOnly }) {
   );
 }
 
-export default function RichEditor({ value, onChange, readOnly = false }) {
+export default function RichEditor({ value, onChange, readOnly = false, scrollAreaClassName }) {
   const editor = useEditor({
     editable: !readOnly,
     extensions: [
@@ -152,10 +152,14 @@ export default function RichEditor({ value, onChange, readOnly = false }) {
     }
   }, [editor, value]);
 
+  const scrollHeightClass = scrollAreaClassName || "h-[320px]";
+
   return (
     <div className="animate-fadeIn">
       <Toolbar editor={editor} readOnly={readOnly} />
-      <div className="editor-scroll-area h-[320px] overflow-y-auto rounded-[2px] border border-[#d8d6d1] bg-[#faf8f5]">
+      <div
+        className={`editor-scroll-area overflow-y-auto rounded-[2px] border border-[#d8d6d1] bg-[#faf8f5] ${scrollHeightClass}`}
+      >
         <EditorContent editor={editor} />
       </div>
     </div>
