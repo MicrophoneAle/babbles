@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { api } from "../api";
 import { useOwner } from "../AuthProvider";
@@ -16,6 +16,7 @@ function formatCreatedTime(iso) {
 
 export default function EntriesPage() {
   const { isOwner } = useOwner();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [entries, setEntries] = useState([]);
@@ -120,12 +121,31 @@ export default function EntriesPage() {
                         #{tag}
                       </span>
                     ))}
-                    <Link
-                      to={`/entry/${entry.id}`}
-                      className="ml-auto font-heading text-base italic text-journal-brown underline"
-                    >
-                      Read More
-                    </Link>
+                    {isOwner ? (
+                      <div className="ml-auto flex flex-wrap items-center gap-3">
+                        <button
+                          type="button"
+                          className="font-heading text-base italic text-journal-brown underline"
+                          onClick={() => navigate(`/entry/${entry.id}`, { state: { viewOnly: true } })}
+                        >
+                          View
+                        </button>
+                        <button
+                          type="button"
+                          className="font-heading text-base italic text-journal-brown underline"
+                          onClick={() => navigate(`/entry/${entry.id}`, { state: { editMode: true } })}
+                        >
+                          Edit
+                        </button>
+                      </div>
+                    ) : (
+                      <Link
+                        to={`/entry/${entry.id}`}
+                        className="ml-auto font-heading text-base italic text-journal-brown underline"
+                      >
+                        Read More
+                      </Link>
+                    )}
                   </div>
                 </article>
               );

@@ -13,10 +13,11 @@ import {
 } from "date-fns";
 import { api } from "../api";
 
-function rotateForDate(dateStr) {
-  let hash = 0;
-  for (let i = 0; i < dateStr.length; i += 1) hash = (hash << 5) - hash + dateStr.charCodeAt(i);
-  return ((hash % 7) - 3) * 0.8;
+/** Stable tilt per calendar day (re-renders do not reshuffle). */
+function stickyRotationDeg(day) {
+  const d = day.getDate();
+  const m = day.getMonth() + 1;
+  return ((d * 13 + m * 7) % 11) - 5;
 }
 
 function StickyCalendar({ entries }) {
@@ -72,7 +73,7 @@ function StickyCalendar({ entries }) {
               className={`relative h-16 rounded-[2px] border border-[#d9ccb0] p-1 text-xs shadow-sm transition ${
                 words ? "bg-[#e9d6ad]" : "bg-journal-sticky"
               } ${today ? "ring-2 ring-journal-brown/30" : ""} ${inMonth ? "" : "opacity-40"}`}
-              style={{ transform: `rotate(${rotateForDate(key)}deg)` }}
+              style={{ transform: `rotate(${stickyRotationDeg(day)}deg)` }}
             >
               <p className="font-semibold text-journal-charcoal">{format(day, "d")}</p>
               {words > 0 ? (

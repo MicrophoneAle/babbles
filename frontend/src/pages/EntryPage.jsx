@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { format, parseISO } from "date-fns";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 import { useOwner } from "../AuthProvider";
 import RichEditor from "../components/Editor";
@@ -203,8 +203,11 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
 export default function EntryPage({ mode }) {
   const params = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { isOwner, isLoaded } = useOwner();
-  const readOnly = !isOwner;
+  const viewOnlyFromNav = location.state?.viewOnly === true;
+  const readOnly = !isOwner || viewOnlyFromNav;
+  const startInEditMode = isOwner && location.state?.editMode === true && !viewOnlyFromNav;
 
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
@@ -451,6 +454,7 @@ export default function EntryPage({ mode }) {
           key={`${singleEntry.id}-${editorNonce}`}
           value={content}
           readOnly={readOnly}
+          autoFocusEditor={startInEditMode}
           onChange={(next) => {
             setContent(next.json);
             setPlainText(next.text);

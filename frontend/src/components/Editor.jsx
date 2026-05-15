@@ -3,7 +3,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const HIGHLIGHT_COLORS = [
   { hex: "#FFD700", label: "Yellow" },
@@ -111,7 +111,15 @@ function Toolbar({ editor, readOnly }) {
   );
 }
 
-export default function RichEditor({ value, onChange, readOnly = false, scrollAreaClassName }) {
+export default function RichEditor({
+  value,
+  onChange,
+  readOnly = false,
+  scrollAreaClassName,
+  autoFocusEditor = false
+}) {
+  const didAutoFocus = useRef(false);
+
   const editor = useEditor({
     editable: !readOnly,
     extensions: [
@@ -142,6 +150,21 @@ export default function RichEditor({ value, onChange, readOnly = false, scrollAr
     if (!editor) return;
     editor.setEditable(!readOnly);
   }, [editor, readOnly]);
+
+  useEffect(() => {
+    if (!autoFocusEditor) {
+      didAutoFocus.current = false;
+    }
+  }, [autoFocusEditor]);
+
+  useEffect(() => {
+    if (!editor || readOnly || !autoFocusEditor || didAutoFocus.current) return;
+    didAutoFocus.current = true;
+    const id = requestAnimationFrame(() => {
+      editor.chain().focus("end").run();
+    });
+    return () => cancelAnimationFrame(id);
+  }, [editor, readOnly, autoFocusEditor]);
 
   useEffect(() => {
     if (!editor) return;
