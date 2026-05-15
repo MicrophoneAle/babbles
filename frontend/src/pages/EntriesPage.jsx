@@ -73,7 +73,7 @@ export default function EntriesPage() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-dancing text-ds-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
+          className="babble-title-input w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
           placeholder="Search by keyword or tag..."
         />
       </div>
@@ -87,7 +87,7 @@ export default function EntriesPage() {
             <h3 className="font-heading text-3xl italic text-journal-brown">{date}</h3>
             {dayEntries.map((entry) => {
               const title = (entry.title || "").trim();
-              const previewLine = title || (entry.preview?.length ? entry.preview : "No preview yet…");
+              const previewLine = entry.preview?.length ? entry.preview : "No preview yet…";
               return (
                 <article
                   key={entry.id}
@@ -99,12 +99,13 @@ export default function EntriesPage() {
                         {formatCreatedTime(entry.createdAt)}
                       </p>
                       <p
-                        className={
-                          title
-                            ? "mt-1 font-heading text-sm font-medium italic leading-relaxed text-journal-charcoal"
-                            : "mt-1 font-prose text-sm font-medium leading-relaxed text-journal-charcoal"
-                        }
+                        className={`mt-1 font-heading text-lg italic leading-snug ${
+                          title ? "text-journal-charcoal" : "text-journal-charcoal/60"
+                        }`}
                       >
+                        {title || "Untitled Babble"}
+                      </p>
+                      <p className="mt-1 font-prose text-sm font-medium leading-relaxed text-journal-charcoal">
                         {previewLine}
                       </p>
                     </div>

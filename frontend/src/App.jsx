@@ -59,7 +59,7 @@ function JournalSidebarPanels() {
               Hide
             </button>
           </div>
-          <ul className="space-y-1 font-dancing text-ds-sm text-[#4b3a28]">
+          <ul className="space-y-1 font-prose text-sm text-[#4b3a28]">
             {prompts.map((prompt) => (
               <li key={prompt}>- {prompt}</li>
             ))}

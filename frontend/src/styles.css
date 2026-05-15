@@ -68,7 +68,7 @@ body {
 }
 
 .editor-scroll-area .ProseMirror h2 {
-  font-family: "Playfair Display", serif;
+  font-family: "Lora", serif;
   font-size: 1.5rem;
   font-weight: 700;
   font-style: italic;
@@ -79,7 +79,7 @@ body {
 }
 
 .editor-scroll-area .ProseMirror h3 {
-  font-family: "Playfair Display", serif;
+  font-family: "Lora", serif;
   font-size: 1.25rem;
   font-weight: 600;
   font-style: italic;
@@ -185,10 +185,38 @@ body {
   }
 }
 
+/* === Central typography === */
+
+/* Dancing Script: all buttons */
+button,
+[type="button"],
+[type="submit"] {
+  font-family: "Dancing Script", cursive;
+}
+
+/* Nunito: babble title fields while typing (not read-only display) */
+.babble-title-input {
+  font-family: "Nunito", sans-serif !important;
+}
+
+/* Stats page: Carattere for all text; buttons stay Dancing Script */
+.stats-page {
+  font-family: "Carattere", cursive;
+}
+
+.stats-page button,
+.stats-page [type="button"] {
+  font-family: "Dancing Script", cursive;
+}
+
 /* Dancing Script — secondary UI script; sizes ~110% vs default Tailwind step. */
 @layer utilities {
   .font-dancing {
     font-family: "Dancing Script", cursive;
+  }
+
+  .font-prose {
+    font-family: "Lora", serif;
   }
 
   .text-ds-2xs {

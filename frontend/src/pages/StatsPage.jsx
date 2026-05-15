@@ -41,14 +41,14 @@ function StickyCalendar({ entries }) {
     <div>
       <div className="mb-3 flex items-center justify-between">
         <button
-          className="rounded-[2px] border border-journal-grey/40 px-3 py-1 font-dancing text-ds-sm"
+          className="rounded-[2px] border border-journal-grey/40 px-3 py-1 text-ds-sm"
           onClick={() => setMonthCursor(subMonths(monthCursor, 1))}
         >
           ←
         </button>
-        <h3 className="font-dancing text-5xl italic text-journal-brown">{format(monthCursor, "MMMM yyyy")}</h3>
+        <h3 className="text-5xl italic text-journal-brown">{format(monthCursor, "MMMM yyyy")}</h3>
         <button
-          className="rounded-[2px] border border-journal-grey/40 px-3 py-1 font-dancing text-ds-sm"
+          className="rounded-[2px] border border-journal-grey/40 px-3 py-1 text-ds-sm"
           onClick={() => setMonthCursor(addMonths(monthCursor, 1))}
         >
           →
@@ -56,7 +56,7 @@ function StickyCalendar({ entries }) {
       </div>
       <div className="mb-2 grid grid-cols-7 gap-2">
         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-          <div key={d} className="text-center font-heading text-base italic text-journal-grey">
+          <div key={d} className="text-center text-base italic text-journal-grey">
             {d}
           </div>
         ))}
@@ -76,7 +76,7 @@ function StickyCalendar({ entries }) {
               } ${today ? "ring-2 ring-journal-brown/30" : ""} ${inMonth ? "" : "opacity-40"}`}
               style={{ transform: `rotate(${stickyRotationDeg(day)}deg)` }}
             >
-              <p className="font-dancing font-semibold text-journal-charcoal">{format(day, "d")}</p>
+              <p className="font-semibold text-journal-charcoal">{format(day, "d")}</p>
               {words > 0 ? (
                 <div className="mt-1 text-[10px] text-journal-brown">
                   <span>✒</span> {words}w
@@ -104,24 +104,24 @@ export default function StatsPage() {
   }, []);
 
   return (
-    <section className="space-y-4">
+    <section className="stats-page space-y-4">
       <h2 className="section-title text-5xl">Writing stats</h2>
       <div className="grid grid-cols-2 gap-4">
         <div className="page-content-block p-4">
-          <p className="font-heading text-xl italic text-journal-grey">Current streak</p>
-          <p className="font-heading text-4xl italic text-journal-brown">{stats.currentStreak} 🔥</p>
+          <p className="text-xl italic text-journal-grey">Current streak</p>
+          <p className="text-4xl italic text-journal-brown">{stats.currentStreak} 🔥</p>
         </div>
         <div className="page-content-block p-4">
-          <p className="font-heading text-xl italic text-journal-grey">Longest streak</p>
-          <p className="font-heading text-4xl italic text-journal-brown">{stats.longestStreak}</p>
+          <p className="text-xl italic text-journal-grey">Longest streak</p>
+          <p className="text-4xl italic text-journal-brown">{stats.longestStreak}</p>
         </div>
         <div className="page-content-block p-4">
-          <p className="font-heading text-xl italic text-journal-grey">Total babbles</p>
-          <p className="font-heading text-4xl italic text-journal-brown">{stats.totalEntries}</p>
+          <p className="text-xl italic text-journal-grey">Total babbles</p>
+          <p className="text-4xl italic text-journal-brown">{stats.totalEntries}</p>
         </div>
         <div className="page-content-block p-4">
-          <p className="font-heading text-xl italic text-journal-grey">Total words</p>
-          <p className="font-heading text-4xl italic text-journal-brown">{stats.totalWords}</p>
+          <p className="text-xl italic text-journal-grey">Total words</p>
+          <p className="text-4xl italic text-journal-brown">{stats.totalWords}</p>
         </div>
       </div>
       <div className="page-content-block p-4">

@@ -8,7 +8,7 @@ export default function Prompts({ prompts, hidden, onHide }) {
           Hide
         </button>
       </div>
-      <ul className="space-y-1 font-dancing text-ds-sm text-journal-charcoal">
+      <ul className="space-y-1 font-prose text-sm text-journal-charcoal">
         {prompts.map((prompt) => (
           <li key={prompt}>- {prompt}</li>
         ))}

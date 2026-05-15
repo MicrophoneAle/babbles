@@ -126,7 +126,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
         onConfirm={() => void handleDelete()}
       />
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2 border-b border-journal-brown/15 pb-2">
-        <p className="font-heading text-base italic text-journal-grey">{formatCreatedTime(entry.createdAt)}</p>
+        <p className="font-dancing text-ds-base italic text-journal-grey">{formatCreatedTime(entry.createdAt)}</p>
         <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
@@ -150,15 +150,23 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
         </div>
       </div>
       {!editorFullscreen ? (
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          readOnly={readOnly}
-          disabled={readOnly}
-          placeholder="Title (optional)"
-          className={`mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-lg italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3] ${readOnly ? "font-heading" : "font-sans"}`}
-        />
+        readOnly ? (
+          <p
+            className={`mb-3 font-heading text-lg italic leading-snug ${
+              title.trim() ? "text-journal-brown" : "text-journal-brown/60"
+            }`}
+          >
+            {title.trim() || "Untitled Babble"}
+          </p>
+        ) : (
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title (optional)"
+            className="babble-title-input mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-lg italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20"
+          />
+        )
       ) : null}
       {!editorFullscreen ? (
         <div className="mb-3">
@@ -444,7 +452,7 @@ export default function EntryPage({ mode }) {
         <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="section-title text-5xl">{format(new Date(`${entryDateStr}T12:00:00`), "EEEE, MMMM d")}</h2>
           <div className="flex items-center gap-3">
-            <p className="font-heading text-base italic text-journal-grey">{formatCreatedTime(singleEntry.createdAt)}</p>
+            <p className="font-dancing text-ds-base italic text-journal-grey">{formatCreatedTime(singleEntry.createdAt)}</p>
             {!readOnly ? (
               <button
                 type="button"
@@ -459,15 +467,23 @@ export default function EntryPage({ mode }) {
         <p className="mb-4 font-dancing text-ds-sm font-semibold text-journal-grey">
           {!isLoaded ? "Loading…" : readOnly ? "View only" : status}
         </p>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          readOnly={readOnly}
-          disabled={readOnly}
-          placeholder="Title (optional)"
-          className={`mb-4 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-xl italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3] ${readOnly ? "font-heading" : "font-sans"}`}
-        />
+        {readOnly ? (
+          <p
+            className={`mb-4 font-heading text-xl italic leading-snug ${
+              title.trim() ? "text-journal-brown" : "text-journal-brown/60"
+            }`}
+          >
+            {title.trim() || "Untitled Babble"}
+          </p>
+        ) : (
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title (optional)"
+            className="babble-title-input mb-4 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-xl italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20"
+          />
+        )}
         <div className="mb-4">
           <p className="mb-2 font-dancing text-ds-xl italic text-journal-brown">Tags</p>
           <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} readOnly={readOnly} />
