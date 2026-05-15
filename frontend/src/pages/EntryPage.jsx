@@ -403,10 +403,7 @@ export default function EntryPage({ mode }) {
         <div className="mb-2 pr-6">
           <button
             type="button"
-            onClick={() => {
-              if (typeof window !== "undefined" && window.history.length > 1) navigate(-1);
-              else navigate("/entries");
-            }}
+            onClick={() => navigate("/entries")}
             className="rounded-[2px] border border-journal-brown/25 bg-[#f5edd9]/60 px-2.5 py-1 font-heading text-base italic text-[#4b3622] shadow-sm transition hover:border-journal-brown/40 hover:bg-[#ede2cb]"
           >
             ← Back
