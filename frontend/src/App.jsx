@@ -54,12 +54,12 @@ function JournalSidebarPanels() {
                 window.localStorage.setItem(PROMPTS_HIDDEN_KEY, today);
                 setHidePrompts(true);
               }}
-              className="text-xs font-semibold text-[#6b4a2a] hover:text-[#3b2a1a]"
+              className="font-dancing text-ds-xs font-semibold text-[#6b4a2a] hover:text-[#3b2a1a]"
             >
               Hide
             </button>
           </div>
-          <ul className="space-y-1 font-prose text-sm text-[#4b3a28]">
+          <ul className="space-y-1 font-dancing text-ds-sm text-[#4b3a28]">
             {prompts.map((prompt) => (
               <li key={prompt}>- {prompt}</li>
             ))}
@@ -74,7 +74,7 @@ function SidebarAuth() {
   const publishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim();
   if (!publishableKey) {
     return (
-      <p className="font-sans text-xs leading-snug text-[#6b4a2a]/85">
+      <p className="font-dancing text-ds-xs leading-snug text-[#6b4a2a]/85">
         Owner sign-in is not configured yet. Add <span className="font-mono">VITE_CLERK_PUBLISHABLE_KEY</span> to enable
         editing.
       </p>
@@ -87,18 +87,18 @@ function SidebarAuth() {
         <SignInButton mode="modal">
           <button
             type="button"
-            className="w-full rounded-[2px] border border-journal-brown/40 bg-journal-brown px-3 py-2 text-sm font-semibold text-journal-white shadow-sm transition hover:bg-[#5d4533]"
+            className="w-full rounded-[2px] border border-journal-brown/40 bg-journal-brown px-3 py-2 font-dancing text-ds-sm font-semibold text-journal-white shadow-sm transition hover:bg-[#5d4533]"
           >
             Sign in
           </button>
         </SignInButton>
-        <p className="text-xs leading-snug text-[#6b4a2a]/80">
+        <p className="font-dancing text-ds-xs leading-snug text-[#6b4a2a]/80">
           Michael&apos;s Babbles is public to read. Sign in as the owner to write or delete anything.
         </p>
       </SignedOut>
       <SignedIn>
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-semibold text-[#6b4a2a]">Signed in</span>
+          <span className="font-dancing text-ds-xs font-semibold text-[#6b4a2a]">Signed in</span>
           <UserButton afterSignOutUrl="/" />
         </div>
       </SignedIn>

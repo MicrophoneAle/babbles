@@ -130,7 +130,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
           <button
             type="button"
             onClick={() => setEditorFullscreen((v) => !v)}
-            className="bg-transparent p-0 text-xs text-[#6b4a2a] transition hover:text-[#3b2a1a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6b4a2a]/30"
+            className="bg-transparent p-0 font-dancing text-ds-xs text-[#6b4a2a] transition hover:text-[#3b2a1a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6b4a2a]/30"
             title={editorFullscreen ? "Collapse editor" : "Expand editor"}
             aria-label={editorFullscreen ? "Collapse editor" : "Expand editor"}
             aria-pressed={editorFullscreen}
@@ -140,7 +140,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
           {!readOnly ? (
             <button
               type="button"
-              className="text-xs font-semibold text-red-800/70 underline decoration-red-800/30 hover:text-red-800"
+              className="font-dancing text-ds-xs font-semibold text-red-800/70 underline decoration-red-800/30 hover:text-red-800"
               onClick={() => setConfirmOpen(true)}
             >
               Delete
@@ -161,7 +161,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
       ) : null}
       {!editorFullscreen ? (
         <div className="mb-3">
-          <p className="mb-2 font-heading text-base italic text-journal-brown">Tags</p>
+          <p className="mb-2 font-dancing text-ds-lg italic text-journal-brown">Tags</p>
           <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} readOnly={readOnly} />
         </div>
       ) : null}
@@ -177,7 +177,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
       />
       <div className="mt-3 flex flex-wrap items-center justify-end gap-3">
         {!editorFullscreen ? (
-          <span className="text-xs font-semibold text-journal-grey">{readOnly ? "View only" : status}</span>
+          <span className="font-dancing text-ds-xs font-semibold text-journal-grey">{readOnly ? "View only" : status}</span>
         ) : null}
         {showSavedFlash && !readOnly ? <span className="save-indicator">✓ Babble saved</span> : null}
         {!readOnly ? (
@@ -190,7 +190,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
                 setTimeout(() => setShowSavedFlash(false), 2000);
               }
             }}
-            className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 text-sm font-semibold text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
+            className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 font-dancing text-ds-sm font-semibold text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
           >
             Save Entry
           </button>
@@ -363,7 +363,7 @@ export default function EntryPage({ mode }) {
   if (mode === "id" && !idValid) {
     return (
       <section>
-        <p className="font-heading text-xl italic text-journal-grey">Invalid entry link.</p>
+        <p className="font-dancing text-ds-xl italic text-journal-grey">Invalid entry link.</p>
       </section>
     );
   }
@@ -371,7 +371,7 @@ export default function EntryPage({ mode }) {
   if (mode === "id" && singleLoadError) {
     return (
       <section>
-        <p className="font-heading text-xl italic text-journal-grey">{singleLoadError}</p>
+        <p className="font-dancing text-ds-xl italic text-journal-grey">{singleLoadError}</p>
       </section>
     );
   }
@@ -404,7 +404,7 @@ export default function EntryPage({ mode }) {
           <button
             type="button"
             onClick={() => navigate("/entries")}
-            className="rounded-[2px] border border-journal-brown/25 bg-[#f5edd9]/60 px-2.5 py-1 font-heading text-base italic text-[#4b3622] shadow-sm transition hover:border-journal-brown/40 hover:bg-[#ede2cb]"
+            className="rounded-[2px] border border-journal-brown/25 bg-[#f5edd9]/60 px-2.5 py-1 font-dancing text-ds-base italic text-[#4b3622] shadow-sm transition hover:border-journal-brown/40 hover:bg-[#ede2cb]"
           >
             ← Back
           </button>
@@ -416,7 +416,7 @@ export default function EntryPage({ mode }) {
             adjacent.previous != null &&
             navigate(`/entry/${adjacent.previous}`, { state: persistEntryNavState })
           }
-          className={`absolute left-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-r-[2px] border-r border-journal-grey/40 text-sm font-bold shadow-sm transition ${
+          className={`absolute left-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-r-[2px] border-r border-journal-grey/40 font-dancing text-ds-sm font-bold shadow-sm transition ${
             adjacent.previous != null
               ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
               : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
@@ -431,7 +431,7 @@ export default function EntryPage({ mode }) {
           onClick={() =>
             adjacent.next != null && navigate(`/entry/${adjacent.next}`, { state: persistEntryNavState })
           }
-          className={`absolute right-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-l-[2px] border-l border-journal-grey/40 text-sm font-bold shadow-sm transition ${
+          className={`absolute right-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-l-[2px] border-l border-journal-grey/40 font-dancing text-ds-sm font-bold shadow-sm transition ${
             adjacent.next != null
               ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
               : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
@@ -447,7 +447,7 @@ export default function EntryPage({ mode }) {
             {!readOnly ? (
               <button
                 type="button"
-                className="text-xs font-semibold text-red-800/70 underline decoration-red-800/30 hover:text-red-800"
+                className="font-dancing text-ds-xs font-semibold text-red-800/70 underline decoration-red-800/30 hover:text-red-800"
                 onClick={() => setConfirmDeleteOpen(true)}
               >
                 Delete
@@ -455,7 +455,7 @@ export default function EntryPage({ mode }) {
             ) : null}
           </div>
         </div>
-        <p className="mb-4 text-sm font-semibold text-journal-grey">
+        <p className="mb-4 font-dancing text-ds-sm font-semibold text-journal-grey">
           {!isLoaded ? "Loading…" : readOnly ? "View only" : status}
         </p>
         <input
@@ -468,7 +468,7 @@ export default function EntryPage({ mode }) {
           className="mb-4 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-sans text-xl italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3]"
         />
         <div className="mb-4">
-          <p className="mb-2 font-heading text-xl italic text-journal-brown">Tags</p>
+          <p className="mb-2 font-dancing text-ds-xl italic text-journal-brown">Tags</p>
           <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} readOnly={readOnly} />
         </div>
         <RichEditor
@@ -493,7 +493,7 @@ export default function EntryPage({ mode }) {
                   setTimeout(() => setShowSavedFlash(false), 2000);
                 }
               }}
-              className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 text-sm font-semibold text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
+              className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 font-dancing text-ds-sm font-semibold text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
             >
               Save Entry
             </button>
@@ -506,7 +506,7 @@ export default function EntryPage({ mode }) {
   if (mode === "id" && !singleEntry && !singleLoadError) {
     return (
       <section>
-        <p className="font-heading text-xl italic text-journal-grey">Loading…</p>
+        <p className="font-dancing text-ds-xl italic text-journal-grey">Loading…</p>
       </section>
     );
   }
@@ -519,20 +519,20 @@ export default function EntryPage({ mode }) {
           <button
             type="button"
             onClick={() => void handleNewEntry()}
-            className="flex items-center gap-2 rounded-[2px] border border-journal-brown/50 bg-journal-brown px-4 py-2.5 font-sans text-lg font-semibold italic text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
+            className="flex items-center gap-2 rounded-[2px] border border-journal-brown/50 bg-journal-brown px-4 py-2.5 font-dancing text-ds-lg font-semibold italic text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
           >
-            <span className="text-xl font-bold leading-none">+</span>
+            <span className="font-dancing text-ds-2xl font-bold leading-none">+</span>
             New Entry
           </button>
         ) : null}
       </div>
-      <p className="mb-4 text-sm font-semibold text-journal-grey">
+      <p className="mb-4 font-dancing text-ds-sm font-semibold text-journal-grey">
         {!isLoaded ? "Loading…" : readOnly ? "View only — sign in as the owner to write." : "Each babble saves on its own."}
       </p>
       {todayLoading ? (
-        <p className="font-heading text-xl italic text-journal-grey">Loading today&apos;s babbles…</p>
+        <p className="font-dancing text-ds-xl italic text-journal-grey">Loading today&apos;s babbles…</p>
       ) : todayEntries.length === 0 ? (
-        <p className="font-heading text-xl italic text-journal-grey">
+        <p className="font-dancing text-ds-xl italic text-journal-grey">
           No babbles yet for today.
           {!readOnly ? " Click New Entry to begin." : ""}
         </p>

@@ -40,14 +40,14 @@ function StickyCalendar({ entries }) {
     <div>
       <div className="mb-3 flex items-center justify-between">
         <button
-          className="rounded-[2px] border border-journal-grey/40 px-3 py-1 text-sm"
+          className="rounded-[2px] border border-journal-grey/40 px-3 py-1 font-dancing text-ds-sm"
           onClick={() => setMonthCursor(subMonths(monthCursor, 1))}
         >
           ←
         </button>
         <h3 className="font-heading text-5xl italic text-journal-brown">{format(monthCursor, "MMMM yyyy")}</h3>
         <button
-          className="rounded-[2px] border border-journal-grey/40 px-3 py-1 text-sm"
+          className="rounded-[2px] border border-journal-grey/40 px-3 py-1 font-dancing text-ds-sm"
           onClick={() => setMonthCursor(addMonths(monthCursor, 1))}
         >
           →

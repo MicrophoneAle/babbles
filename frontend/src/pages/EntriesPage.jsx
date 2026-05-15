@@ -72,12 +72,12 @@ export default function EntriesPage() {
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
+          className="w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-dancing text-ds-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
           placeholder="Search by keyword or tag..."
         />
       </div>
       {entries.length === 0 ? (
-        <p className="font-heading text-xl italic text-journal-grey">
+        <p className="font-dancing text-ds-xl italic text-journal-grey">
           No babbles yet — open Babble to start writing!
         </p>
       ) : (
@@ -94,7 +94,7 @@ export default function EntriesPage() {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                      <p className="font-sans text-xs font-semibold uppercase tracking-wide text-journal-grey">
+                      <p className="font-dancing text-ds-xs font-semibold uppercase tracking-wide text-journal-grey">
                         {formatCreatedTime(entry.createdAt)}
                       </p>
                       <p className="mt-1 font-prose text-sm font-medium leading-relaxed text-journal-charcoal">
@@ -104,19 +104,19 @@ export default function EntriesPage() {
                     {isOwner ? (
                       <button
                         type="button"
-                        className="shrink-0 text-xs text-red-800/60 underline decoration-red-800/30 hover:text-red-800/80"
+                        className="shrink-0 font-dancing text-ds-xs text-red-800/60 underline decoration-red-800/30 hover:text-red-800/80"
                         onClick={() => setConfirmEntryId(entry.id)}
                       >
                         Delete
                       </button>
                     ) : null}
                   </div>
-                  <p className="mt-2 font-heading text-base italic text-journal-grey">{entry.wordCount ?? 0} words</p>
+                  <p className="mt-2 font-dancing text-ds-base italic text-journal-grey">{entry.wordCount ?? 0} words</p>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {(entry.tags || []).map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-2 py-1 text-xs font-semibold text-journal-brown"
+                        className="rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-2 py-1 font-dancing text-ds-xs font-semibold text-journal-brown"
                       >
                         #{tag}
                       </span>
@@ -125,14 +125,14 @@ export default function EntriesPage() {
                       <div className="ml-auto flex flex-wrap items-center gap-3">
                         <button
                           type="button"
-                          className="font-heading text-base italic text-journal-brown underline"
+                          className="font-dancing text-ds-base italic text-journal-brown underline"
                           onClick={() => navigate(`/entry/${entry.id}`, { state: { viewOnly: true } })}
                         >
                           View
                         </button>
                         <button
                           type="button"
-                          className="font-heading text-base italic text-journal-brown underline"
+                          className="font-dancing text-ds-base italic text-journal-brown underline"
                           onClick={() => navigate(`/entry/${entry.id}`, { state: { editMode: true } })}
                         >
                           Edit
@@ -141,7 +141,7 @@ export default function EntriesPage() {
                     ) : (
                       <Link
                         to={`/entry/${entry.id}`}
-                        className="ml-auto font-heading text-base italic text-journal-brown underline"
+                        className="ml-auto font-dancing text-ds-base italic text-journal-brown underline"
                       >
                         Read More
                       </Link>

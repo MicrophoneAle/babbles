@@ -163,7 +163,9 @@ body {
 
 .save-indicator {
   color: #7a9e7e;
-  @apply text-sm font-semibold animate-saveFlash;
+  font-family: "Dancing Script", cursive;
+  font-size: calc(0.875rem * 1.1);
+  @apply font-semibold animate-saveFlash;
 }
 
 @keyframes saveFlash {
@@ -180,5 +182,57 @@ body {
   }
   100% {
     opacity: 0;
+  }
+}
+
+/* Dancing Script — secondary UI script; sizes ~110% vs default Tailwind step. */
+@layer utilities {
+  .font-dancing {
+    font-family: "Dancing Script", cursive;
+  }
+
+  .text-ds-2xs {
+    font-size: calc(10px * 1.1);
+    line-height: 1.2;
+  }
+
+  .text-ds-xs {
+    font-size: calc(0.75rem * 1.1);
+    line-height: 1.2;
+  }
+
+  .text-ds-sm {
+    font-size: calc(0.875rem * 1.1);
+    line-height: 1.35;
+  }
+
+  .text-ds-base {
+    font-size: calc(1rem * 1.1);
+    line-height: 1.45;
+  }
+
+  .text-ds-lg {
+    font-size: calc(1.125rem * 1.1);
+    line-height: 1.45;
+  }
+
+  .text-ds-xl {
+    font-size: calc(1.25rem * 1.1);
+    line-height: 1.45;
+  }
+
+  .text-ds-2xl {
+    font-size: calc(1.5rem * 1.1);
+    line-height: 1.35;
+  }
+
+  .text-ds-3xl {
+    font-size: calc(1.875rem * 1.1);
+    line-height: 1.2;
+  }
+
+  .text-ds-4xl {
+    font-size: calc(2.25rem * 1.1);
+    line-height: 1.1;
   }
 }
