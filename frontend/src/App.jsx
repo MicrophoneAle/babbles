@@ -114,7 +114,7 @@ function Layout({ children }) {
     <div
       className="desk-bg flex min-h-screen w-full max-w-full min-w-0 items-center justify-center p-6"
       style={{
-        backgroundImage: `url(${woodTexture})`,
+        backgroundImage: `linear-gradient(rgba(139, 94, 60, 0.55), rgba(139, 94, 60, 0.55)), url(${woodTexture})`,
         backgroundSize: "cover",
         backgroundPosition: "center"
       }}
@@ -122,7 +122,7 @@ function Layout({ children }) {
       <div
         className="book-frame relative w-full max-w-full min-w-0 rounded-[5px] p-[10px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
         style={{
-          backgroundImage: `url(${maroonTexture})`,
+          backgroundImage: `linear-gradient(rgba(123, 45, 45, 0.6), rgba(123, 45, 45, 0.6)), url(${maroonTexture})`,
           backgroundSize: "cover",
           backgroundPosition: "center"
         }}
@@ -130,7 +130,7 @@ function Layout({ children }) {
         <div
           className="book-cover box-border w-full max-w-full min-w-0 overflow-hidden rounded-[3px] p-[12px]"
           style={{
-            backgroundImage: `url(${leatherTexture})`,
+            backgroundImage: `linear-gradient(rgba(59, 42, 26, 0.6), rgba(59, 42, 26, 0.6)), url(${leatherTexture})`,
             backgroundSize: "cover",
             backgroundPosition: "center"
           }}
