@@ -12,6 +12,7 @@ import {
   subMonths
 } from "date-fns";
 import { api } from "../api";
+import { plural } from "../utils/plural";
 
 /** Stable tilt per calendar day (re-renders do not reshuffle). */
 function stickyRotationDeg(day) {
@@ -45,7 +46,7 @@ function StickyCalendar({ entries }) {
         >
           ←
         </button>
-        <h3 className="font-heading text-5xl italic text-journal-brown">{format(monthCursor, "MMMM yyyy")}</h3>
+        <h3 className="font-dancing text-5xl italic text-journal-brown">{format(monthCursor, "MMMM yyyy")}</h3>
         <button
           className="rounded-[2px] border border-journal-grey/40 px-3 py-1 font-dancing text-ds-sm"
           onClick={() => setMonthCursor(addMonths(monthCursor, 1))}
@@ -69,13 +70,13 @@ function StickyCalendar({ entries }) {
           return (
             <div
               key={key}
-              title={`${format(day, "PPP")} - ${words} words`}
+              title={`${format(day, "PPP")} - ${plural(words, "word")}`}
               className={`relative h-16 rounded-[2px] border border-[#d9ccb0] p-1 text-xs shadow-sm transition ${
                 words ? "bg-[#e9d6ad]" : "bg-journal-sticky"
               } ${today ? "ring-2 ring-journal-brown/30" : ""} ${inMonth ? "" : "opacity-40"}`}
               style={{ transform: `rotate(${stickyRotationDeg(day)}deg)` }}
             >
-              <p className="font-semibold text-journal-charcoal">{format(day, "d")}</p>
+              <p className="font-dancing font-semibold text-journal-charcoal">{format(day, "d")}</p>
               {words > 0 ? (
                 <div className="mt-1 text-[10px] text-journal-brown">
                   <span>✒</span> {words}w

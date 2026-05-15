@@ -6,6 +6,7 @@ import { useOwner } from "../AuthProvider";
 import RichEditor from "../components/Editor";
 import TagInput from "../components/TagInput";
 import ConfirmModal from "../components/ConfirmModal";
+import { plural } from "../utils/plural";
 
 const emptyDoc = { type: "doc", content: [{ type: "paragraph" }] };
 
@@ -156,7 +157,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
           readOnly={readOnly}
           disabled={readOnly}
           placeholder="Title (optional)"
-          className="mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-sans text-lg italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3]"
+          className={`mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-lg italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3] ${readOnly ? "font-heading" : "font-sans"}`}
         />
       ) : null}
       {!editorFullscreen ? (
@@ -465,7 +466,7 @@ export default function EntryPage({ mode }) {
           readOnly={readOnly}
           disabled={readOnly}
           placeholder="Title (optional)"
-          className="mb-4 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-sans text-xl italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3]"
+          className={`mb-4 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-xl italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3] ${readOnly ? "font-heading" : "font-sans"}`}
         />
         <div className="mb-4">
           <p className="mb-2 font-dancing text-ds-xl italic text-journal-brown">Tags</p>

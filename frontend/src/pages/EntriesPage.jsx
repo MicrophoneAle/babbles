@@ -4,6 +4,7 @@ import { format, parseISO } from "date-fns";
 import { api } from "../api";
 import { useOwner } from "../AuthProvider";
 import ConfirmModal from "../components/ConfirmModal";
+import { plural } from "../utils/plural";
 
 function formatCreatedTime(iso) {
   if (!iso) return "";
@@ -97,7 +98,13 @@ export default function EntriesPage() {
                       <p className="font-dancing text-ds-xs font-semibold uppercase tracking-wide text-journal-grey">
                         {formatCreatedTime(entry.createdAt)}
                       </p>
-                      <p className="mt-1 font-prose text-sm font-medium leading-relaxed text-journal-charcoal">
+                      <p
+                        className={
+                          title
+                            ? "mt-1 font-heading text-sm font-medium italic leading-relaxed text-journal-charcoal"
+                            : "mt-1 font-prose text-sm font-medium leading-relaxed text-journal-charcoal"
+                        }
+                      >
                         {previewLine}
                       </p>
                     </div>
@@ -111,7 +118,9 @@ export default function EntriesPage() {
                       </button>
                     ) : null}
                   </div>
-                  <p className="mt-2 font-dancing text-ds-base italic text-journal-grey">{entry.wordCount ?? 0} words</p>
+                  <p className="mt-2 font-dancing text-ds-base italic text-journal-grey">
+                    {plural(entry.wordCount ?? 0, "word")}
+                  </p>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {(entry.tags || []).map((tag) => (
                       <span

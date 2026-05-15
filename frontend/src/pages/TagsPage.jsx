@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useOwner } from "../AuthProvider";
 import ConfirmModal from "../components/ConfirmModal";
+import { plural } from "../utils/plural";
 
 export default function TagsPage() {
   const { isOwner } = useOwner();
@@ -75,7 +76,7 @@ export default function TagsPage() {
               className="flex items-center gap-2 rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-3 py-1 font-dancing text-ds-sm font-semibold text-journal-brown"
             >
               <span className="italic">{tag.name}</span>
-              <span className="font-dancing text-ds-xs text-journal-grey">({tag.count} babbles)</span>
+              <span className="font-dancing text-ds-xs text-journal-grey">({plural(tag.count, "babble")})</span>
               <button
                 type="button"
                 className="font-dancing text-ds-sm italic text-journal-brown underline"
