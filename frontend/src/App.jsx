@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
 import { NavLink, Route, Routes, useLocation } from "react-router-dom";
 import { format } from "date-fns";
+import woodTexture from "./assets/textures/babbles-wood-texture.jpg";
+import leatherTexture from "./assets/textures/babbles-leather-book-texture.jpg";
+import maroonTexture from "./assets/textures/babbles-maroon-book-texture.jpg";
 import { api } from "./api";
 import EntryPage from "./pages/EntryPage";
 import EntriesPage from "./pages/EntriesPage";
@@ -108,9 +111,30 @@ function Layout({ children }) {
   const showJournalPanels = location.pathname === "/";
 
   return (
-    <div className="desk-bg flex min-h-screen w-full max-w-full min-w-0 items-center justify-center p-6">
-      <div className="book-frame relative w-full max-w-full min-w-0 rounded-[5px] p-[10px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-        <div className="book-cover box-border w-full max-w-full min-w-0 overflow-hidden rounded-[3px] p-[12px]">
+    <div
+      className="desk-bg flex min-h-screen w-full max-w-full min-w-0 items-center justify-center p-6"
+      style={{
+        backgroundImage: `url(${woodTexture})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }}
+    >
+      <div
+        className="book-frame relative w-full max-w-full min-w-0 rounded-[5px] p-[10px] shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+        style={{
+          backgroundImage: `url(${maroonTexture})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }}
+      >
+        <div
+          className="book-cover box-border w-full max-w-full min-w-0 overflow-hidden rounded-[3px] p-[12px]"
+          style={{
+            backgroundImage: `url(${leatherTexture})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }}
+        >
           <div className="flex min-h-[calc(100vh-9rem)] w-full min-w-0">
             <div className="page-left flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-bl-[2px] rounded-tl-[2px] p-6">
               <h1 className="font-heading text-5xl font-bold italic leading-tight text-[#3b2a1a]">Michael's Babbles</h1>
