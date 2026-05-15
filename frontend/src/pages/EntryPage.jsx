@@ -209,6 +209,13 @@ export default function EntryPage({ mode }) {
   const readOnly = !isOwner || viewOnlyFromNav;
   const startInEditMode = isOwner && location.state?.editMode === true && !viewOnlyFromNav;
 
+  /** Preserve owner view vs edit intent when using prev/next arrows. */
+  const persistEntryNavState = useMemo(() => {
+    if (location.state?.viewOnly === true) return { viewOnly: true };
+    if (location.state?.editMode === true) return { editMode: true };
+    return {};
+  }, [location.state?.viewOnly, location.state?.editMode]);
+
   const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
   const entryId = mode === "id" ? Number.parseInt(params.entryId, 10) : null;
@@ -393,10 +400,25 @@ export default function EntryPage({ mode }) {
             }
           }}
         />
+        <div className="mb-2 pr-6">
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== "undefined" && window.history.length > 1) navigate(-1);
+              else navigate("/entries");
+            }}
+            className="rounded-[2px] border border-journal-brown/25 bg-[#f5edd9]/60 px-2.5 py-1 font-heading text-base italic text-[#4b3622] shadow-sm transition hover:border-journal-brown/40 hover:bg-[#ede2cb]"
+          >
+            ← Back
+          </button>
+        </div>
         <button
           type="button"
           disabled={adjacent.previous == null}
-          onClick={() => adjacent.previous != null && navigate(`/entry/${adjacent.previous}`)}
+          onClick={() =>
+            adjacent.previous != null &&
+            navigate(`/entry/${adjacent.previous}`, { state: persistEntryNavState })
+          }
           className={`absolute left-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-r-[2px] border-r border-journal-grey/40 text-sm font-bold shadow-sm transition ${
             adjacent.previous != null
               ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
@@ -409,7 +431,9 @@ export default function EntryPage({ mode }) {
         <button
           type="button"
           disabled={adjacent.next == null}
-          onClick={() => adjacent.next != null && navigate(`/entry/${adjacent.next}`)}
+          onClick={() =>
+            adjacent.next != null && navigate(`/entry/${adjacent.next}`, { state: persistEntryNavState })
+          }
           className={`absolute right-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-l-[2px] border-l border-journal-grey/40 text-sm font-bold shadow-sm transition ${
             adjacent.next != null
               ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
