@@ -44,7 +44,7 @@ function StickyCalendar({ entries }) {
         >
           ←
         </button>
-        <h3 className="font-heading text-4xl italic text-journal-brown">{format(monthCursor, "MMMM yyyy")}</h3>
+        <h3 className="font-heading text-5xl italic text-journal-brown">{format(monthCursor, "MMMM yyyy")}</h3>
         <button
           className="rounded-[2px] border border-journal-grey/40 px-3 py-1 text-sm"
           onClick={() => setMonthCursor(addMonths(monthCursor, 1))}
@@ -54,7 +54,7 @@ function StickyCalendar({ entries }) {
       </div>
       <div className="mb-2 grid grid-cols-7 gap-2">
         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-          <div key={d} className="text-center font-heading text-sm italic text-journal-grey">
+          <div key={d} className="text-center font-heading text-base italic text-journal-grey">
             {d}
           </div>
         ))}
@@ -103,23 +103,23 @@ export default function StatsPage() {
 
   return (
     <section className="space-y-4">
-      <h2 className="section-title text-4xl">Writing stats</h2>
+      <h2 className="section-title text-5xl">Writing stats</h2>
       <div className="grid grid-cols-2 gap-4">
         <div className="page-content-block p-4">
-          <p className="font-heading text-lg italic text-journal-grey">Current streak</p>
-          <p className="font-heading text-3xl italic text-journal-brown">{stats.currentStreak} 🔥</p>
+          <p className="font-heading text-xl italic text-journal-grey">Current streak</p>
+          <p className="font-heading text-4xl italic text-journal-brown">{stats.currentStreak} 🔥</p>
         </div>
         <div className="page-content-block p-4">
-          <p className="font-heading text-lg italic text-journal-grey">Longest streak</p>
-          <p className="font-heading text-3xl italic text-journal-brown">{stats.longestStreak}</p>
+          <p className="font-heading text-xl italic text-journal-grey">Longest streak</p>
+          <p className="font-heading text-4xl italic text-journal-brown">{stats.longestStreak}</p>
         </div>
         <div className="page-content-block p-4">
-          <p className="font-heading text-lg italic text-journal-grey">Total babbles</p>
-          <p className="font-heading text-3xl italic text-journal-brown">{stats.totalEntries}</p>
+          <p className="font-heading text-xl italic text-journal-grey">Total babbles</p>
+          <p className="font-heading text-4xl italic text-journal-brown">{stats.totalEntries}</p>
         </div>
         <div className="page-content-block p-4">
-          <p className="font-heading text-lg italic text-journal-grey">Total words</p>
-          <p className="font-heading text-3xl italic text-journal-brown">{stats.totalWords}</p>
+          <p className="font-heading text-xl italic text-journal-grey">Total words</p>
+          <p className="font-heading text-4xl italic text-journal-brown">{stats.totalWords}</p>
         </div>
       </div>
       <div className="page-content-block p-4">

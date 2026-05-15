@@ -14,7 +14,7 @@ export default function ConfirmModal({ isOpen, message, onConfirm, onCancel }) {
         aria-modal="true"
         className="relative z-10 w-full max-w-md rounded-[2px] border border-journal-brown/40 bg-journal-paper px-6 py-5 shadow-lg"
       >
-        <p className="font-heading text-lg italic leading-relaxed text-journal-charcoal">{message}</p>
+        <p className="font-sans text-lg italic leading-relaxed text-journal-charcoal">{message}</p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"

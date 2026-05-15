@@ -125,7 +125,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
         onConfirm={() => void handleDelete()}
       />
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2 border-b border-journal-brown/15 pb-2">
-        <p className="font-heading text-sm italic text-journal-grey">{formatCreatedTime(entry.createdAt)}</p>
+        <p className="font-heading text-base italic text-journal-grey">{formatCreatedTime(entry.createdAt)}</p>
         <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
@@ -156,12 +156,12 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
           readOnly={readOnly}
           disabled={readOnly}
           placeholder="Title (optional)"
-          className="mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-heading text-lg italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3]"
+          className="mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-sans text-lg italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3]"
         />
       ) : null}
       {!editorFullscreen ? (
         <div className="mb-3">
-          <p className="mb-2 font-heading text-sm italic text-journal-brown">Tags</p>
+          <p className="mb-2 font-heading text-base italic text-journal-brown">Tags</p>
           <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} readOnly={readOnly} />
         </div>
       ) : null}
@@ -353,7 +353,7 @@ export default function EntryPage({ mode }) {
   if (mode === "id" && !idValid) {
     return (
       <section>
-        <p className="font-heading text-lg italic text-journal-grey">Invalid entry link.</p>
+        <p className="font-heading text-xl italic text-journal-grey">Invalid entry link.</p>
       </section>
     );
   }
@@ -361,7 +361,7 @@ export default function EntryPage({ mode }) {
   if (mode === "id" && singleLoadError) {
     return (
       <section>
-        <p className="font-heading text-lg italic text-journal-grey">{singleLoadError}</p>
+        <p className="font-heading text-xl italic text-journal-grey">{singleLoadError}</p>
       </section>
     );
   }
@@ -417,9 +417,9 @@ export default function EntryPage({ mode }) {
           ›
         </button>
         <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="section-title text-4xl">{format(new Date(`${entryDateStr}T12:00:00`), "EEEE, MMMM d")}</h2>
+          <h2 className="section-title text-5xl">{format(new Date(`${entryDateStr}T12:00:00`), "EEEE, MMMM d")}</h2>
           <div className="flex items-center gap-3">
-            <p className="font-heading text-sm italic text-journal-grey">{formatCreatedTime(singleEntry.createdAt)}</p>
+            <p className="font-heading text-base italic text-journal-grey">{formatCreatedTime(singleEntry.createdAt)}</p>
             {!readOnly ? (
               <button
                 type="button"
@@ -441,10 +441,10 @@ export default function EntryPage({ mode }) {
           readOnly={readOnly}
           disabled={readOnly}
           placeholder="Title (optional)"
-          className="mb-4 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-heading text-xl italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3]"
+          className="mb-4 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-sans text-xl italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3]"
         />
         <div className="mb-4">
-          <p className="mb-2 font-heading text-lg italic text-journal-brown">Tags</p>
+          <p className="mb-2 font-heading text-xl italic text-journal-brown">Tags</p>
           <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} readOnly={readOnly} />
         </div>
         <RichEditor
@@ -481,7 +481,7 @@ export default function EntryPage({ mode }) {
   if (mode === "id" && !singleEntry && !singleLoadError) {
     return (
       <section>
-        <p className="font-heading text-lg italic text-journal-grey">Loading…</p>
+        <p className="font-heading text-xl italic text-journal-grey">Loading…</p>
       </section>
     );
   }
@@ -489,12 +489,12 @@ export default function EntryPage({ mode }) {
   return (
     <section className="relative pr-1">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="section-title text-4xl">{format(new Date(`${todayStr}T12:00:00`), "EEEE, MMMM d")}</h2>
+        <h2 className="section-title text-5xl">{format(new Date(`${todayStr}T12:00:00`), "EEEE, MMMM d")}</h2>
         {!readOnly ? (
           <button
             type="button"
             onClick={() => void handleNewEntry()}
-            className="flex items-center gap-2 rounded-[2px] border border-journal-brown/50 bg-journal-brown px-4 py-2.5 font-heading text-base italic text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
+            className="flex items-center gap-2 rounded-[2px] border border-journal-brown/50 bg-journal-brown px-4 py-2.5 font-sans text-lg font-semibold italic text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
           >
             <span className="text-xl font-bold leading-none">+</span>
             New Entry
@@ -505,9 +505,9 @@ export default function EntryPage({ mode }) {
         {!isLoaded ? "Loading…" : readOnly ? "View only — sign in as the owner to write." : "Each babble saves on its own."}
       </p>
       {todayLoading ? (
-        <p className="font-heading text-lg italic text-journal-grey">Loading today&apos;s babbles…</p>
+        <p className="font-heading text-xl italic text-journal-grey">Loading today&apos;s babbles…</p>
       ) : todayEntries.length === 0 ? (
-        <p className="font-heading text-lg italic text-journal-grey">
+        <p className="font-heading text-xl italic text-journal-grey">
           No babbles yet for today.
           {!readOnly ? " Click New Entry to begin." : ""}
         </p>

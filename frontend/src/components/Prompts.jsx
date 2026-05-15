@@ -3,7 +3,7 @@ export default function Prompts({ prompts, hidden, onHide }) {
   return (
     <section className="card-surface mb-4 animate-fadeIn p-4">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="font-heading text-xl italic text-journal-brown">Daily prompts</h3>
+        <h3 className="font-heading text-2xl italic text-journal-brown">Daily prompts</h3>
         <button onClick={onHide} className="text-xs font-semibold text-journal-grey hover:text-journal-charcoal">
           Hide
         </button>

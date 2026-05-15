@@ -43,7 +43,7 @@ export default function TagsPage() {
           }
         }}
       />
-      <h2 className="section-title text-4xl">Tags</h2>
+      <h2 className="section-title text-5xl">Tags</h2>
       {isOwner ? (
         <div className="page-content-block flex gap-2 p-4">
           <input
@@ -67,18 +67,18 @@ export default function TagsPage() {
       ) : null}
 
       <div className="page-content-block p-4">
-        <h3 className="mb-4 font-heading text-2xl italic text-journal-brown">Tag List</h3>
+        <h3 className="mb-4 font-heading text-3xl italic text-journal-brown">Tag List</h3>
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <div
               key={tag.name}
               className="flex items-center gap-2 rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-3 py-1 text-sm font-semibold text-journal-brown"
             >
-              <span className="font-heading italic">{tag.name}</span>
+              <span className="italic">{tag.name}</span>
               <span className="text-xs text-journal-grey">({tag.count} babbles)</span>
               <button
                 type="button"
-                className="font-heading text-sm italic text-journal-brown underline"
+                className="font-sans text-sm italic text-journal-brown underline"
                 onClick={() => navigate(`/entries?search=${encodeURIComponent(tag.name)}`)}
               >
                 View

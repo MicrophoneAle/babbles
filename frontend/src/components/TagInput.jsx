@@ -79,14 +79,14 @@ export default function TagInput({ tags, setTags, suggestions = [], savedTags = 
       />
       {!readOnly && availableTags.length > 0 ? (
         <>
-          <p className="mt-3 font-heading text-sm italic text-[#6b4a2a]">Available tags</p>
+          <p className="mt-3 font-sans text-sm italic text-[#6b4a2a]">Available tags</p>
           <div className="mt-1 flex flex-wrap gap-2">
             {availableTags.map((tag) => (
               <button
                 key={tag}
                 type="button"
                 onClick={() => void addTag(tag)}
-                className="cursor-pointer rounded-[2px] border border-[rgba(107,74,42,0.3)] bg-[rgba(245,230,200,0.5)] px-3 py-1 font-heading text-sm italic text-[#6b4a2a] transition hover:bg-[rgba(245,230,200,0.75)]"
+                className="cursor-pointer rounded-[2px] border border-[rgba(107,74,42,0.3)] bg-[rgba(245,230,200,0.5)] px-3 py-1 font-sans text-sm italic text-[#6b4a2a] transition hover:bg-[rgba(245,230,200,0.75)]"
               >
                 #{tag}
               </button>

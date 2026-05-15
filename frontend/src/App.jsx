@@ -46,7 +46,7 @@ function JournalSidebarPanels() {
       {!hidePrompts && prompts.length > 0 ? (
         <section className="left-panel-card">
           <div className="mb-2 flex items-center justify-between">
-            <h3 className="font-heading text-lg italic text-[#3b2a1a]">Daily prompts</h3>
+            <h3 className="font-heading text-xl italic text-[#3b2a1a]">Daily prompts</h3>
             <button
               type="button"
               onClick={() => {
@@ -137,8 +137,8 @@ function Layout({ children }) {
         >
           <div className="flex min-h-[calc(100vh-9rem)] w-full min-w-0">
             <div className="page-left flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-bl-[2px] rounded-tl-[2px] p-6">
-              <h1 className="font-heading text-5xl font-bold italic leading-tight text-[#3b2a1a]">Michael's Babbles</h1>
-              <p className="mt-1 font-heading text-base italic text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
+              <h1 className="font-heading text-6xl italic leading-tight text-[#3b2a1a]">Michael's Babbles</h1>
+              <p className="mt-1 font-heading text-lg italic text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
 
               <nav className="mt-6 flex flex-col gap-2 text-sm font-bold">
                 <NavLink className="nav-link" to="/">

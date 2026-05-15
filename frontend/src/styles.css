@@ -17,7 +17,7 @@ body {
 }
 
 .nav-link {
-  @apply rounded-[2px] px-3 py-2 font-heading text-xl italic text-[#4b3622] transition;
+  @apply rounded-[2px] px-3 py-2 font-heading text-2xl italic text-[#4b3622] transition;
   background: transparent;
   border: 1px solid transparent;
 }
@@ -101,8 +101,9 @@ body {
   margin: 0.35rem 0;
 }
 
+/* Route / page titles — size set per usage (Carattere reads small at default scale). */
 .section-title {
-  @apply font-heading text-2xl italic text-journal-brown;
+  @apply font-heading italic text-journal-brown;
 }
 
 .journal-page {

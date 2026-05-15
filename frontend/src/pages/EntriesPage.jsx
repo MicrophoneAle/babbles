@@ -66,7 +66,7 @@ export default function EntriesPage() {
           }
         }}
       />
-      <h2 className="section-title text-4xl">Past Babbles</h2>
+      <h2 className="section-title text-5xl">Past Babbles</h2>
       <div className="page-content-block p-4">
         <input
           value={search}
@@ -76,13 +76,13 @@ export default function EntriesPage() {
         />
       </div>
       {entries.length === 0 ? (
-        <p className="font-heading text-lg italic text-journal-grey">
+        <p className="font-heading text-xl italic text-journal-grey">
           No babbles yet — open Babble to start writing!
         </p>
       ) : (
         grouped.map(([date, dayEntries]) => (
           <div key={date} className="space-y-3">
-            <h3 className="font-heading text-2xl italic text-journal-brown">{date}</h3>
+            <h3 className="font-heading text-3xl italic text-journal-brown">{date}</h3>
             {dayEntries.map((entry) => {
               const title = (entry.title || "").trim();
               const previewLine = title || (entry.preview?.length ? entry.preview : "No preview yet…");
@@ -93,7 +93,7 @@ export default function EntriesPage() {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                      <p className="font-heading text-xs font-semibold uppercase tracking-wide text-journal-grey">
+                      <p className="font-sans text-xs font-semibold uppercase tracking-wide text-journal-grey">
                         {formatCreatedTime(entry.createdAt)}
                       </p>
                       <p className="mt-1 font-prose text-sm font-medium leading-relaxed text-journal-charcoal">
@@ -110,7 +110,7 @@ export default function EntriesPage() {
                       </button>
                     ) : null}
                   </div>
-                  <p className="mt-2 font-heading text-sm italic text-journal-grey">{entry.wordCount ?? 0} words</p>
+                  <p className="mt-2 font-heading text-base italic text-journal-grey">{entry.wordCount ?? 0} words</p>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {(entry.tags || []).map((tag) => (
                       <span
@@ -122,7 +122,7 @@ export default function EntriesPage() {
                     ))}
                     <Link
                       to={`/entry/${entry.id}`}
-                      className="ml-auto font-heading text-sm italic text-journal-brown underline"
+                      className="ml-auto font-heading text-base italic text-journal-brown underline"
                     >
                       Read More
                     </Link>

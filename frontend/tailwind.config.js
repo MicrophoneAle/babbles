@@ -5,7 +5,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ["Nunito", "sans-serif"],
-        heading: ["Playfair Display", "serif"],
+        heading: ["Carattere", "cursive"],
         prose: ["Lora", "serif"]
       },
       colors: {
