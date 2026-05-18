@@ -194,52 +194,37 @@ export default function EntriesPage() {
         <p className="font-ui-hint text-ds-xl text-journal-grey">No babbles match your search.</p>
       ) : (
         <>
-          <div className="relative flex items-center justify-center gap-4">
+          <div className="-mx-2 flex w-[calc(100%+1rem)] items-center justify-between gap-2">
             {canGoOlder ? (
               <button
                 type="button"
                 onClick={() => setDateIndex((i) => i - 1)}
-                className="text-ds-3xl leading-none text-[#6b4a2a] transition hover:text-[#3b2a1a]"
+                className="shrink-0 text-ds-3xl leading-none text-[#6b4a2a] transition hover:text-[#3b2a1a]"
                 aria-label="Older date"
               >
                 ←
               </button>
             ) : (
-              <span className="text-ds-3xl leading-none text-journal-grey/40" aria-hidden>
+              <span className="shrink-0 text-ds-3xl leading-none text-journal-grey/40" aria-hidden>
                 ←
               </span>
             )}
-            <h3 className="font-date-md shrink-0 whitespace-nowrap text-center text-journal-brown">
-              {formattedCurrentDate}
-            </h3>
-            {canGoNewer ? (
-              <button
-                type="button"
-                onClick={() => setDateIndex((i) => i + 1)}
-                className="text-ds-3xl leading-none text-[#6b4a2a] transition hover:text-[#3b2a1a]"
-                aria-label="Newer date"
-              >
-                →
-              </button>
-            ) : (
-              <span className="text-ds-3xl leading-none text-journal-grey/40" aria-hidden>
-                →
-              </span>
-            )}
-            <div
-              ref={dropdownRef}
-              className="absolute right-0 top-1/2 -translate-y-1/2"
-            >
-              <div className="relative">
+            <div className="flex min-w-0 flex-1 justify-center px-1">
+              <h3 className="font-date-sm whitespace-nowrap text-center text-journal-brown">
+                {formattedCurrentDate}
+              </h3>
+            </div>
+            <div className="flex shrink-0 items-center gap-2">
+              <div ref={dropdownRef} className="relative">
                 <button
                   type="button"
                   onClick={() => setDropdownOpen((open) => !open)}
-                  className="font-dancing text-ds-xs text-[#6b4a2a] transition hover:text-[#3b2a1a]"
+                  className="font-dancing whitespace-nowrap text-ds-xs text-[#6b4a2a] transition hover:text-[#3b2a1a]"
                   aria-expanded={dropdownOpen}
                   aria-haspopup="listbox"
                   aria-label="Sort babbles"
                 >
-                  Sort: {selectedSortLabel} ▾
+                  {selectedSortLabel} ▾
                 </button>
                 {dropdownOpen ? (
                   <ul
@@ -270,6 +255,20 @@ export default function EntriesPage() {
                   </ul>
                 ) : null}
               </div>
+              {canGoNewer ? (
+                <button
+                  type="button"
+                  onClick={() => setDateIndex((i) => i + 1)}
+                  className="text-ds-3xl leading-none text-[#6b4a2a] transition hover:text-[#3b2a1a]"
+                  aria-label="Newer date"
+                >
+                  →
+                </button>
+              ) : (
+                <span className="text-ds-3xl leading-none text-journal-grey/40" aria-hidden>
+                  →
+                </span>
+              )}
             </div>
           </div>
           <div className="space-y-3">
