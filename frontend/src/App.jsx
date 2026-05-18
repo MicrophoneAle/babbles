@@ -39,7 +39,7 @@ function PageStackLayers({ side }) {
 
   return (
     <div
-      className={`pointer-events-none absolute inset-y-0 z-[5] ${onLeftPage ? "right-0" : "left-0"}`}
+      className={`pointer-events-none absolute inset-y-0 z-[5] ${onLeftPage ? "left-0" : "right-0"}`}
       style={{ width: stackWidth }}
       aria-hidden
     >
@@ -49,14 +49,14 @@ function PageStackLayers({ side }) {
           <div
             key={color}
             className={`absolute inset-y-0 border border-[rgba(196,176,154,0.4)] shadow-[2px_1px_3px_0px_rgba(0,0,0,0.15)] ${
-              onLeftPage ? "rounded-br-[4px] rounded-tr-[4px]" : "rounded-bl-[4px] rounded-tl-[4px]"
+              onLeftPage ? "rounded-bl-[4px] rounded-tl-[4px]" : "rounded-br-[4px] rounded-tr-[4px]"
             }`}
             style={{
               width: PAGE_STACK_STRIP_PX,
               backgroundColor: color,
               zIndex: index + 1,
-              right: onLeftPage ? offset : undefined,
-              left: onLeftPage ? undefined : offset,
+              left: onLeftPage ? offset : undefined,
+              right: onLeftPage ? undefined : offset,
               boxShadow:
                 "inset 0 1px 2px rgba(255,255,255,0.4), 2px 1px 3px rgba(0,0,0,0.15)"
             }}
