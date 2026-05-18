@@ -13,6 +13,74 @@ import TagsPage from "./pages/TagsPage";
 
 const PROMPTS_HIDDEN_KEY = "promptsHiddenDate";
 
+/** Figma nodes 40:5–40:32 / 40:36–40:60 — back (darkest) to front (#F5EDD9). */
+const PAGE_STACK_LAYERS = [
+  "#c4bc9e",
+  "#c8c0a3",
+  "#ccc4a8",
+  "#d0c8ad",
+  "#d4ccb2",
+  "#d8d0b7",
+  "#ddd5bb",
+  "#e1d9c0",
+  "#e5ddc5",
+  "#e9e2ca",
+  "#ede6cf",
+  "#f1ead4",
+  "#f5edd9"
+];
+
+const PAGE_STACK_STEP_PX = 2;
+const PAGE_STACK_STRIP_PX = 12;
+
+function PageStackLayers({ side }) {
+  const onLeftPage = side === "left";
+  const stackWidth = (PAGE_STACK_LAYERS.length - 1) * PAGE_STACK_STEP_PX + PAGE_STACK_STRIP_PX;
+
+  return (
+    <div
+      className={`pointer-events-none absolute inset-y-0 z-[5] ${onLeftPage ? "right-0" : "left-0"}`}
+      style={{ width: stackWidth }}
+      aria-hidden
+    >
+      {PAGE_STACK_LAYERS.map((color, index) => {
+        const offset = index * PAGE_STACK_STEP_PX;
+        return (
+          <div
+            key={color}
+            className={`absolute inset-y-0 border border-[rgba(196,176,154,0.4)] shadow-[2px_1px_3px_0px_rgba(0,0,0,0.15)] ${
+              onLeftPage ? "rounded-br-[4px] rounded-tr-[4px]" : "rounded-bl-[4px] rounded-tl-[4px]"
+            }`}
+            style={{
+              width: PAGE_STACK_STRIP_PX,
+              backgroundColor: color,
+              zIndex: index + 1,
+              right: onLeftPage ? offset : undefined,
+              left: onLeftPage ? undefined : offset,
+              boxShadow:
+                "inset 0 1px 2px rgba(255,255,255,0.4), 2px 1px 3px rgba(0,0,0,0.15)"
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+/** Figma node 40:2 — binding between open pages. */
+function BookSpine() {
+  return (
+    <div
+      className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[15] w-7 -translate-x-1/2"
+      style={{
+        background:
+          "linear-gradient(90deg, rgba(30,20,12,0.35) 0%, rgba(20,12,8,0.65) 45%, rgba(30,20,12,0.35) 100%)"
+      }}
+      aria-hidden
+    />
+  );
+}
+
 function JournalSidebarPanels() {
   const [prompts, setPrompts] = useState([]);
   const [hidePrompts, setHidePrompts] = useState(() => {
@@ -135,8 +203,11 @@ function Layout({ children }) {
             backgroundPosition: "center"
           }}
         >
-          <div className="flex min-h-[calc(100vh-9rem)] w-full min-w-0">
-            <div className="page-left flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-bl-[2px] rounded-tl-[2px] p-6">
+          <div className="relative flex min-h-[calc(100vh-9rem)] w-full min-w-0">
+            <BookSpine />
+            <div className="page-left relative flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-bl-[2px] rounded-tl-[2px] p-6">
+              <PageStackLayers side="left" />
+              <div className="relative z-10 flex min-h-0 flex-1 flex-col">
               <h1 className="app-brand-title italic text-[#3b2a1a]">Michael's Babbles</h1>
               <p className="font-date-sm mt-1 text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
 
@@ -164,10 +235,12 @@ function Layout({ children }) {
               <div className="mt-auto shrink-0 border-t border-journal-brown/15 pt-5">
                 <SidebarAuth />
               </div>
+              </div>
             </div>
 
-            <main className="page-right flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-br-[2px] rounded-tr-[2px] p-6 text-journal-text">
-              {children}
+            <main className="page-right relative flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-br-[2px] rounded-tr-[2px] p-6 text-journal-text">
+              <PageStackLayers side="right" />
+              <div className="relative z-10 flex min-h-0 flex-1 flex-col">{children}</div>
             </main>
           </div>
         </div>
