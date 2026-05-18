@@ -159,7 +159,7 @@ export default function EntriesPage() {
     SORT_OPTIONS.find((option) => option.value === sortBy)?.label ?? "Newest first";
 
   return (
-    <section className="space-y-4">
+    <section className="-mx-3 space-y-4">
       <ConfirmModal
         isOpen={confirmEntryId !== null}
         message="Delete this babble? This cannot be undone."
@@ -194,9 +194,8 @@ export default function EntriesPage() {
         <p className="font-ui-hint text-ds-xl text-journal-grey">No babbles match your search.</p>
       ) : (
         <>
-          <div className="-mx-2 flex w-[calc(100%+1rem)] items-center gap-2">
-            <div className="flex min-w-0 flex-1 justify-center">
-              <div className="flex items-center gap-2">
+          <div className="relative flex w-full items-center">
+            <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-2">
                 {canGoOlder ? (
                   <button
                     type="button"
@@ -229,8 +228,7 @@ export default function EntriesPage() {
                   </span>
                 )}
               </div>
-            </div>
-            <div ref={dropdownRef} className="relative shrink-0">
+            <div ref={dropdownRef} className="relative ml-auto shrink-0">
                 <button
                   type="button"
                   onClick={() => setDropdownOpen((open) => !open)}
