@@ -17,10 +17,10 @@ function formatCreatedTime(iso) {
 
 /** Body snippet only — omit when API preview duplicates the title. */
 function getBodyPreview(entry, title) {
-  const preview = (entry.preview || "").trim();
-  if (!preview) return null;
-  if (title && preview === title) return null;
-  return preview;
+  const plainText = (entry.preview || "").trim();
+  if (!plainText) return null;
+  if (title && plainText === title) return null;
+  return plainText.length > 150 ? plainText.slice(0, 150).trimEnd() + "..." : plainText;
 }
 
 const SORT_NEWEST = "newest";
@@ -194,28 +194,43 @@ export default function EntriesPage() {
         <p className="font-ui-hint text-ds-xl text-journal-grey">No babbles match your search.</p>
       ) : (
         <>
-          <div className="-mx-2 flex w-[calc(100%+1rem)] items-center justify-between gap-2">
-            {canGoOlder ? (
-              <button
-                type="button"
-                onClick={() => setDateIndex((i) => i - 1)}
-                className="shrink-0 text-ds-3xl leading-none text-[#6b4a2a] transition hover:text-[#3b2a1a]"
-                aria-label="Older date"
-              >
-                ←
-              </button>
-            ) : (
-              <span className="shrink-0 text-ds-3xl leading-none text-journal-grey/40" aria-hidden>
-                ←
-              </span>
-            )}
-            <div className="flex min-w-0 flex-1 justify-center px-1">
-              <h3 className="font-date-sm whitespace-nowrap text-center text-journal-brown">
-                {formattedCurrentDate}
-              </h3>
+          <div className="-mx-2 flex w-[calc(100%+1rem)] items-center gap-2">
+            <div className="flex min-w-0 flex-1 justify-center">
+              <div className="flex items-center gap-2">
+                {canGoOlder ? (
+                  <button
+                    type="button"
+                    onClick={() => setDateIndex((i) => i - 1)}
+                    className="shrink-0 text-ds-3xl leading-none text-[#6b4a2a] transition hover:text-[#3b2a1a]"
+                    aria-label="Older date"
+                  >
+                    ←
+                  </button>
+                ) : (
+                  <span className="shrink-0 text-ds-3xl leading-none text-journal-grey/40" aria-hidden>
+                    ←
+                  </span>
+                )}
+                <h3 className="font-date-md whitespace-nowrap text-center text-journal-brown">
+                  {formattedCurrentDate}
+                </h3>
+                {canGoNewer ? (
+                  <button
+                    type="button"
+                    onClick={() => setDateIndex((i) => i + 1)}
+                    className="shrink-0 text-ds-3xl leading-none text-[#6b4a2a] transition hover:text-[#3b2a1a]"
+                    aria-label="Newer date"
+                  >
+                    →
+                  </button>
+                ) : (
+                  <span className="shrink-0 text-ds-3xl leading-none text-journal-grey/40" aria-hidden>
+                    →
+                  </span>
+                )}
+              </div>
             </div>
-            <div className="flex shrink-0 items-center gap-2">
-              <div ref={dropdownRef} className="relative">
+            <div ref={dropdownRef} className="relative shrink-0">
                 <button
                   type="button"
                   onClick={() => setDropdownOpen((open) => !open)}
@@ -254,21 +269,6 @@ export default function EntriesPage() {
                     ))}
                   </ul>
                 ) : null}
-              </div>
-              {canGoNewer ? (
-                <button
-                  type="button"
-                  onClick={() => setDateIndex((i) => i + 1)}
-                  className="text-ds-3xl leading-none text-[#6b4a2a] transition hover:text-[#3b2a1a]"
-                  aria-label="Newer date"
-                >
-                  →
-                </button>
-              ) : (
-                <span className="text-ds-3xl leading-none text-journal-grey/40" aria-hidden>
-                  →
-                </span>
-              )}
             </div>
           </div>
           <div className="space-y-3">
@@ -292,9 +292,9 @@ export default function EntriesPage() {
                       >
                         {title || "Untitled Babble"}
                       </p>
-                      {bodyPreview || !title ? (
-                        <p className="mt-1 font-prose text-sm font-medium leading-relaxed text-journal-charcoal">
-                          {bodyPreview || "No preview yet…"}
+                      {bodyPreview ? (
+                        <p className="mt-1 overflow-hidden font-prose text-sm font-medium leading-relaxed text-journal-charcoal [overflow-wrap:break-word] [word-break:break-word]">
+                          {bodyPreview}
                         </p>
                       ) : null}
                     </div>
