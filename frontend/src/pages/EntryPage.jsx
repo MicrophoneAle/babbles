@@ -6,6 +6,7 @@ import { useOwner } from "../AuthProvider";
 import RichEditor from "../components/Editor";
 import TagInput from "../components/TagInput";
 import ConfirmModal from "../components/ConfirmModal";
+import { formatNavDate } from "../utils/navDate";
 import { wordCountWithReadingTime } from "../utils/plural";
 
 const emptyDoc = { type: "doc", content: [{ type: "paragraph" }] };
@@ -476,7 +477,7 @@ export default function EntryPage({ mode }) {
           ›
         </button>
         <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="font-date-lg text-journal-brown">{format(new Date(`${entryDateStr}T12:00:00`), "EEEE, MMMM d")}</h2>
+          <h2 className="font-date-lg text-journal-brown">{formatNavDate(new Date(`${entryDateStr}T12:00:00`), { includeYear: false })}</h2>
           <div className="flex items-center gap-3">
             <p className="font-time text-ds-base text-journal-grey">{formatCreatedTime(singleEntry.createdAt)}</p>
             {!readOnly ? (
@@ -560,7 +561,7 @@ export default function EntryPage({ mode }) {
   return (
     <section className="relative pr-1">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-date-lg text-journal-brown">{format(new Date(`${todayStr}T12:00:00`), "EEEE, MMMM d")}</h2>
+        <h2 className="font-date-lg text-journal-brown">{formatNavDate(new Date(`${todayStr}T12:00:00`), { includeYear: false })}</h2>
         {!readOnly ? (
           <button
             type="button"

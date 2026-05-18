@@ -316,7 +316,7 @@ button.tag-chip,
 
 .calendar-month-title {
   font-family: "Dancing Script", cursive;
-  font-size: calc(3rem * 1.1);
+  font-size: calc(3rem * 1.1 * 0.78);
   line-height: 1.1;
   font-style: normal !important;
 }

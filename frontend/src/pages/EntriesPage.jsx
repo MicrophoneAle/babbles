@@ -4,6 +4,7 @@ import { format, parseISO } from "date-fns";
 import { api } from "../api";
 import { useOwner } from "../AuthProvider";
 import ConfirmModal from "../components/ConfirmModal";
+import { formatNavDate } from "../utils/navDate";
 import { wordCountWithReadingTime } from "../utils/plural";
 
 function formatCreatedTime(iso) {
@@ -152,7 +153,7 @@ export default function EntriesPage() {
   const canGoNewer = sortedDates.length > 0 && activeDateIndex < sortedDates.length - 1;
 
   const formattedCurrentDate = currentDate
-    ? format(new Date(`${currentDate}T12:00:00`), "EEEE, MMMM d, yyyy")
+    ? formatNavDate(new Date(`${currentDate}T12:00:00`))
     : "";
 
   const selectedSortLabel =
@@ -247,9 +248,9 @@ export default function EntriesPage() {
                     className="right-0 min-w-[9.5rem] rounded-[2px] border border-journal-brown/25 py-1 shadow-sm"
                     style={{
                       position: "absolute",
-                      top: "48px",
-                      zIndex: 100,
-                      backgroundColor: "#F5EDD9"
+                      top: "100%",
+                      marginTop: "4px",
+                      zIndex: 100
                     }}
                   >
                     {SORT_OPTIONS.map((option) => (
