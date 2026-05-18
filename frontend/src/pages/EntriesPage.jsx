@@ -74,6 +74,11 @@ export default function EntriesPage() {
       setDateIndex(idx >= 0 ? idx : sortedDates.length - 1);
       return;
     }
+    if (!consumedInitialDate.current) {
+      consumedInitialDate.current = true;
+      setDateIndex(sortedDates.length - 1);
+      return;
+    }
     setDateIndex((prev) => {
       const prevDate = sortedDates[prev];
       if (prevDate) {
@@ -142,7 +147,9 @@ export default function EntriesPage() {
                 ←
               </span>
             )}
-            <h3 className="font-date-lg text-center text-journal-brown">{formattedCurrentDate}</h3>
+            <h3 className="font-date-md shrink-0 whitespace-nowrap text-center text-journal-brown">
+              {formattedCurrentDate}
+            </h3>
             {canGoNewer ? (
               <button
                 type="button"
