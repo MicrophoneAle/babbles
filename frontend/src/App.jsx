@@ -35,7 +35,7 @@ const PAGE_STACK_STRIP_PX = 12;
 const PAGE_STACK_TOTAL_WIDTH =
   (PAGE_STACK_LAYERS.length - 1) * PAGE_STACK_STEP_PX + PAGE_STACK_STRIP_PX;
 
-const PAGE_EDGE_BORDER = "0.5px solid rgba(180, 160, 130, 0.4)";
+const PAGE_EDGE_BORDER = "0.3px solid rgba(180, 160, 130, 0.35)";
 
 function PageStackLayers({ side }) {
   const onLeftPage = side === "left";
