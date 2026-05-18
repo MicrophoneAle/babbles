@@ -243,7 +243,7 @@ export default function EntriesPage() {
                   <ul
                     role="listbox"
                     aria-label="Sort options"
-                    className="absolute right-0 top-full z-50 mt-1 min-w-[9.5rem] rounded-[2px] border border-journal-brown/25 bg-[#F5EDD9] py-1 shadow-sm"
+                    className="absolute right-0 top-[calc(100%+8px)] z-[100] min-w-[9.5rem] rounded-[2px] border border-journal-brown/25 bg-[#F5EDD9] py-1 shadow-sm"
                   >
                     {SORT_OPTIONS.map((option) => (
                       <li key={option.value} role="presentation">
