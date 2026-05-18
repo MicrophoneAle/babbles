@@ -10,19 +10,32 @@ A personal journaling web app with a realistic open book UI, rich text editing, 
 - **Backend:** Node.js, Express
 - **Database:** PostgreSQL (Neon)
 - **ORM:** Prisma
-- **Fonts:** Playfair Display, Lora, Nunito
+- **Fonts:** Carattere, Dancing Script, Lora (Google Fonts)
 - **Hosting:** Vercel (frontend), Render (backend), Neon (database)
 
 ## Features
 
-- One journal entry per day with rich text formatting
+- Open book UI with wood desk, leather cover, maroon border and aged parchment pages, all with texture overlays
+- Layered page stack depth effect on outer edges of both pages
+- Spine shadow gradient between pages
+- Multiple journal entries per day, newest first
+- Rich text editor (Tiptap) with bold, italic, underline, bullet lists, numbered lists, headings, blockquotes and multicolour highlights
+- Fullscreen editor that expands to fill the entire right page
 - Auto-save every 10 seconds plus a manual save button
-- Tags — create, attach to entries, and delete
-- Past entries page with search and delete
-- Stats page with writing streaks and a sticky note calendar
-- Entry navigation arrows between adjacent dates
-- Custom confirmation modals for destructive actions
-- Responsive open book UI with an aged parchment look
+- Entry titles (optional) with fallback "Untitled Babble"
+- Tags: create, attach to entries, delete, with autocomplete
+- Past Babbles page with date navigation arrows, sort options (newest, oldest, longest, shortest) and keyword/tag search
+- Clickable sticky note calendar on Stats page that navigates to the entry date
+- Stats page with writing streaks, word counts and sticky note calendar
+- Reading time estimate alongside word count
+- Entry navigation arrows between adjacent entries
+- View and Edit modes per entry
+- Back button navigation
+- Export/print entry as PDF
+- Custom confirmation modals for all destructive actions
+- Daily writing prompts on the sidebar with hide per day
+- Clerk authentication: owner has full write access, visitors are read only
+- Pluralization fixed throughout
 
 ## Local development
 
@@ -49,13 +62,28 @@ A personal journaling web app with a realistic open book UI, rich text editing, 
 
 3. **Environment variables**
 
+   Create `frontend/.env`:
+
+   ```env
+   VITE_API_URL=your-render-url
+   VITE_CLERK_PUBLISHABLE_KEY=pk_test_xxx
+   VITE_OWNER_EMAIL=your-email
+   VITE_OWNER_USER_ID=user_xxx
+   ```
+
    Create `backend/.env`:
 
    ```env
-   DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/journal_app"
-   FRONTEND_URL="http://localhost:5173"
+   DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/journal_app
+   FRONTEND_URL=http://localhost:5173
+   CLERK_SECRET_KEY=sk_test_xxx
+   CLERK_PUBLISHABLE_KEY=pk_test_xxx
+   OWNER_EMAIL=your-email
+   OWNER_USER_ID=user_xxx
    PORT=4000
    ```
+
+   For production on Render, also set `NODE_ENV=production` in `backend/.env` or in the Render dashboard.
 
 4. **Database**
 
@@ -119,9 +147,18 @@ Vercel and Render redeploy from the default branch when you push (if those integ
 
 ## API (reference)
 
-- `GET /api/health` — health check
-- `GET /api/entries`, `GET /api/entries/:date`, `POST /api/entries`, `PUT /api/entries/:date`, `DELETE /api/entries/:date`
-- `GET /api/entries/adjacent/:date` — previous / next entry dates
-- `GET /api/prompts`, `GET /api/stats`, `GET /api/tags`, `POST /api/tags`, `DELETE /api/tags/:name`
+- `GET /api/entries` - list all entries
+- `GET /api/entries/:date` - entries for a date
+- `GET /api/entries/id/:id` - single entry by id
+- `POST /api/entries` - create entry
+- `PUT /api/entries/id/:id` - update entry
+- `DELETE /api/entries/id/:id` - delete entry
+- `GET /api/entries/adjacent/:id` - adjacent ids
+- `GET /api/prompts` - 3 random prompts
+- `GET /api/stats` - streak and word stats
+- `GET /api/tags` - list all tags
+- `POST /api/tags` - create tag
+- `DELETE /api/tags/:name` - delete tag
+- `GET /api/health` - health check
 
-From `backend`: `npm run test:db` tests the database connection; `npm run clear:entries` removes all entries (destructive).
+From `backend`: `npm run test:db` tests the database connection. `npm run clear:entries` removes all entries (destructive).
