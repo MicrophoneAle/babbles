@@ -38,18 +38,18 @@ function createdAtMs(entry) {
   return Number.isNaN(ms) ? 0 : ms;
 }
 
-function sortDayEntries(list, sortBy) {
-  const entries = [...list];
-  switch (sortBy) {
+function sortDayEntries(list, sortMode) {
+  const sorted = [...list];
+  switch (sortMode) {
     case "oldest":
-      return entries.sort((a, b) => createdAtMs(a) - createdAtMs(b));
+      return sorted.sort((a, b) => createdAtMs(a) - createdAtMs(b));
     case "longest":
-      return entries.sort((a, b) => (b.wordCount ?? 0) - (a.wordCount ?? 0));
+      return sorted.sort((a, b) => (b.wordCount ?? 0) - (a.wordCount ?? 0));
     case "shortest":
-      return entries.sort((a, b) => (a.wordCount ?? 0) - (b.wordCount ?? 0));
+      return sorted.sort((a, b) => (a.wordCount ?? 0) - (b.wordCount ?? 0));
     case "newest":
     default:
-      return entries.sort((a, b) => createdAtMs(b) - createdAtMs(a));
+      return sorted.sort((a, b) => createdAtMs(b) - createdAtMs(a));
   }
 }
 
@@ -89,22 +89,28 @@ export default function EntriesPage() {
     return [...dates].sort((a, b) => a.localeCompare(b));
   }, [entries]);
 
-  const currentDate = sortedDates[dateIndex] ?? null;
+  const activeDateIndex =
+    sortedDates.length === 0 ? 0 : Math.min(Math.max(dateIndex, 0), sortedDates.length - 1);
+  const currentDate = sortedDates[activeDateIndex] ?? null;
 
-  const dayEntries = useMemo(() => {
+  const sortedDayEntries = useMemo(() => {
     if (!currentDate) return [];
-    return entries.filter((e) => e.date === currentDate);
-  }, [entries, currentDate]);
-
-  const sortedDayEntries = useMemo(
-    () => sortDayEntries(dayEntries, sortBy),
-    [dayEntries, sortBy]
-  );
+    const filtered = entries.filter((e) => e.date === currentDate);
+    return sortDayEntries(filtered, sortBy);
+  }, [entries, currentDate, sortBy]);
 
   useEffect(() => {
     setSortBy(SORT_NEWEST);
     setDropdownOpen(false);
   }, [currentDate]);
+
+  useEffect(() => {
+    if (sortedDates.length === 0) return;
+    const clamped = Math.min(Math.max(dateIndex, 0), sortedDates.length - 1);
+    if (dateIndex !== clamped) {
+      setDateIndex(clamped);
+    }
+  }, [sortedDates, dateIndex]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -142,8 +148,8 @@ export default function EntriesPage() {
     });
   }, [sortedDates, initialDate]);
 
-  const canGoOlder = sortedDates.length > 0 && dateIndex > 0;
-  const canGoNewer = sortedDates.length > 0 && dateIndex < sortedDates.length - 1;
+  const canGoOlder = sortedDates.length > 0 && activeDateIndex > 0;
+  const canGoNewer = sortedDates.length > 0 && activeDateIndex < sortedDates.length - 1;
 
   const formattedCurrentDate = currentDate
     ? format(new Date(`${currentDate}T12:00:00`), "EEEE, MMMM d, yyyy")
