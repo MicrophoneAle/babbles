@@ -233,6 +233,7 @@ export default function EntriesPage() {
                   type="button"
                   onClick={() => setDropdownOpen((open) => !open)}
                   className="font-dancing whitespace-nowrap text-ds-xs text-[#6b4a2a] transition hover:text-[#3b2a1a]"
+                  style={{ marginTop: "8px" }}
                   aria-expanded={dropdownOpen}
                   aria-haspopup="listbox"
                   aria-label="Sort babbles"
