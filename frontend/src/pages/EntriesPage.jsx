@@ -228,7 +228,7 @@ export default function EntriesPage() {
                   </span>
                 )}
               </div>
-            <div ref={dropdownRef} className="relative ml-auto shrink-0">
+            <div ref={dropdownRef} className="ml-auto shrink-0" style={{ position: "relative" }}>
                 <button
                   type="button"
                   onClick={() => setDropdownOpen((open) => !open)}
@@ -243,7 +243,13 @@ export default function EntriesPage() {
                   <ul
                     role="listbox"
                     aria-label="Sort options"
-                    className="absolute right-0 top-[calc(100%+12px)] z-[100] min-w-[9.5rem] rounded-[2px] border border-journal-brown/25 bg-[#F5EDD9] py-1 shadow-sm"
+                    className="right-0 min-w-[9.5rem] rounded-[2px] border border-journal-brown/25 py-1 shadow-sm"
+                    style={{
+                      position: "absolute",
+                      top: "48px",
+                      zIndex: 100,
+                      backgroundColor: "#F5EDD9"
+                    }}
                   >
                     {SORT_OPTIONS.map((option) => (
                       <li key={option.value} role="presentation">
