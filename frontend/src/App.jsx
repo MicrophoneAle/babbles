@@ -32,15 +32,20 @@ const PAGE_STACK_LAYERS = [
 
 const PAGE_STACK_STEP_PX = 2;
 const PAGE_STACK_STRIP_PX = 12;
+const PAGE_STACK_TOTAL_WIDTH =
+  (PAGE_STACK_LAYERS.length - 1) * PAGE_STACK_STEP_PX + PAGE_STACK_STRIP_PX;
 
 function PageStackLayers({ side }) {
   const onLeftPage = side === "left";
-  const stackWidth = (PAGE_STACK_LAYERS.length - 1) * PAGE_STACK_STEP_PX + PAGE_STACK_STRIP_PX;
 
   return (
     <div
-      className={`pointer-events-none absolute inset-y-0 z-[5] ${onLeftPage ? "left-0" : "right-0"}`}
-      style={{ width: stackWidth }}
+      className="pointer-events-none absolute inset-y-0 z-[5]"
+      style={{
+        width: PAGE_STACK_TOTAL_WIDTH,
+        left: onLeftPage ? -PAGE_STACK_TOTAL_WIDTH : undefined,
+        right: onLeftPage ? undefined : -PAGE_STACK_TOTAL_WIDTH
+      }}
       aria-hidden
     >
       {PAGE_STACK_LAYERS.map((color, index) => {
@@ -67,14 +72,15 @@ function PageStackLayers({ side }) {
   );
 }
 
-/** Figma node 40:2 — binding between open pages. */
+/** Figma node 40:2 — soft gutter shadow between open pages (28px wide). */
 function BookSpine() {
   return (
     <div
-      className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[15] w-7 -translate-x-1/2"
+      className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[15] -translate-x-1/2"
       style={{
+        width: 28,
         background:
-          "linear-gradient(90deg, rgba(30,20,12,0.35) 0%, rgba(20,12,8,0.65) 45%, rgba(30,20,12,0.35) 100%)"
+          "linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0.03) 30%, rgba(0,0,0,0.03) 70%, rgba(0,0,0,0.15))"
       }}
       aria-hidden
     />
@@ -196,16 +202,16 @@ function Layout({ children }) {
         }}
       >
         <div
-          className="book-cover box-border w-full max-w-full min-w-0 overflow-hidden rounded-[3px] p-[12px]"
+          className="book-cover box-border w-full max-w-full min-w-0 overflow-visible rounded-[3px] p-[12px]"
           style={{
             backgroundImage: `linear-gradient(rgba(59, 42, 26, 0.6), rgba(59, 42, 26, 0.6)), url(${leatherTexture})`,
             backgroundSize: "cover",
             backgroundPosition: "center"
           }}
         >
-          <div className="relative flex min-h-[calc(100vh-9rem)] w-full min-w-0">
+          <div className="relative flex min-h-[calc(100vh-9rem)] w-full min-w-0 overflow-visible">
             <BookSpine />
-            <div className="page-left relative flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-bl-[2px] rounded-tl-[2px] p-6">
+            <div className="page-left relative flex w-1/2 min-w-0 flex-col overflow-y-auto overflow-x-visible rounded-bl-[2px] rounded-tl-[2px] p-6">
               <PageStackLayers side="left" />
               <div className="relative z-10 flex min-h-0 flex-1 flex-col">
               <h1 className="app-brand-title italic text-[#3b2a1a]">Michael's Babbles</h1>
@@ -238,7 +244,7 @@ function Layout({ children }) {
               </div>
             </div>
 
-            <main className="page-right relative flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-br-[2px] rounded-tr-[2px] p-6 text-journal-text">
+            <main className="page-right relative flex w-1/2 min-w-0 flex-col overflow-y-auto overflow-x-visible rounded-br-[2px] rounded-tr-[2px] p-6 text-journal-text">
               <PageStackLayers side="right" />
               <div className="relative z-10 flex min-h-0 flex-1 flex-col">{children}</div>
             </main>
