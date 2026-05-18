@@ -49,17 +49,13 @@ function PageStackLayers({ side }) {
         return (
           <div
             key={color}
-            className={`absolute inset-y-0 border border-[rgba(196,176,154,0.4)] shadow-[2px_1px_3px_0px_rgba(0,0,0,0.15)] ${
-              onLeftPage ? "rounded-bl-[4px] rounded-tl-[4px]" : "rounded-br-[4px] rounded-tr-[4px]"
-            }`}
+            className="absolute inset-y-0"
             style={{
               width: PAGE_STACK_STRIP_PX,
               backgroundColor: color,
               zIndex: index + 1,
               left: onLeftPage ? offset : undefined,
-              right: onLeftPage ? undefined : offset,
-              boxShadow:
-                "inset 0 1px 2px rgba(255,255,255,0.4), 2px 1px 3px rgba(0,0,0,0.15)"
+              right: onLeftPage ? undefined : offset
             }}
           />
         );
@@ -68,18 +64,17 @@ function PageStackLayers({ side }) {
   );
 }
 
-/** Figma node 40:2 — 28×868 spine shadow (image fill from design file). */
-const FIGMA_SPINE_IMAGE_URL =
-  "https://www.figma.com/api/mcp/asset/2dd67eb1-05bd-4cf9-9a5d-8aa059578808";
-
+/** Figma node 40:2 — spine gutter shadow (28px wide). */
 function BookSpine() {
   return (
     <div
       className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[15] h-full w-[28px] -translate-x-1/2"
+      style={{
+        background:
+          "linear-gradient(to right, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.06) 15%, rgba(0,0,0,0.18) 35%, rgba(0,0,0,0.22) 50%, rgba(0,0,0,0.18) 65%, rgba(0,0,0,0.06) 85%, rgba(0,0,0,0.0) 100%)"
+      }}
       aria-hidden
-    >
-      <img alt="" className="pointer-events-none size-full max-w-none object-cover" src={FIGMA_SPINE_IMAGE_URL} />
-    </div>
+    />
   );
 }
 
