@@ -202,7 +202,7 @@ function Layout({ children }) {
         >
           <div className="relative flex min-h-[calc(100vh-9rem)] w-full min-w-0">
             <BookSpine />
-            <div className="page-left relative flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-bl-[2px] rounded-tl-[2px] p-6">
+            <div className="page-left relative flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-bl-[2px] rounded-tl-[2px]">
               <PageStackLayers side="left" />
               <div
                 className="relative z-10 flex min-h-0 flex-1 flex-col"
@@ -238,7 +238,7 @@ function Layout({ children }) {
               </div>
             </div>
 
-            <main className="page-right relative flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-br-[2px] rounded-tr-[2px] p-6 text-journal-text">
+            <main className="page-right relative flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-br-[2px] rounded-tr-[2px] text-journal-text">
               <PageStackLayers side="right" />
               <div
                 className="relative z-10 flex min-h-0 flex-1 flex-col"
