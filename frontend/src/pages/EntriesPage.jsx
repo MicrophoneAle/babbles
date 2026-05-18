@@ -64,6 +64,8 @@ export default function EntriesPage() {
   const [entries, setEntries] = useState([]);
   const [dateIndex, setDateIndex] = useState(0);
   const [sortBy, setSortBy] = useState(SORT_NEWEST);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const [confirmEntryId, setConfirmEntryId] = useState(null);
 
   useEffect(() => {
@@ -101,7 +103,18 @@ export default function EntriesPage() {
 
   useEffect(() => {
     setSortBy(SORT_NEWEST);
+    setDropdownOpen(false);
   }, [currentDate]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     if (sortedDates.length === 0) {
@@ -135,6 +148,9 @@ export default function EntriesPage() {
   const formattedCurrentDate = currentDate
     ? format(new Date(`${currentDate}T12:00:00`), "EEEE, MMMM d, yyyy")
     : "";
+
+  const selectedSortLabel =
+    SORT_OPTIONS.find((option) => option.value === sortBy)?.label ?? "Newest first";
 
   return (
     <section className="space-y-4">
@@ -172,8 +188,7 @@ export default function EntriesPage() {
         <p className="font-ui-hint text-ds-xl text-journal-grey">No babbles match your search.</p>
       ) : (
         <>
-          <div className="space-y-2">
-            <div className="flex items-center justify-center gap-4">
+          <div className="relative flex items-center justify-center gap-4">
             {canGoOlder ? (
               <button
                 type="button"
@@ -205,28 +220,49 @@ export default function EntriesPage() {
                 →
               </span>
             )}
-            </div>
-            <div className="flex justify-end">
-              <div
-                className="flex flex-wrap items-center justify-end gap-1"
-                role="group"
-                aria-label="Sort babbles"
-              >
-                {SORT_OPTIONS.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => setSortBy(option.value)}
-                    className={`rounded-[2px] px-2 py-0.5 text-ds-xs transition ${
-                      sortBy === option.value
-                        ? "bg-[#ede2cb] text-[#3b2a1a]"
-                        : "text-[#6b4a2a] hover:bg-[#f0e5cf]/80 hover:text-[#3b2a1a]"
-                    }`}
-                    aria-pressed={sortBy === option.value}
+            <div
+              ref={dropdownRef}
+              className="absolute right-0 top-1/2 -translate-y-1/2"
+            >
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setDropdownOpen((open) => !open)}
+                  className="font-dancing text-ds-xs text-[#6b4a2a] transition hover:text-[#3b2a1a]"
+                  aria-expanded={dropdownOpen}
+                  aria-haspopup="listbox"
+                  aria-label="Sort babbles"
+                >
+                  Sort: {selectedSortLabel} ▾
+                </button>
+                {dropdownOpen ? (
+                  <ul
+                    role="listbox"
+                    aria-label="Sort options"
+                    className="absolute right-0 top-full z-50 mt-1 min-w-[9.5rem] rounded-[2px] border border-journal-brown/25 bg-[#F5EDD9] py-1 shadow-sm"
                   >
-                    {option.label}
-                  </button>
-                ))}
+                    {SORT_OPTIONS.map((option) => (
+                      <li key={option.value} role="presentation">
+                        <button
+                          type="button"
+                          role="option"
+                          aria-selected={sortBy === option.value}
+                          onClick={() => {
+                            setSortBy(option.value);
+                            setDropdownOpen(false);
+                          }}
+                          className={`font-dancing block w-full px-3 py-1.5 text-left text-ds-xs transition ${
+                            sortBy === option.value
+                              ? "bg-[#ede2cb] text-[#3b2a1a]"
+                              : "text-[#6b4a2a] hover:bg-[#f0e5cf]/80 hover:text-[#3b2a1a]"
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </div>
             </div>
           </div>
