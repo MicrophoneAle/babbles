@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   addMonths,
   eachDayOfInterval,
@@ -21,7 +22,7 @@ function stickyRotationDeg(day) {
   return ((d * 13 + m * 7) % 11) - 5;
 }
 
-function StickyCalendar({ entries }) {
+function StickyCalendar({ entries, onDateClick }) {
   const [monthCursor, setMonthCursor] = useState(new Date());
   const byDate = useMemo(() => {
     const map = new Map();
@@ -65,14 +66,26 @@ function StickyCalendar({ entries }) {
         {days.map((day) => {
           const key = format(day, "yyyy-MM-dd");
           const words = byDate.get(key) || 0;
+          const hasEntries = words > 0;
           const inMonth = isSameMonth(day, monthCursor);
           const today = isSameDay(day, new Date());
           return (
             <div
               key={key}
               title={`${format(day, "PPP")} - ${plural(words, "word")}`}
+              role={hasEntries ? "button" : undefined}
+              tabIndex={hasEntries ? 0 : undefined}
+              onClick={() => {
+                if (hasEntries) onDateClick(key);
+              }}
+              onKeyDown={(e) => {
+                if (hasEntries && (e.key === "Enter" || e.key === " ")) {
+                  e.preventDefault();
+                  onDateClick(key);
+                }
+              }}
               className={`relative h-16 rounded-[2px] border border-[#d9ccb0] p-1 text-xs shadow-sm transition ${
-                words ? "bg-[#e9d6ad]" : "bg-journal-sticky"
+                hasEntries ? "bg-[#e9d6ad] cursor-pointer hover:bg-[#dfc99a]" : "bg-journal-sticky"
               } ${today ? "ring-2 ring-journal-brown/30" : ""} ${inMonth ? "" : "opacity-40"}`}
               style={{ transform: `rotate(${stickyRotationDeg(day)}deg)` }}
             >
@@ -91,6 +104,7 @@ function StickyCalendar({ entries }) {
 }
 
 export default function StatsPage() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     currentStreak: 0,
     longestStreak: 0,
@@ -125,7 +139,10 @@ export default function StatsPage() {
         </div>
       </div>
       <div className="page-content-block p-4">
-        <StickyCalendar entries={stats.heatmap} />
+        <StickyCalendar
+          entries={stats.heatmap}
+          onDateClick={(dateStr) => navigate("/entries", { state: { selectedDate: dateStr } })}
+        />
       </div>
     </section>
   );

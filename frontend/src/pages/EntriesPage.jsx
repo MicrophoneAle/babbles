@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { api } from "../api";
 import { useOwner } from "../AuthProvider";
@@ -26,9 +26,13 @@ function getBodyPreview(entry, title) {
 export default function EntriesPage() {
   const { isOwner } = useOwner();
   const navigate = useNavigate();
+  const location = useLocation();
+  const initialDate = location.state?.selectedDate;
+  const consumedInitialDate = useRef(false);
   const [searchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [entries, setEntries] = useState([]);
+  const [dateIndex, setDateIndex] = useState(0);
   const [confirmEntryId, setConfirmEntryId] = useState(null);
 
   useEffect(() => {
@@ -47,15 +51,45 @@ export default function EntriesPage() {
     return () => clearTimeout(id);
   }, [search]);
 
-  const grouped = useMemo(() => {
-    const map = new Map();
-    for (const entry of entries) {
-      const d = entry.date;
-      if (!map.has(d)) map.set(d, []);
-      map.get(d).push(entry);
-    }
-    return [...map.entries()].sort((a, b) => (a[0] < b[0] ? 1 : a[0] > b[0] ? -1 : 0));
+  const sortedDates = useMemo(() => {
+    const dates = new Set(entries.map((e) => e.date));
+    return [...dates].sort((a, b) => a.localeCompare(b));
   }, [entries]);
+
+  const currentDate = sortedDates[dateIndex] ?? null;
+
+  const dayEntries = useMemo(() => {
+    if (!currentDate) return [];
+    return entries.filter((e) => e.date === currentDate);
+  }, [entries, currentDate]);
+
+  useEffect(() => {
+    if (sortedDates.length === 0) {
+      setDateIndex(0);
+      return;
+    }
+    if (!consumedInitialDate.current && initialDate) {
+      consumedInitialDate.current = true;
+      const idx = sortedDates.indexOf(initialDate);
+      setDateIndex(idx >= 0 ? idx : sortedDates.length - 1);
+      return;
+    }
+    setDateIndex((prev) => {
+      const prevDate = sortedDates[prev];
+      if (prevDate) {
+        const idx = sortedDates.indexOf(prevDate);
+        if (idx >= 0) return idx;
+      }
+      return sortedDates.length - 1;
+    });
+  }, [sortedDates, initialDate]);
+
+  const canGoOlder = sortedDates.length > 0 && dateIndex > 0;
+  const canGoNewer = sortedDates.length > 0 && dateIndex < sortedDates.length - 1;
+
+  const formattedCurrentDate = currentDate
+    ? format(new Date(`${currentDate}T12:00:00`), "EEEE, MMMM d, yyyy")
+    : "";
 
   return (
     <section className="space-y-4">
@@ -89,10 +123,42 @@ export default function EntriesPage() {
         <p className="font-ui-hint text-ds-xl text-journal-grey">
           No babbles yet — open Babble to start writing!
         </p>
+      ) : sortedDates.length === 0 ? (
+        <p className="font-ui-hint text-ds-xl text-journal-grey">No babbles match your search.</p>
       ) : (
-        grouped.map(([date, dayEntries]) => (
-          <div key={date} className="space-y-3">
-            <h3 className="font-date-md text-journal-brown">{date}</h3>
+        <>
+          <div className="flex items-center justify-center gap-4">
+            {canGoOlder ? (
+              <button
+                type="button"
+                onClick={() => setDateIndex((i) => i - 1)}
+                className="text-ds-3xl leading-none text-[#6b4a2a] transition hover:text-[#3b2a1a]"
+                aria-label="Older date"
+              >
+                ←
+              </button>
+            ) : (
+              <span className="text-ds-3xl leading-none text-journal-grey/40" aria-hidden>
+                ←
+              </span>
+            )}
+            <h3 className="font-date-lg text-center text-journal-brown">{formattedCurrentDate}</h3>
+            {canGoNewer ? (
+              <button
+                type="button"
+                onClick={() => setDateIndex((i) => i + 1)}
+                className="text-ds-3xl leading-none text-[#6b4a2a] transition hover:text-[#3b2a1a]"
+                aria-label="Newer date"
+              >
+                →
+              </button>
+            ) : (
+              <span className="text-ds-3xl leading-none text-journal-grey/40" aria-hidden>
+                →
+              </span>
+            )}
+          </div>
+          <div className="space-y-3">
             {dayEntries.map((entry) => {
               const title = (entry.title || "").trim();
               const bodyPreview = getBodyPreview(entry, title);
@@ -171,7 +237,7 @@ export default function EntriesPage() {
               );
             })}
           </div>
-        ))
+        </>
       )}
     </section>
   );
