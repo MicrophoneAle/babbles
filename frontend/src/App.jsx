@@ -46,9 +46,8 @@ function PageStackLayers({ side }) {
     >
       {PAGE_STACK_LAYERS.map((color, index) => {
         const offset = index * PAGE_STACK_STEP_PX;
-        const stripBorder = {
-          border: "1px solid rgba(160, 140, 110, 0.5)"
-        };
+        const stripBorder =
+          index === 0 ? {} : { border: "0.5px solid rgba(160, 140, 110, 0.3)" };
         return (
           <div
             key={color}
