@@ -35,6 +35,8 @@ const PAGE_STACK_STRIP_PX = 12;
 const PAGE_STACK_TOTAL_WIDTH =
   (PAGE_STACK_LAYERS.length - 1) * PAGE_STACK_STEP_PX + PAGE_STACK_STRIP_PX;
 
+const PAGE_EDGE_BORDER = "0.5px solid rgba(180, 160, 130, 0.4)";
+
 function PageStackLayers({ side }) {
   const onLeftPage = side === "left";
 
@@ -46,6 +48,21 @@ function PageStackLayers({ side }) {
     >
       {PAGE_STACK_LAYERS.map((color, index) => {
         const offset = index * PAGE_STACK_STEP_PX;
+        const isFirst = index === 0;
+        const isLast = index === PAGE_STACK_LAYERS.length - 1;
+        const stripBorder = {
+          borderTop: PAGE_EDGE_BORDER,
+          borderBottom: PAGE_EDGE_BORDER,
+          ...(onLeftPage
+            ? {
+                ...(isFirst ? { borderLeft: PAGE_EDGE_BORDER } : {}),
+                ...(isLast ? { borderRight: PAGE_EDGE_BORDER } : {})
+              }
+            : {
+                ...(isFirst ? { borderRight: PAGE_EDGE_BORDER } : {}),
+                ...(isLast ? { borderLeft: PAGE_EDGE_BORDER } : {})
+              })
+        };
         return (
           <div
             key={color}
@@ -55,7 +72,8 @@ function PageStackLayers({ side }) {
               backgroundColor: color,
               zIndex: index + 1,
               left: onLeftPage ? offset : undefined,
-              right: onLeftPage ? undefined : offset
+              right: onLeftPage ? undefined : offset,
+              ...stripBorder
             }}
           />
         );
