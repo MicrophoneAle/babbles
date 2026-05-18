@@ -6,7 +6,7 @@ import { useOwner } from "../AuthProvider";
 import RichEditor from "../components/Editor";
 import TagInput from "../components/TagInput";
 import ConfirmModal from "../components/ConfirmModal";
-import { plural } from "../utils/plural";
+import { wordCountWithReadingTime } from "../utils/plural";
 
 const emptyDoc = { type: "doc", content: [{ type: "paragraph" }] };
 
@@ -205,6 +205,11 @@ function TodayEntryEditor({
           setPlainText(next.text);
         }}
       />
+      {!editorFullscreen ? (
+        <p className="word-count mt-2 text-ds-base italic text-journal-grey">
+          {wordCountWithReadingTime(entry.wordCount)}
+        </p>
+      ) : null}
       <div className="mt-3 flex flex-wrap items-center justify-end gap-3">
         {!editorFullscreen ? (
           <span className="font-ui-hint text-ds-xs font-semibold text-journal-grey">{readOnly ? "View only" : status}</span>
@@ -519,6 +524,9 @@ export default function EntryPage({ mode }) {
             setPlainText(next.text);
           }}
         />
+        <p className="word-count mt-2 text-ds-base italic text-journal-grey">
+          {wordCountWithReadingTime(singleEntry.wordCount)}
+        </p>
         <div className="mt-4 flex items-center justify-end gap-3">
           {showSavedFlash && !readOnly ? <span className="save-indicator">✓ Babble saved</span> : null}
           {!readOnly ? (

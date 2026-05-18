@@ -4,7 +4,7 @@ import { format, parseISO } from "date-fns";
 import { api } from "../api";
 import { useOwner } from "../AuthProvider";
 import ConfirmModal from "../components/ConfirmModal";
-import { plural } from "../utils/plural";
+import { wordCountWithReadingTime } from "../utils/plural";
 
 function formatCreatedTime(iso) {
   if (!iso) return "";
@@ -203,7 +203,7 @@ export default function EntriesPage() {
                     ) : null}
                   </div>
                   <p className="word-count mt-2 text-ds-base italic text-journal-grey">
-                    {plural(entry.wordCount ?? 0, "word")}
+                    {wordCountWithReadingTime(entry.wordCount)}
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {(entry.tags || []).map((tag) => (
