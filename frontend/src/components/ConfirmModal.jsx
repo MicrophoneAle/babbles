@@ -14,19 +14,19 @@ export default function ConfirmModal({ isOpen, message, onConfirm, onCancel }) {
         aria-modal="true"
         className="relative z-10 w-full max-w-md rounded-[2px] border border-journal-brown/40 bg-journal-paper px-6 py-5 shadow-lg"
       >
-        <p className="font-dancing text-ds-lg italic leading-relaxed text-journal-charcoal">{message}</p>
+        <p className="font-ui-hint text-ds-lg leading-relaxed text-journal-charcoal">{message}</p>
         <div className="mt-6 flex justify-end gap-3">
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-[2px] border border-journal-brown/50 bg-transparent px-4 py-2 font-dancing text-ds-sm font-semibold text-journal-brown transition hover:bg-journal-white"
+            className="rounded-[2px] border border-journal-brown/50 bg-transparent px-4 py-2 text-ds-sm font-semibold text-journal-brown transition hover:bg-journal-white"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 font-dancing text-ds-sm font-semibold text-journal-white transition hover:bg-[#5d4533]"
+            className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 text-ds-sm font-semibold text-journal-white transition hover:bg-[#5d4533]"
           >
             Confirm
           </button>

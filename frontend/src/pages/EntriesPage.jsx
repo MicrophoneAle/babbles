@@ -76,7 +76,7 @@ export default function EntriesPage() {
           }
         }}
       />
-      <h2 className="section-title text-5xl">Past Babbles</h2>
+      <h2 className="section-title">Past Babbles</h2>
       <div className="page-content-block p-4">
         <input
           value={search}
@@ -86,13 +86,13 @@ export default function EntriesPage() {
         />
       </div>
       {entries.length === 0 ? (
-        <p className="font-dancing text-ds-xl italic text-journal-grey">
+        <p className="font-ui-hint text-ds-xl text-journal-grey">
           No babbles yet — open Babble to start writing!
         </p>
       ) : (
         grouped.map(([date, dayEntries]) => (
           <div key={date} className="space-y-3">
-            <h3 className="font-heading text-3xl italic text-journal-brown">{date}</h3>
+            <h3 className="font-date-md text-journal-brown">{date}</h3>
             {dayEntries.map((entry) => {
               const title = (entry.title || "").trim();
               const bodyPreview = getBodyPreview(entry, title);
@@ -103,7 +103,7 @@ export default function EntriesPage() {
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                      <p className="font-dancing text-ds-xs font-semibold uppercase tracking-wide text-journal-grey">
+                      <p className="font-time text-ds-xs font-semibold uppercase tracking-wide text-journal-grey">
                         {formatCreatedTime(entry.createdAt)}
                       </p>
                       <p
@@ -122,21 +122,21 @@ export default function EntriesPage() {
                     {isOwner ? (
                       <button
                         type="button"
-                        className="shrink-0 font-dancing text-ds-xs text-red-800/60 underline decoration-red-800/30 hover:text-red-800/80"
+                        className="shrink-0 text-ds-xs text-red-800/60 underline decoration-red-800/30 hover:text-red-800/80"
                         onClick={() => setConfirmEntryId(entry.id)}
                       >
                         Delete
                       </button>
                     ) : null}
                   </div>
-                  <p className="mt-2 font-dancing text-ds-base italic text-journal-grey">
+                  <p className="word-count mt-2 text-ds-base italic text-journal-grey">
                     {plural(entry.wordCount ?? 0, "word")}
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {(entry.tags || []).map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-2 py-1 font-dancing text-ds-xs font-semibold text-journal-brown"
+                        className="tag-chip rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-2 py-1 text-ds-xs font-semibold text-journal-brown"
                       >
                         #{tag}
                       </span>
@@ -145,14 +145,14 @@ export default function EntriesPage() {
                       <div className="ml-auto flex flex-wrap items-center gap-3">
                         <button
                           type="button"
-                          className="font-dancing text-ds-base italic text-journal-brown underline"
+                          className="text-ds-base text-journal-brown underline"
                           onClick={() => navigate(`/entry/${entry.id}`, { state: { viewOnly: true } })}
                         >
                           View
                         </button>
                         <button
                           type="button"
-                          className="font-dancing text-ds-base italic text-journal-brown underline"
+                          className="text-ds-base text-journal-brown underline"
                           onClick={() => navigate(`/entry/${entry.id}`, { state: { editMode: true } })}
                         >
                           Edit
@@ -161,7 +161,7 @@ export default function EntriesPage() {
                     ) : (
                       <Link
                         to={`/entry/${entry.id}`}
-                        className="ml-auto font-dancing text-ds-base italic text-journal-brown underline"
+                        className="font-dancing ml-auto text-ds-base text-journal-brown underline"
                       >
                         Read More
                       </Link>

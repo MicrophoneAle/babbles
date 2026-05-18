@@ -46,7 +46,7 @@ export default function TagInput({ tags, setTags, suggestions = [], savedTags = 
           readOnly ? (
             <span
               key={tag}
-              className="rounded-[2px] border border-journal-brown/40 bg-[#f1ece4] px-3 py-1 font-dancing text-ds-xs font-semibold text-journal-text"
+              className="tag-chip rounded-[2px] border border-journal-brown/40 bg-[#f1ece4] px-3 py-1 text-ds-xs font-semibold text-journal-text"
             >
               #{tag}
             </span>
@@ -54,7 +54,7 @@ export default function TagInput({ tags, setTags, suggestions = [], savedTags = 
             <button
               key={tag}
               type="button"
-              className="rounded-[2px] border border-journal-brown/40 bg-[#f1ece4] px-3 py-1 font-dancing text-ds-xs font-semibold text-journal-text transition hover:bg-[#e5ded2]"
+              className="tag-chip rounded-[2px] border border-journal-brown/40 bg-[#f1ece4] px-3 py-1 text-ds-xs font-semibold text-journal-text transition hover:bg-[#e5ded2]"
               onClick={() => setTags(tags.filter((t) => t !== tag))}
             >
               #{tag} {savedTags.includes(tag) ? "✓" : ""} ×
@@ -74,19 +74,19 @@ export default function TagInput({ tags, setTags, suggestions = [], savedTags = 
         }}
         readOnly={readOnly}
         disabled={readOnly}
-        className="w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-dancing text-ds-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3] disabled:text-journal-grey"
+        className="w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-ds-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20 disabled:cursor-not-allowed disabled:bg-[#f0ebe3] disabled:text-journal-grey"
         placeholder={readOnly ? "Tags (view only)" : "Add a tag and press Enter"}
       />
       {!readOnly && availableTags.length > 0 ? (
         <>
-          <p className="mt-3 font-dancing text-ds-sm italic text-[#6b4a2a]">Available tags</p>
+          <p className="font-ui-hint mt-3 text-ds-sm text-[#6b4a2a]">Available tags</p>
           <div className="mt-1 flex flex-wrap gap-2">
             {availableTags.map((tag) => (
               <button
                 key={tag}
                 type="button"
                 onClick={() => void addTag(tag)}
-                className="cursor-pointer rounded-[2px] border border-[rgba(107,74,42,0.3)] bg-[rgba(245,230,200,0.5)] px-3 py-1 font-dancing text-ds-sm italic text-[#6b4a2a] transition hover:bg-[rgba(245,230,200,0.75)]"
+                className="tag-chip cursor-pointer rounded-[2px] border border-[rgba(107,74,42,0.3)] bg-[rgba(245,230,200,0.5)] px-3 py-1 text-ds-sm text-[#6b4a2a] transition hover:bg-[rgba(245,230,200,0.75)]"
               >
                 #{tag}
               </button>

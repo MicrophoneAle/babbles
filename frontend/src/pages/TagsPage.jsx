@@ -44,13 +44,13 @@ export default function TagsPage() {
           }
         }}
       />
-      <h2 className="section-title text-5xl">Tags</h2>
+      <h2 className="section-title">Tags</h2>
       {isOwner ? (
         <div className="page-content-block flex gap-2 p-4">
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="flex-1 rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 font-dancing text-ds-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
+            className="flex-1 rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-ds-sm text-journal-text outline-none focus:ring-2 focus:ring-journal-brown/20"
             placeholder="New tag name"
           />
           <button
@@ -60,7 +60,7 @@ export default function TagsPage() {
               setName("");
               await loadTags();
             }}
-            className="rounded-[2px] border border-journal-brown/40 bg-journal-brown px-4 py-2 font-dancing text-ds-sm font-semibold text-journal-white"
+            className="rounded-[2px] border border-journal-brown/40 bg-journal-brown px-4 py-2 text-ds-sm font-semibold text-journal-white"
           >
             Create Tag
           </button>
@@ -68,18 +68,18 @@ export default function TagsPage() {
       ) : null}
 
       <div className="page-content-block p-4">
-        <h3 className="mb-4 font-heading text-3xl italic text-journal-brown">Tag List</h3>
+        <h3 className="page-subheading mb-4 text-journal-brown">Tag List</h3>
         <div className="flex flex-wrap gap-2">
           {tags.map((tag) => (
             <div
               key={tag.name}
-              className="flex items-center gap-2 rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-3 py-1 font-dancing text-ds-sm font-semibold text-journal-brown"
+              className="tag-chip flex items-center gap-2 rounded-[2px] border border-journal-brown/30 bg-journal-sticky px-3 py-1 text-ds-sm font-semibold text-journal-brown"
             >
-              <span className="italic">{tag.name}</span>
-              <span className="font-dancing text-ds-xs text-journal-grey">({plural(tag.count, "babble")})</span>
+              <span>{tag.name}</span>
+              <span className="word-count text-ds-xs text-journal-grey">({plural(tag.count, "babble")})</span>
               <button
                 type="button"
-                className="font-dancing text-ds-sm italic text-journal-brown underline"
+                className="text-ds-sm text-journal-brown underline"
                 onClick={() => navigate(`/entries?search=${encodeURIComponent(tag.name)}`)}
               >
                 View
@@ -87,7 +87,7 @@ export default function TagsPage() {
               {isOwner ? (
                 <button
                   type="button"
-                  className="rounded-[2px] border border-journal-grey/50 bg-journal-white px-2 py-0.5 font-dancing text-ds-xs font-semibold text-journal-charcoal"
+                  className="rounded-[2px] border border-journal-grey/50 bg-journal-white px-2 py-0.5 text-ds-xs font-semibold text-journal-charcoal"
                   onClick={() => setConfirmTag(tag.name)}
                 >
                   Delete

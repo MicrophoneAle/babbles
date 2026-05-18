@@ -46,7 +46,7 @@ function JournalSidebarPanels() {
       {!hidePrompts && prompts.length > 0 ? (
         <section className="left-panel-card">
           <div className="mb-2 flex items-center justify-between">
-            <h3 className="font-heading text-xl italic text-[#3b2a1a]">Daily prompts</h3>
+            <h3 className="page-subheading text-[#3b2a1a]">Daily prompts</h3>
             <button
               type="button"
               onClick={() => {
@@ -54,12 +54,12 @@ function JournalSidebarPanels() {
                 window.localStorage.setItem(PROMPTS_HIDDEN_KEY, today);
                 setHidePrompts(true);
               }}
-              className="font-dancing text-ds-xs font-semibold text-[#6b4a2a] hover:text-[#3b2a1a]"
+              className="text-ds-xs font-semibold text-[#6b4a2a] hover:text-[#3b2a1a]"
             >
               Hide
             </button>
           </div>
-          <ul className="space-y-1 font-prose text-sm text-[#4b3a28]">
+          <ul className="prompt-list space-y-1 text-sm text-[#4b3a28]">
             {prompts.map((prompt) => (
               <li key={prompt}>- {prompt}</li>
             ))}
@@ -74,7 +74,7 @@ function SidebarAuth() {
   const publishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim();
   if (!publishableKey) {
     return (
-      <p className="font-dancing text-ds-xs leading-snug text-[#6b4a2a]/85">
+      <p className="font-ui-hint text-ds-xs leading-snug text-[#6b4a2a]/85">
         Owner sign-in is not configured yet. Add <span className="font-mono">VITE_CLERK_PUBLISHABLE_KEY</span> to enable
         editing.
       </p>
@@ -82,23 +82,23 @@ function SidebarAuth() {
   }
 
   return (
-    <div className="flex flex-col gap-2 font-sans">
+    <div className="flex flex-col gap-2">
       <SignedOut>
         <SignInButton mode="modal">
           <button
             type="button"
-            className="w-full rounded-[2px] border border-journal-brown/40 bg-journal-brown px-3 py-2 font-dancing text-ds-sm font-semibold text-journal-white shadow-sm transition hover:bg-[#5d4533]"
+            className="w-full rounded-[2px] border border-journal-brown/40 bg-journal-brown px-3 py-2 text-ds-sm font-semibold text-journal-white shadow-sm transition hover:bg-[#5d4533]"
           >
             Sign in
           </button>
         </SignInButton>
-        <p className="font-dancing text-ds-xs leading-snug text-[#6b4a2a]/80">
+        <p className="font-ui-hint text-ds-xs leading-snug text-[#6b4a2a]/80">
           Michael&apos;s Babbles is public to read. Sign in as the owner to write or delete anything.
         </p>
       </SignedOut>
       <SignedIn>
         <div className="flex items-center justify-between gap-2">
-          <span className="font-dancing text-ds-xs font-semibold text-[#6b4a2a]">Signed in</span>
+          <span className="font-ui-hint text-ds-xs font-semibold text-[#6b4a2a]">Signed in</span>
           <UserButton afterSignOutUrl="/" />
         </div>
       </SignedIn>
@@ -137,8 +137,8 @@ function Layout({ children }) {
         >
           <div className="flex min-h-[calc(100vh-9rem)] w-full min-w-0">
             <div className="page-left flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-bl-[2px] rounded-tl-[2px] p-6">
-              <h1 className="font-heading text-6xl italic leading-tight text-[#3b2a1a]">Michael's Babbles</h1>
-              <p className="mt-1 font-heading text-lg italic text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
+              <h1 className="app-brand-title italic text-[#3b2a1a]">Michael's Babbles</h1>
+              <p className="font-date-sm mt-1 text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
 
               <nav className="mt-6 flex flex-col gap-2 text-sm font-bold">
                 <NavLink className="nav-link" to="/">

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family: "Nunito", sans-serif;
+  font-family: "Lora", serif;
   background: #8b5e3c;
   color: #2c2c2c;
   overflow-x: hidden;
@@ -17,7 +17,9 @@ body {
 }
 
 .nav-link {
-  @apply rounded-[2px] px-3 py-2 font-heading text-2xl italic text-[#4b3622] transition;
+  @apply rounded-[2px] px-3 py-2 font-carattere italic text-[#4b3622] transition;
+  font-size: calc(1.5rem * 1.125);
+  line-height: 1.2;
   background: transparent;
   border: 1px solid transparent;
 }
@@ -101,9 +103,10 @@ body {
   margin: 0.35rem 0;
 }
 
-/* Route / page titles — size set per usage (Carattere reads small at default scale). */
-.section-title {
-  @apply font-heading italic text-journal-brown;
+/* ProseMirror: Lora only — never Carattere or Dancing Script */
+.editor-scroll-area .ProseMirror,
+.editor-scroll-area .ProseMirror * {
+  font-family: "Lora", serif;
 }
 
 .journal-page {
@@ -164,6 +167,7 @@ body {
 .save-indicator {
   color: #7a9e7e;
   font-family: "Dancing Script", cursive;
+  font-style: normal;
   font-size: calc(0.875rem * 1.1);
   @apply font-semibold animate-saveFlash;
 }
@@ -187,52 +191,163 @@ body {
 
 /* === Central typography === */
 
-/* Dancing Script: all buttons */
-button,
-[type="button"],
-[type="submit"] {
-  font-family: "Dancing Script", cursive;
+/* Carattere — display script (~12.5% size bump) */
+.font-carattere,
+.font-heading {
+  font-family: "Carattere", cursive;
 }
 
-/* Nunito: search and other non-title text inputs */
-.babble-title-input {
-  font-family: "Nunito", sans-serif !important;
-  font-style: normal;
+.app-brand-title {
+  font-family: "Carattere", cursive;
+  font-size: calc(3.75rem * 1.125);
+  line-height: 1.1;
 }
 
-/* Displayed entry titles (Past Babbles, read-only entry view) */
+.section-title {
+  @apply font-carattere italic text-journal-brown;
+  font-size: calc(3rem * 1.125);
+  line-height: 1.1;
+}
+
+.page-subheading {
+  font-family: "Carattere", cursive;
+  font-size: calc(1.875rem * 1.125);
+  line-height: 1.2;
+  font-style: italic;
+}
+
+.font-date {
+  font-family: "Carattere", cursive;
+  font-style: italic;
+}
+
+.font-date-lg {
+  font-family: "Carattere", cursive;
+  font-size: calc(3rem * 1.125);
+  line-height: 1.1;
+  font-style: italic;
+}
+
+.font-date-md {
+  font-family: "Carattere", cursive;
+  font-size: calc(1.875rem * 1.125);
+  line-height: 1.2;
+  font-style: italic;
+}
+
+.font-date-sm {
+  font-family: "Carattere", cursive;
+  font-size: calc(1.125rem * 1.125);
+  line-height: 1.3;
+  font-style: italic;
+}
+
 .babble-entry-title {
-  font-family: "Dancing Script", cursive;
+  font-family: "Carattere", cursive;
   font-style: normal;
   font-weight: 600;
-  font-size: 1.15rem;
+  font-size: calc(1.15rem * 1.125);
   line-height: 1.35;
 }
 
 .babble-entry-title--lg {
-  font-size: 1.25rem;
+  font-size: calc(1.25rem * 1.125);
 }
 
-/* Stats page: Carattere for all text; buttons stay Dancing Script */
-.stats-page {
+.stat-label {
   font-family: "Carattere", cursive;
+  font-size: calc(1.25rem * 1.125);
+  line-height: 1.3;
+  font-style: italic;
 }
 
-.stats-page button,
-.stats-page [type="button"] {
+.stat-value {
+  font-family: "Carattere", cursive;
+  font-size: calc(2.25rem * 1.125);
+  line-height: 1.1;
+  font-style: italic;
+}
+
+.calendar-dow {
+  font-family: "Carattere", cursive;
+  font-size: calc(1rem * 1.125);
+  line-height: 1.2;
+  font-style: italic;
+}
+
+/* Dancing Script — UI script (~10% size bump); always upright */
+.font-dancing {
   font-family: "Dancing Script", cursive;
+  font-style: normal !important;
 }
 
-/* Dancing Script — secondary UI script; sizes ~110% vs default Tailwind step. */
+button,
+[type="button"],
+[type="submit"] {
+  font-family: "Dancing Script", cursive;
+  font-style: normal !important;
+}
+
+.tag-chip,
+span.tag-chip,
+button.tag-chip,
+[type="button"].tag-chip {
+  font-family: "Dancing Script", cursive;
+  font-style: normal !important;
+}
+
+.font-time {
+  font-family: "Dancing Script", cursive;
+  font-style: normal !important;
+}
+
+.font-ui-hint {
+  font-family: "Dancing Script", cursive;
+  font-style: normal !important;
+}
+
+.calendar-month-title {
+  font-family: "Dancing Script", cursive;
+  font-size: calc(3rem * 1.1);
+  line-height: 1.1;
+  font-style: normal !important;
+}
+
+.calendar-day-num {
+  font-family: "Dancing Script", cursive;
+  font-style: normal !important;
+}
+
+/* Lora — body & reading */
+.font-prose,
+.font-body {
+  font-family: "Lora", serif;
+}
+
+.prompt-list {
+  font-family: "Lora", serif;
+  font-style: italic;
+}
+
+.word-count {
+  font-family: "Lora", serif;
+}
+
+/* User-typed fields: Lora only (never Carattere / Dancing Script) */
+input,
+textarea,
+select {
+  font-family: "Lora", serif;
+  font-style: normal;
+}
+
+.babble-title-input {
+  font-family: "Lora", serif !important;
+  font-style: normal;
+}
+
+/* Dancing Script scaled text utilities */
 @layer utilities {
-  .font-dancing {
-    font-family: "Dancing Script", cursive;
-  }
-
-  .font-prose {
-    font-family: "Lora", serif;
-  }
-
   .text-ds-2xs {
     font-size: calc(10px * 1.1);
     line-height: 1.2;

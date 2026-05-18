@@ -34,9 +34,17 @@ function formatCreatedTime(iso) {
   }
 }
 
-const EDITOR_FULLSCREEN_SCROLL_CLASS = "h-[calc(100vh-12rem)]";
+const EDITOR_FULLSCREEN_SCROLL_CLASS = "min-h-0 flex-1 h-full max-h-none";
 
-function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdated }) {
+function TodayEntryEditor({
+  entry,
+  tagSuggestions,
+  readOnly,
+  obscured,
+  onFullscreenChange,
+  onDeleted,
+  onUpdated
+}) {
   const [title, setTitle] = useState(entry.title ?? "");
   const [content, setContent] = useState(entry.content || emptyDoc);
   const [plainText, setPlainText] = useState(entry.plainText ?? "");
@@ -62,6 +70,11 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
     setStatus("Saved");
     setEditorFullscreen(false);
   }, [entry.id]);
+
+  useEffect(() => {
+    onFullscreenChange?.(editorFullscreen);
+    return () => onFullscreenChange?.(false);
+  }, [editorFullscreen, onFullscreenChange]);
 
   useEffect(() => {
     if (!editorFullscreen) return undefined;
@@ -118,7 +131,15 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
   }
 
   return (
-    <article className="page-content-block mb-6 animate-fadeIn p-4">
+    <article
+      className={
+        obscured
+          ? "hidden"
+          : editorFullscreen
+            ? "flex min-h-0 min-w-0 flex-1 flex-col animate-fadeIn"
+            : "page-content-block mb-6 animate-fadeIn p-4"
+      }
+    >
       <ConfirmModal
         isOpen={confirmOpen}
         message="Delete this babble? This cannot be undone."
@@ -126,22 +147,22 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
         onConfirm={() => void handleDelete()}
       />
       <div className="mb-2 flex flex-wrap items-center justify-between gap-2 border-b border-journal-brown/15 pb-2">
-        <p className="font-dancing text-ds-base italic text-journal-grey">{formatCreatedTime(entry.createdAt)}</p>
+        <p className="font-time text-ds-base text-journal-grey">{formatCreatedTime(entry.createdAt)}</p>
         <div className="flex shrink-0 items-center gap-2">
           <button
             type="button"
             onClick={() => setEditorFullscreen((v) => !v)}
-            className="bg-transparent p-0 font-dancing text-ds-xs text-[#6b4a2a] transition hover:text-[#3b2a1a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6b4a2a]/30"
-            title={editorFullscreen ? "Collapse editor" : "Expand editor"}
-            aria-label={editorFullscreen ? "Collapse editor" : "Expand editor"}
-            aria-pressed={editorFullscreen}
+            className="bg-transparent p-0 text-ds-xs text-[#6b4a2a] transition hover:text-[#3b2a1a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6b4a2a]/30"
+            title="Expand editor"
+            aria-label="Expand editor"
+            aria-pressed={false}
           >
-            {editorFullscreen ? "⤡" : "⤢"}
+            ⤢
           </button>
           {!readOnly ? (
             <button
               type="button"
-              className="font-dancing text-ds-xs font-semibold text-red-800/70 underline decoration-red-800/30 hover:text-red-800"
+              className="text-ds-xs font-semibold text-red-800/70 underline decoration-red-800/30 hover:text-red-800"
               onClick={() => setConfirmOpen(true)}
             >
               Delete
@@ -164,13 +185,13 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Title (optional)"
-            className="font-heading mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-lg not-italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20"
+            className="babble-title-input mb-3 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-lg text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20"
           />
         )
       ) : null}
       {!editorFullscreen ? (
         <div className="mb-3">
-          <p className="mb-2 font-dancing text-ds-lg italic text-journal-brown">Tags</p>
+          <p className="page-subheading mb-2 text-journal-brown">Tags</p>
           <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} readOnly={readOnly} />
         </div>
       ) : null}
@@ -186,7 +207,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
       />
       <div className="mt-3 flex flex-wrap items-center justify-end gap-3">
         {!editorFullscreen ? (
-          <span className="font-dancing text-ds-xs font-semibold text-journal-grey">{readOnly ? "View only" : status}</span>
+          <span className="font-ui-hint text-ds-xs font-semibold text-journal-grey">{readOnly ? "View only" : status}</span>
         ) : null}
         {showSavedFlash && !readOnly ? <span className="save-indicator">✓ Babble saved</span> : null}
         {!readOnly ? (
@@ -199,7 +220,7 @@ function TodayEntryEditor({ entry, tagSuggestions, readOnly, onDeleted, onUpdate
                 setTimeout(() => setShowSavedFlash(false), 2000);
               }
             }}
-            className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 font-dancing text-ds-sm font-semibold text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
+            className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 text-ds-sm font-semibold text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
           >
             Save Entry
           </button>
@@ -372,7 +393,7 @@ export default function EntryPage({ mode }) {
   if (mode === "id" && !idValid) {
     return (
       <section>
-        <p className="font-dancing text-ds-xl italic text-journal-grey">Invalid entry link.</p>
+        <p className="font-ui-hint text-ds-xl text-journal-grey">Invalid entry link.</p>
       </section>
     );
   }
@@ -380,7 +401,7 @@ export default function EntryPage({ mode }) {
   if (mode === "id" && singleLoadError) {
     return (
       <section>
-        <p className="font-dancing text-ds-xl italic text-journal-grey">{singleLoadError}</p>
+        <p className="font-ui-hint text-ds-xl text-journal-grey">{singleLoadError}</p>
       </section>
     );
   }
@@ -413,7 +434,7 @@ export default function EntryPage({ mode }) {
           <button
             type="button"
             onClick={() => navigate("/entries")}
-            className="rounded-[2px] border border-journal-brown/25 bg-[#f5edd9]/60 px-2.5 py-1 font-dancing text-ds-base italic text-[#4b3622] shadow-sm transition hover:border-journal-brown/40 hover:bg-[#ede2cb]"
+            className="rounded-[2px] border border-journal-brown/25 bg-[#f5edd9]/60 px-2.5 py-1 text-ds-base text-[#4b3622] shadow-sm transition hover:border-journal-brown/40 hover:bg-[#ede2cb]"
           >
             ← Back
           </button>
@@ -425,7 +446,7 @@ export default function EntryPage({ mode }) {
             adjacent.previous != null &&
             navigate(`/entry/${adjacent.previous}`, { state: persistEntryNavState })
           }
-          className={`absolute left-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-r-[2px] border-r border-journal-grey/40 font-dancing text-ds-sm font-bold shadow-sm transition ${
+          className={`absolute left-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-r-[2px] border-r border-journal-grey/40 text-ds-sm font-bold shadow-sm transition ${
             adjacent.previous != null
               ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
               : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
@@ -440,7 +461,7 @@ export default function EntryPage({ mode }) {
           onClick={() =>
             adjacent.next != null && navigate(`/entry/${adjacent.next}`, { state: persistEntryNavState })
           }
-          className={`absolute right-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-l-[2px] border-l border-journal-grey/40 font-dancing text-ds-sm font-bold shadow-sm transition ${
+          className={`absolute right-0 top-1/2 z-10 h-[60px] w-4 -translate-y-1/2 rounded-l-[2px] border-l border-journal-grey/40 text-ds-sm font-bold shadow-sm transition ${
             adjacent.next != null
               ? "bg-journal-brown text-journal-white hover:bg-[#5b4330]"
               : "cursor-not-allowed bg-[#cfc8be] text-[#f5f5f5]"
@@ -450,13 +471,13 @@ export default function EntryPage({ mode }) {
           ›
         </button>
         <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="section-title text-5xl">{format(new Date(`${entryDateStr}T12:00:00`), "EEEE, MMMM d")}</h2>
+          <h2 className="font-date-lg text-journal-brown">{format(new Date(`${entryDateStr}T12:00:00`), "EEEE, MMMM d")}</h2>
           <div className="flex items-center gap-3">
-            <p className="font-dancing text-ds-base italic text-journal-grey">{formatCreatedTime(singleEntry.createdAt)}</p>
+            <p className="font-time text-ds-base text-journal-grey">{formatCreatedTime(singleEntry.createdAt)}</p>
             {!readOnly ? (
               <button
                 type="button"
-                className="font-dancing text-ds-xs font-semibold text-red-800/70 underline decoration-red-800/30 hover:text-red-800"
+                className="text-ds-xs font-semibold text-red-800/70 underline decoration-red-800/30 hover:text-red-800"
                 onClick={() => setConfirmDeleteOpen(true)}
               >
                 Delete
@@ -464,7 +485,7 @@ export default function EntryPage({ mode }) {
             ) : null}
           </div>
         </div>
-        <p className="mb-4 font-dancing text-ds-sm font-semibold text-journal-grey">
+        <p className="font-ui-hint mb-4 text-ds-sm font-semibold text-journal-grey">
           {!isLoaded ? "Loading…" : readOnly ? "View only" : status}
         </p>
         {readOnly ? (
@@ -481,11 +502,11 @@ export default function EntryPage({ mode }) {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Title (optional)"
-            className="font-heading mb-4 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-xl not-italic text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20"
+            className="babble-title-input mb-4 w-full rounded-[2px] border border-journal-grey/40 bg-journal-white px-3 py-2 text-xl text-journal-brown outline-none placeholder:text-journal-grey/60 focus:ring-2 focus:ring-journal-brown/20"
           />
         )}
         <div className="mb-4">
-          <p className="mb-2 font-dancing text-ds-xl italic text-journal-brown">Tags</p>
+          <p className="page-subheading mb-2 text-journal-brown">Tags</p>
           <TagInput tags={tags} setTags={setTags} suggestions={tagSuggestions} savedTags={savedTags} readOnly={readOnly} />
         </div>
         <RichEditor
@@ -510,7 +531,7 @@ export default function EntryPage({ mode }) {
                   setTimeout(() => setShowSavedFlash(false), 2000);
                 }
               }}
-              className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 font-dancing text-ds-sm font-semibold text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
+              className="rounded-[2px] border border-journal-brown/60 bg-journal-brown px-4 py-2 text-ds-sm font-semibold text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
             >
               Save Entry
             </button>
@@ -523,7 +544,7 @@ export default function EntryPage({ mode }) {
   if (mode === "id" && !singleEntry && !singleLoadError) {
     return (
       <section>
-        <p className="font-dancing text-ds-xl italic text-journal-grey">Loading…</p>
+        <p className="font-ui-hint text-ds-xl text-journal-grey">Loading…</p>
       </section>
     );
   }
@@ -531,25 +552,25 @@ export default function EntryPage({ mode }) {
   return (
     <section className="relative pr-1">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="section-title text-5xl">{format(new Date(`${todayStr}T12:00:00`), "EEEE, MMMM d")}</h2>
+        <h2 className="font-date-lg text-journal-brown">{format(new Date(`${todayStr}T12:00:00`), "EEEE, MMMM d")}</h2>
         {!readOnly ? (
           <button
             type="button"
             onClick={() => void handleNewEntry()}
-            className="flex items-center gap-2 rounded-[2px] border border-journal-brown/50 bg-journal-brown px-4 py-2.5 font-dancing text-ds-lg font-semibold italic text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
+            className="flex items-center gap-2 rounded-[2px] border border-journal-brown/50 bg-journal-brown px-4 py-2.5 text-ds-lg font-semibold text-[#f5edd9] shadow-md transition hover:bg-[#5d4533]"
           >
-            <span className="font-dancing text-ds-2xl font-bold leading-none">+</span>
+            <span className="text-ds-2xl font-bold leading-none">+</span>
             New Entry
           </button>
         ) : null}
       </div>
-      <p className="mb-4 font-dancing text-ds-sm font-semibold text-journal-grey">
+      <p className="font-ui-hint mb-4 text-ds-sm font-semibold text-journal-grey">
         {!isLoaded ? "Loading…" : readOnly ? "View only — sign in as the owner to write." : "Each babble saves on its own."}
       </p>
       {todayLoading ? (
-        <p className="font-dancing text-ds-xl italic text-journal-grey">Loading today&apos;s babbles…</p>
+        <p className="font-ui-hint text-ds-xl text-journal-grey">Loading today&apos;s babbles…</p>
       ) : todayEntries.length === 0 ? (
-        <p className="font-dancing text-ds-xl italic text-journal-grey">
+        <p className="font-ui-hint text-ds-xl text-journal-grey">
           No babbles yet for today.
           {!readOnly ? " Click New Entry to begin." : ""}
         </p>

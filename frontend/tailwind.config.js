@@ -4,8 +4,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Nunito", "sans-serif"],
+        sans: ["Lora", "serif"],
+        carattere: ["Carattere", "cursive"],
         heading: ["Carattere", "cursive"],
+        dancing: ["Dancing Script", "cursive"],
         prose: ["Lora", "serif"]
       },
       colors: {

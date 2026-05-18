@@ -82,7 +82,7 @@ function Toolbar({ editor, readOnly }) {
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5 border-t border-journal-grey/20 pt-2">
-        <span className="mr-1 text-[10px] font-bold uppercase tracking-wide text-journal-grey">Highlight</span>
+        <span className="font-ui-hint mr-1 text-[10px] font-bold uppercase tracking-wide text-journal-grey">Highlight</span>
         {HIGHLIGHT_COLORS.map(({ hex, label }) => (
           <button
             key={hex}
@@ -115,6 +115,7 @@ export default function RichEditor({
   value,
   onChange,
   readOnly = false,
+  fullscreen = false,
   scrollAreaClassName,
   autoFocusEditor = false
 }) {
