@@ -198,7 +198,7 @@ function Layout({ children }) {
         }}
       >
         <div
-          className="book-cover box-border w-full max-w-full min-w-0 overflow-hidden rounded-[3px] p-[12px]"
+          className="book-cover box-border w-full max-w-full min-w-0 overflow-hidden rounded-[3px]"
           style={{
             backgroundImage: `linear-gradient(rgba(59, 42, 26, 0.6), rgba(59, 42, 26, 0.6)), url(${leatherTexture})`,
             backgroundSize: "cover",
@@ -208,7 +208,7 @@ function Layout({ children }) {
           <div className="relative flex min-h-[calc(100vh-9rem)] w-full min-w-0">
             <BookSpine />
             <div
-              className="page-left relative flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-bl-[2px] rounded-tl-[2px]"
+              className="page-left relative flex min-h-full w-1/2 min-w-0 flex-col overflow-y-auto rounded-bl-[2px] rounded-tl-[2px]"
               style={{ zIndex: 10, backgroundColor: "#F5EDD9" }}
             >
               <PageStackLayers side="left" />
@@ -247,7 +247,7 @@ function Layout({ children }) {
             </div>
 
             <main
-              className="page-right relative flex w-1/2 min-w-0 flex-col overflow-y-auto rounded-br-[2px] rounded-tr-[2px] text-journal-text"
+              className="page-right relative flex min-h-full w-1/2 min-w-0 flex-col overflow-y-auto rounded-br-[2px] rounded-tr-[2px] text-journal-text"
               style={{ zIndex: 10, backgroundColor: "#F5EDD9" }}
             >
               <PageStackLayers side="right" />
