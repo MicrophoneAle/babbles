@@ -23,6 +23,36 @@ function getBodyPreview(entry, title) {
   return preview;
 }
 
+const SORT_NEWEST = "newest";
+
+const SORT_OPTIONS = [
+  { value: "newest", label: "Newest first" },
+  { value: "oldest", label: "Oldest first" },
+  { value: "longest", label: "Longest" },
+  { value: "shortest", label: "Shortest" }
+];
+
+function createdAtMs(entry) {
+  if (!entry.createdAt) return 0;
+  const ms = Date.parse(entry.createdAt);
+  return Number.isNaN(ms) ? 0 : ms;
+}
+
+function sortDayEntries(list, sortBy) {
+  const entries = [...list];
+  switch (sortBy) {
+    case "oldest":
+      return entries.sort((a, b) => createdAtMs(a) - createdAtMs(b));
+    case "longest":
+      return entries.sort((a, b) => (b.wordCount ?? 0) - (a.wordCount ?? 0));
+    case "shortest":
+      return entries.sort((a, b) => (a.wordCount ?? 0) - (b.wordCount ?? 0));
+    case "newest":
+    default:
+      return entries.sort((a, b) => createdAtMs(b) - createdAtMs(a));
+  }
+}
+
 export default function EntriesPage() {
   const { isOwner } = useOwner();
   const navigate = useNavigate();
@@ -33,6 +63,7 @@ export default function EntriesPage() {
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [entries, setEntries] = useState([]);
   const [dateIndex, setDateIndex] = useState(0);
+  const [sortBy, setSortBy] = useState(SORT_NEWEST);
   const [confirmEntryId, setConfirmEntryId] = useState(null);
 
   useEffect(() => {
@@ -62,6 +93,15 @@ export default function EntriesPage() {
     if (!currentDate) return [];
     return entries.filter((e) => e.date === currentDate);
   }, [entries, currentDate]);
+
+  const sortedDayEntries = useMemo(
+    () => sortDayEntries(dayEntries, sortBy),
+    [dayEntries, sortBy]
+  );
+
+  useEffect(() => {
+    setSortBy(SORT_NEWEST);
+  }, [currentDate]);
 
   useEffect(() => {
     if (sortedDates.length === 0) {
@@ -132,7 +172,8 @@ export default function EntriesPage() {
         <p className="font-ui-hint text-ds-xl text-journal-grey">No babbles match your search.</p>
       ) : (
         <>
-          <div className="flex items-center justify-center gap-4">
+          <div className="space-y-2">
+            <div className="flex items-center justify-center gap-4">
             {canGoOlder ? (
               <button
                 type="button"
@@ -164,9 +205,33 @@ export default function EntriesPage() {
                 →
               </span>
             )}
+            </div>
+            <div className="flex justify-end">
+              <div
+                className="flex flex-wrap items-center justify-end gap-1"
+                role="group"
+                aria-label="Sort babbles"
+              >
+                {SORT_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => setSortBy(option.value)}
+                    className={`rounded-[2px] px-2 py-0.5 text-ds-xs transition ${
+                      sortBy === option.value
+                        ? "bg-[#ede2cb] text-[#3b2a1a]"
+                        : "text-[#6b4a2a] hover:bg-[#f0e5cf]/80 hover:text-[#3b2a1a]"
+                    }`}
+                    aria-pressed={sortBy === option.value}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
           <div className="space-y-3">
-            {dayEntries.map((entry) => {
+            {sortedDayEntries.map((entry) => {
               const title = (entry.title || "").trim();
               const bodyPreview = getBodyPreview(entry, title);
               return (
