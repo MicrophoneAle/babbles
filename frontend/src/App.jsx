@@ -192,7 +192,7 @@ function Layout({ children }) {
       <div
         className="book-frame relative w-full max-w-full min-w-0 rounded-[5px] p-[10px]"
         style={{
-          backgroundImage: `linear-gradient(rgba(123, 45, 45, 0.6), rgba(123, 45, 45, 0.6)), url(${maroonTexture})`,
+          backgroundImage: `linear-gradient(rgba(123, 45, 45, 0.42), rgba(123, 45, 45, 0.42)), url(${maroonTexture})`,
           backgroundSize: "cover",
           backgroundPosition: "center"
         }}
@@ -200,7 +200,7 @@ function Layout({ children }) {
         <div
           className="book-cover box-border w-full max-w-full min-w-0 overflow-hidden rounded-[3px] p-[12px]"
           style={{
-            backgroundImage: `linear-gradient(rgba(59, 42, 26, 0.6), rgba(59, 42, 26, 0.6)), url(${leatherTexture})`,
+            backgroundImage: `linear-gradient(rgba(59, 42, 26, 0.38), rgba(59, 42, 26, 0.38)), url(${leatherTexture})`,
             backgroundSize: "cover",
             backgroundPosition: "center"
           }}
