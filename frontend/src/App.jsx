@@ -198,7 +198,7 @@ function Layout({ children }) {
         }}
       >
         <div
-          className="book-cover box-border w-full max-w-full min-w-0 overflow-hidden rounded-[3px] p-[12px]"
+          className="book-cover box-border w-full max-w-full min-w-0 overflow-hidden rounded-[2px] p-[12px]"
           style={{
             backgroundImage: `linear-gradient(rgba(59, 42, 26, 0.38), rgba(59, 42, 26, 0.38)), url(${leatherTexture})`,
             backgroundSize: "cover",

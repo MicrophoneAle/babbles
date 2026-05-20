@@ -126,9 +126,10 @@ body {
   max-width: 100%;
 }
 
-/* Outer hardcover: beveled maroon board depth (front view) */
+/* Cover radii: 5px maroon frame → 2px leather (concentric with 10px frame padding) */
 .book-frame {
-  border-radius: 10px;
+  --book-outer-radius: 5px;
+  border-radius: var(--book-outer-radius);
   max-width: 100%;
   min-width: 0;
   box-shadow:
@@ -145,7 +146,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 5px;
+  border-radius: inherit;
   pointer-events: none;
   box-shadow:
     inset 0 0 0 1px rgba(255, 225, 200, 0.24),
@@ -154,6 +155,8 @@ body {
 }
 
 .book-cover {
+  --book-inner-radius: 2px;
+  border-radius: var(--book-inner-radius);
   max-width: 100%;
   min-width: 0;
   box-shadow:
