@@ -2,6 +2,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Highlight from "@tiptap/extension-highlight";
+import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import { useEffect, useRef } from "react";
 
@@ -24,10 +25,38 @@ function toolBtnClass(active) {
 }
 
 function Toolbar({ editor, readOnly }) {
+  const imageInputRef = useRef(null);
+
   if (!editor || readOnly) return null;
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image is over 2MB and may slow down saving");
+    }
+
+    const reader = new FileReader();
+    reader.onload = (readerEvent) => {
+      const base64 = readerEvent.target?.result;
+      if (typeof base64 === "string") {
+        editor.chain().focus().setImage({ src: base64 }).run();
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
 
   return (
     <div className="mb-3 flex flex-col gap-2 rounded-[2px] border border-journal-grey/25 bg-[#faf8f3] p-2">
+      <input
+        type="file"
+        accept="image/jpeg, image/png"
+        style={{ display: "none" }}
+        ref={imageInputRef}
+        onChange={handleImageUpload}
+      />
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
@@ -79,6 +108,16 @@ function Toolbar({ editor, readOnly }) {
         >
           Quote
         </button>
+        <span className="mx-0.5 h-4 w-px shrink-0 bg-journal-grey/30" aria-hidden />
+        <button
+          type="button"
+          className={toolBtnClass(false)}
+          title="Insert image"
+          aria-label="Insert image"
+          onClick={() => imageInputRef.current?.click()}
+        >
+          Image
+        </button>
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5 border-t border-journal-grey/20 pt-2">
@@ -126,6 +165,10 @@ export default function RichEditor({
     extensions: [
       StarterKit,
       Underline,
+      Image.configure({
+        inline: false,
+        allowBase64: true
+      }),
       Highlight.configure({ multicolor: true }),
       Placeholder.configure({
         placeholder: readOnly ? "Read-only view" : "Write your thoughts..."
