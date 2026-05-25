@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
-import { NavLink, Route, Routes, useLocation } from "react-router-dom";
+import { NavLink, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { format } from "date-fns";
 import woodTexture from "./assets/textures/babbles-wood-texture.jpg";
 import leatherTexture from "./assets/textures/babbles-leather-book-texture.jpg";
@@ -34,6 +34,22 @@ const PAGE_STACK_STEP_PX = 2;
 const PAGE_STACK_STRIP_PX = 12;
 const PAGE_STACK_TOTAL_WIDTH =
   (PAGE_STACK_LAYERS.length - 1) * PAGE_STACK_STEP_PX + PAGE_STACK_STRIP_PX;
+
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(min-width: 768px)").matches;
+  });
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const onChange = () => setIsDesktop(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  return isDesktop;
+}
 
 function PageStackLayers({ side }) {
   const onLeftPage = side === "left";
@@ -140,7 +156,7 @@ function JournalSidebarPanels() {
   );
 }
 
-function SidebarAuth() {
+function SidebarAuth({ compact = false }) {
   const publishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY?.trim();
   if (!publishableKey) {
     return (
@@ -157,14 +173,18 @@ function SidebarAuth() {
         <SignInButton mode="modal">
           <button
             type="button"
-            className="w-full rounded-[2px] border border-journal-brown/40 bg-journal-brown px-3 py-2 text-ds-sm font-semibold text-journal-white shadow-sm transition hover:bg-[#5d4533]"
+            className={`w-full rounded-[2px] border border-journal-brown/40 bg-journal-brown px-3 text-ds-sm font-semibold text-journal-white shadow-sm transition hover:bg-[#5d4533] ${
+              compact ? "min-h-11 py-2.5" : "py-2"
+            }`}
           >
             Sign in
           </button>
         </SignInButton>
-        <p className="font-ui-hint text-ds-xs leading-snug text-[#6b4a2a]/80">
-          Michael&apos;s Babbles is public to read. Sign in as the owner to write or delete anything.
-        </p>
+        {!compact ? (
+          <p className="font-ui-hint text-ds-xs leading-snug text-[#6b4a2a]/80">
+            Michael&apos;s Babbles is public to read. Sign in as the owner to write or delete anything.
+          </p>
+        ) : null}
       </SignedOut>
       <SignedIn>
         <div className="flex items-center justify-between gap-2">
@@ -176,7 +196,114 @@ function SidebarAuth() {
   );
 }
 
-function Layout({ children }) {
+function MobileNavDrawer({ open, onClose, showJournalPanels }) {
+  useEffect(() => {
+    if (!open) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, onClose]);
+
+  return (
+    <>
+      <button
+        type="button"
+        aria-label="Close menu"
+        className={`mobile-drawer-backdrop fixed inset-0 z-[60] bg-black/50 transition-opacity duration-300 md:hidden ${
+          open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={onClose}
+        tabIndex={open ? 0 : -1}
+      />
+      <aside
+        className={`mobile-drawer fixed inset-y-0 left-0 z-[70] flex w-[min(18rem,85vw)] flex-col bg-[#F5EDD9] shadow-xl transition-transform duration-300 ease-out md:hidden ${
+          open ? "translate-x-0" : "-translate-x-full"
+        }`}
+        aria-hidden={!open}
+      >
+        <div className="flex items-center justify-between border-b border-journal-brown/15 px-4 py-3">
+          <p className="font-carattere text-2xl italic text-[#3b2a1a]">Menu</p>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close menu"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-[2px] text-2xl leading-none text-[#6b4a2a] transition hover:bg-[#ede2cb]"
+          >
+            ×
+          </button>
+        </div>
+        <nav className="flex flex-col gap-1 px-3 py-4" onClick={onClose}>
+          <NavLink className="mobile-nav-link nav-link" to="/">
+            Babble
+          </NavLink>
+          <NavLink className="mobile-nav-link nav-link" to="/entries">
+            Past Babbles
+          </NavLink>
+          <NavLink className="mobile-nav-link nav-link" to="/stats">
+            Stats
+          </NavLink>
+          <NavLink className="mobile-nav-link nav-link" to="/tags">
+            Tags
+          </NavLink>
+        </nav>
+        {showJournalPanels ? (
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">
+            <JournalSidebarPanels />
+          </div>
+        ) : (
+          <div className="flex-1" />
+        )}
+        <div className="shrink-0 border-t border-journal-brown/15 px-4 py-4">
+          <SidebarAuth compact />
+        </div>
+      </aside>
+    </>
+  );
+}
+
+function MobileLayout() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const location = useLocation();
+  const showJournalPanels = location.pathname === "/";
+
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [location.pathname]);
+
+  return (
+    <div className="mobile-shell flex min-h-[100dvh] min-w-0 flex-col bg-[#F5EDD9] text-journal-text">
+      <header className="mobile-top-nav sticky top-0 z-50 flex shrink-0 items-center justify-between gap-3 border-b border-journal-brown/15 bg-[#F5EDD9] px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+        <h1 className="mobile-brand-title font-carattere truncate italic leading-tight text-[#3b2a1a]">
+          Michael&apos;s Babbles
+        </h1>
+        <button
+          type="button"
+          aria-label="Open menu"
+          aria-expanded={drawerOpen}
+          className="flex min-h-11 min-w-11 shrink-0 flex-col items-center justify-center gap-1.5 rounded-[2px] border border-journal-brown/25 bg-[#f0e5cf]/80 px-2 transition hover:bg-[#ede2cb]"
+          onClick={() => setDrawerOpen(true)}
+        >
+          <span className="block h-0.5 w-5 rounded-full bg-[#3b2a1a]" />
+          <span className="block h-0.5 w-5 rounded-full bg-[#3b2a1a]" />
+          <span className="block h-0.5 w-5 rounded-full bg-[#3b2a1a]" />
+        </button>
+      </header>
+      <MobileNavDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} showJournalPanels={showJournalPanels} />
+      <main className="mobile-main min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-4 text-journal-text">
+        <Outlet />
+      </main>
+    </div>
+  );
+}
+
+function DesktopBookLayout() {
   const location = useLocation();
   const showJournalPanels = location.pathname === "/";
 
@@ -213,33 +340,33 @@ function Layout({ children }) {
                 className="relative z-10 flex min-h-0 flex-1 flex-col"
                 style={{ paddingLeft: PAGE_STACK_TOTAL_WIDTH }}
               >
-              <h1 className="app-brand-title italic text-[#3b2a1a]">Michael's Babbles</h1>
-              <p className="font-date-sm mt-1 text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
+                <h1 className="app-brand-title italic text-[#3b2a1a]">Michael's Babbles</h1>
+                <p className="font-date-sm mt-1 text-[#6b4a2a]">{format(new Date(), "EEEE, MMM d")}</p>
 
-              <nav className="mt-6 flex flex-col gap-2 text-sm font-bold">
-                <NavLink className="nav-link" to="/">
-                  Babble
-                </NavLink>
-                <NavLink className="nav-link" to="/entries">
-                  Past Babbles
-                </NavLink>
-                <NavLink className="nav-link" to="/stats">
-                  Stats
-                </NavLink>
-                <NavLink className="nav-link" to="/tags">
-                  Tags
-                </NavLink>
-              </nav>
+                <nav className="mt-6 flex flex-col gap-2 text-sm font-bold">
+                  <NavLink className="nav-link" to="/">
+                    Babble
+                  </NavLink>
+                  <NavLink className="nav-link" to="/entries">
+                    Past Babbles
+                  </NavLink>
+                  <NavLink className="nav-link" to="/stats">
+                    Stats
+                  </NavLink>
+                  <NavLink className="nav-link" to="/tags">
+                    Tags
+                  </NavLink>
+                </nav>
 
-              {showJournalPanels ? (
-                <div className="mt-5 flex min-h-0 flex-1 flex-col">
-                  <JournalSidebarPanels />
+                {showJournalPanels ? (
+                  <div className="mt-5 flex min-h-0 flex-1 flex-col">
+                    <JournalSidebarPanels />
+                  </div>
+                ) : null}
+
+                <div className="mt-auto shrink-0 border-t border-journal-brown/15 pt-5">
+                  <SidebarAuth />
                 </div>
-              ) : null}
-
-              <div className="mt-auto shrink-0 border-t border-journal-brown/15 pt-5">
-                <SidebarAuth />
-              </div>
               </div>
             </div>
 
@@ -249,7 +376,7 @@ function Layout({ children }) {
                 className="relative z-10 flex min-h-0 flex-1 flex-col"
                 style={{ paddingRight: PAGE_STACK_TOTAL_WIDTH }}
               >
-                {children}
+                <Outlet />
               </div>
             </main>
           </div>
@@ -259,17 +386,21 @@ function Layout({ children }) {
   );
 }
 
+function Layout() {
+  const isDesktop = useIsDesktop();
+  return isDesktop ? <DesktopBookLayout /> : <MobileLayout />;
+}
+
 export default function App() {
   return (
-    <Layout>
-      <Routes>
+    <Routes>
+      <Route element={<Layout />}>
         <Route path="/" element={<EntryPage mode="today" />} />
         <Route path="/entry/:entryId" element={<EntryPage mode="id" />} />
         <Route path="/entries" element={<EntriesPage />} />
         <Route path="/stats" element={<StatsPage />} />
         <Route path="/tags" element={<TagsPage />} />
-      </Routes>
-    </Layout>
+      </Route>
+    </Routes>
   );
 }
-

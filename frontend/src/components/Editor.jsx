@@ -17,7 +17,7 @@ const HIGHLIGHT_COLORS = [
 ];
 
 const TOOL_BTN_BASE =
-  "rounded-[2px] border border-journal-grey/30 bg-[#f6f4ef] px-2 py-1 text-xs font-semibold text-journal-charcoal transition hover:bg-[#ece8df]";
+  "rounded-[2px] border border-journal-grey/30 bg-[#f6f4ef] px-2 py-1 text-xs font-semibold text-journal-charcoal transition hover:bg-[#ece8df] max-md:min-h-9 max-md:min-w-9 max-md:flex max-md:items-center max-md:justify-center max-md:px-2.5";
 const TOOL_BTN_ACTIVE = "bg-[#e8dcc2] border-[#6b4a2a]";
 
 function toolBtnClass(active) {
@@ -49,7 +49,7 @@ function Toolbar({ editor, readOnly }) {
   };
 
   return (
-    <div className="mb-3 flex flex-col gap-2 rounded-[2px] border border-journal-grey/25 bg-[#faf8f3] p-2">
+    <div className="editor-toolbar mb-3 flex flex-col gap-2 rounded-[2px] border border-journal-grey/25 bg-[#faf8f3] p-2 max-md:gap-2.5">
       <input
         type="file"
         accept="image/jpeg, image/png"
@@ -57,7 +57,7 @@ function Toolbar({ editor, readOnly }) {
         ref={imageInputRef}
         onChange={handleImageUpload}
       />
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="editor-toolbar-row flex flex-wrap items-center gap-2 max-md:gap-2.5">
         <button
           type="button"
           className={toolBtnClass(editor.isActive("bold"))}
@@ -120,7 +120,7 @@ function Toolbar({ editor, readOnly }) {
         </button>
       </div>
 
-      <div className="flex flex-wrap items-center gap-1.5 border-t border-journal-grey/20 pt-2">
+      <div className="editor-toolbar-row flex flex-wrap items-center gap-1.5 border-t border-journal-grey/20 pt-2 max-md:gap-2.5">
         <span className="font-ui-hint mr-1 text-[10px] font-bold uppercase tracking-wide text-journal-grey">Highlight</span>
         {HIGHLIGHT_COLORS.map(({ hex, label }) => (
           <button
@@ -129,7 +129,7 @@ function Toolbar({ editor, readOnly }) {
             title={label}
             aria-label={`Highlight ${label}`}
             className={[
-              "h-[20px] w-[20px] shrink-0 rounded-full border-2 border-[rgba(107,74,42,0.35)] shadow-sm ring-offset-1 transition hover:scale-110 hover:ring-2 hover:ring-journal-brown/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-journal-brown/40",
+              "h-[20px] w-[20px] shrink-0 rounded-full border-2 border-[rgba(107,74,42,0.35)] shadow-sm ring-offset-1 transition hover:scale-110 hover:ring-2 hover:ring-journal-brown/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-journal-brown/40 max-md:h-9 max-md:w-9",
               editor.isActive("highlight", { color: hex }) ? "ring-2 ring-[#6b4a2a] ring-offset-1" : ""
             ].join(" ")}
             style={{ backgroundColor: hex }}
@@ -140,7 +140,7 @@ function Toolbar({ editor, readOnly }) {
           type="button"
           title="Remove highlight"
           aria-label="Remove highlight"
-          className="ml-0.5 flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full border-2 border-dashed border-journal-brown/50 bg-[#f6f4ef] text-[11px] font-bold leading-none text-journal-brown transition hover:bg-[#ece8df] hover:border-journal-brown"
+          className="ml-0.5 flex h-[20px] w-[20px] shrink-0 items-center justify-center rounded-full border-2 border-dashed border-journal-brown/50 bg-[#f6f4ef] text-[11px] font-bold leading-none text-journal-brown transition hover:bg-[#ece8df] hover:border-journal-brown max-md:h-9 max-md:w-9"
           onClick={() => editor.chain().focus().unsetHighlight().run()}
         >
           ×

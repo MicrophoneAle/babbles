@@ -437,3 +437,110 @@ select {
     line-height: 1.1;
   }
 }
+
+/* ——— Mobile layout (below md / 768px); desktop book UI unchanged at md+ ——— */
+
+.mobile-brand-title {
+  font-size: 1.75rem;
+}
+
+.mobile-nav-link.nav-link {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: 1.35rem;
+}
+
+@media (max-width: 767px) {
+  .mobile-main .section-title {
+    font-size: 2rem;
+  }
+
+  .mobile-main .font-date-lg {
+    font-size: 1.75rem;
+  }
+
+  .mobile-main .font-date-md {
+    font-size: 1.35rem;
+  }
+
+  .mobile-main button,
+  .mobile-main [type="button"],
+  .mobile-main [type="submit"] {
+    min-height: 44px;
+  }
+
+  .mobile-main .text-ds-xs.font-semibold.text-red-800\/70,
+  .mobile-main .text-ds-xs.text-red-800\/60 {
+    min-height: auto;
+  }
+
+  /* Past Babbles: date row + sort (EntriesPage structure) */
+  .mobile-main section.space-y-4 .relative.flex.w-full.items-center {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+  }
+
+  .mobile-main section.space-y-4 .relative.flex.w-full.items-center > .absolute {
+    position: static;
+    transform: none;
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 0;
+    width: auto;
+  }
+
+  .mobile-main section.space-y-4 .relative.flex.w-full.items-center > .absolute .font-date-md {
+    font-size: 1.15rem;
+  }
+
+  .mobile-main section.space-y-4 .relative.flex.w-full.items-center > .ml-auto {
+    margin-left: 0;
+    flex: 0 0 auto;
+    max-width: 100%;
+  }
+
+  .mobile-main section.space-y-4 .relative.flex.w-full.items-center > .ml-auto button {
+    margin-top: 0 !important;
+    min-height: 44px;
+    padding: 0.5rem 0.25rem;
+  }
+
+  /* Stats: sticky calendar fits width */
+  .mobile-main .stats-page > .page-content-block:last-child {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-main .stats-page > .page-content-block:last-child > div {
+    min-width: 280px;
+    transform: scale(0.92);
+    transform-origin: top center;
+  }
+
+  .mobile-main .stats-page > .page-content-block:last-child .grid.grid-cols-7 {
+    gap: 0.25rem;
+  }
+
+  .mobile-main .stats-page > .page-content-block:last-child .grid.grid-cols-7 > div {
+    height: 3.25rem;
+  }
+
+  .mobile-main .stats-page > .page-content-block:last-child .calendar-month-title {
+    font-size: 1.5rem;
+  }
+
+  /* Editor fullscreen on mobile */
+  .mobile-main article.flex.min-h-0.flex-1.flex-col .editor-scroll-area {
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+  }
+
+  .mobile-main article.flex.min-h-0.flex-1.flex-col {
+    min-height: 100dvh;
+  }
+}
