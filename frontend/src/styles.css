@@ -440,8 +440,15 @@ select {
 
 /* ——— Mobile layout (below md / 768px); desktop book UI unchanged at md+ ——— */
 
+.mobile-top-nav {
+  overflow: visible;
+}
+
 .mobile-brand-title {
-  font-size: 1.75rem;
+  font-size: clamp(1.2rem, 5vw, 2rem);
+  min-width: 0;
+  flex-shrink: 1;
+  overflow: visible;
 }
 
 .mobile-nav-link.nav-link {

@@ -279,8 +279,8 @@ function MobileLayout() {
 
   return (
     <div className="mobile-shell flex min-h-[100dvh] min-w-0 flex-col bg-[#F5EDD9] text-journal-text">
-      <header className="mobile-top-nav sticky top-0 z-50 flex shrink-0 items-center justify-between gap-3 border-b border-journal-brown/15 bg-[#F5EDD9] px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
-        <h1 className="mobile-brand-title font-carattere truncate italic leading-tight text-[#3b2a1a]">
+      <header className="mobile-top-nav sticky top-0 z-50 flex shrink-0 items-center justify-between gap-3 overflow-visible border-b border-journal-brown/15 bg-[#F5EDD9] px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+        <h1 className="mobile-brand-title min-w-0 flex-1 pr-2 font-carattere italic leading-tight text-[#3b2a1a]">
           Michael&apos;s Babbles
         </h1>
         <button
